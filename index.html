@@ -5,6 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Happy Kids Moda Infantil | Do RN ao 18 • Santa Fé do Sul - SP</title>
   <meta name="description" content="Happy Kids Moda Infantil em Santa Fé do Sul - SP. Roupas infantis, bebê e juvenil do tamanho RN ao 18. Enviamos para todo o Brasil em até 10x sem juros!" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Happy Kids Moda Infantil | Catálogo Oficial (RN ao 18)" />
+  <meta property="og:description" content="Moda bebê, infantil e juvenil em Santa Fé do Sul - SP. Escolha o tamanho e peça direto pelo WhatsApp (17) 99773-2964! Enviamos para todo o Brasil." />
+  <meta property="og:image" content="https://felipesfs7.github.io/happy-kids-moda-infantil/assets/logo.png" />
+  <meta property="og:url" content="https://felipesfs7.github.io/happy-kids-moda-infantil/" />
   <link rel="icon" type="image/png" href="assets/logo.png" />
 
   <!-- Google Fonts: Poppins (Títulos) & Inter (Corpo) -->
@@ -732,20 +737,28 @@
     </section>
 
     <!-- ======================================================================
-         VIEW 6: PAINEL ADMINISTRATIVO / CMS DO LOJISTA (REQUISITO D)
+         VIEW 6: PAINEL ADMINISTRATIVO / CMS DO LOJISTA (REQUISITO D + NUVEM + BAIXA POR CÓDIGO)
          ====================================================================== -->
     <section id="view-admin" class="hidden max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-10 space-y-8">
       
       <!-- Cabeçalho do Painel do Lojista -->
       <div class="bg-gradient-to-r from-slate-900 via-[#1E3A5F] to-[#2B6EB5] text-white rounded-3xl p-6 sm:p-8 shadow-md flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/15 text-[#FAD02C] font-heading font-bold text-xs mb-2">
-            <i data-lucide="shield" class="w-3.5 h-3.5"></i>
-            <span>CMS / GESTÃO DE ESTOQUE EM TEMPO REAL</span>
+          <div class="flex flex-wrap items-center gap-2 mb-2">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/15 text-[#FAD02C] font-heading font-bold text-xs">
+              <i data-lucide="shield" class="w-3.5 h-3.5"></i>
+              <span>PAINEL DO LOJISTA • ESTOQUE EM NUVEM</span>
+            </div>
+            <div id="admin-cloud-status-badge">
+              <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-400/40 text-emerald-100 font-heading font-bold text-xs">
+                <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                <span>Banco em Nuvem Conectado</span>
+              </span>
+            </div>
           </div>
-          <h1 class="font-heading text-2xl sm:text-3xl font-extrabold">Painel do Lojista • Happy Kids</h1>
+          <h1 class="font-heading text-2xl sm:text-3xl font-extrabold">Gerenciamento • Happy Kids</h1>
           <p class="text-xs sm:text-sm text-slate-200 mt-1">
-            Adicione novos produtos, faça upload de fotos, edite preços/descrições ou remova itens esgotados. Tudo reflete na vitrine na mesma hora!
+            Retire peças vendidas pelo <strong>Código (CÓD.)</strong>, desative tamanhos específicos ou cadastre novos produtos. As alterações atualizam o site para todos os clientes!
           </p>
         </div>
 
@@ -758,7 +771,7 @@
           <button onclick="restoreDefaultCatalog()"
             class="px-4 py-2.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 border border-amber-300/40 text-amber-200 font-heading font-semibold text-xs flex items-center gap-1.5 transition cursor-pointer">
             <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
-            <span>Restaurar Catálogo Padrão</span>
+            <span>Restaurar Todo Estoque</span>
           </button>
           <button onclick="lockAdminPanel()"
             class="px-4 py-2.5 rounded-xl bg-rose-500/25 hover:bg-rose-500/40 border border-rose-300/40 text-rose-100 font-heading font-semibold text-xs flex items-center gap-1.5 transition cursor-pointer">
@@ -769,19 +782,29 @@
       </div>
 
       <!-- Indicadores Rápidos (KPIs) -->
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div class="bg-white rounded-2xl p-5 border border-slate-200 flex items-center gap-4">
-          <div class="w-12 h-12 rounded-2xl bg-blue-50 text-[#2B6EB5] flex items-center justify-center">
-            <i data-lucide="package" class="w-6 h-6"></i>
+          <div class="w-12 h-12 rounded-2xl bg-blue-50 text-[#2B6EB5] flex items-center justify-center shrink-0">
+            <i data-lucide="package-check" class="w-6 h-6"></i>
           </div>
           <div>
-            <p class="text-xs text-slate-500 font-medium">Total de Produtos Ativos</p>
+            <p class="text-xs text-slate-500 font-medium">Disponíveis na Vitrine</p>
             <p id="admin-kpi-total" class="font-heading text-2xl font-extrabold text-slate-900">0</p>
           </div>
         </div>
 
         <div class="bg-white rounded-2xl p-5 border border-slate-200 flex items-center gap-4">
-          <div class="w-12 h-12 rounded-2xl bg-amber-50 text-[#F38230] flex items-center justify-center">
+          <div class="w-12 h-12 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center shrink-0">
+            <i data-lucide="package-x" class="w-6 h-6"></i>
+          </div>
+          <div>
+            <p class="text-xs text-slate-500 font-medium">Retirados (Já Vendidos)</p>
+            <p id="admin-kpi-soldout" class="font-heading text-2xl font-extrabold text-rose-600">0</p>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-2xl p-5 border border-slate-200 flex items-center gap-4">
+          <div class="w-12 h-12 rounded-2xl bg-amber-50 text-[#F38230] flex items-center justify-center shrink-0">
             <i data-lucide="star" class="w-6 h-6"></i>
           </div>
           <div>
@@ -791,14 +814,63 @@
         </div>
 
         <div class="bg-white rounded-2xl p-5 border border-slate-200 flex items-center gap-4">
-          <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+          <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
             <i data-lucide="tag" class="w-6 h-6"></i>
           </div>
           <div>
-            <p class="text-xs text-slate-500 font-medium">Ticket Médio do Catálogo</p>
+            <p class="text-xs text-slate-500 font-medium">Ticket Médio Ativo</p>
             <p id="admin-kpi-avg" class="font-heading text-2xl font-extrabold text-slate-900">R$ 0,00</p>
           </div>
         </div>
+      </div>
+
+      <!-- ====================================================================
+           DESTAQUE PRINCIPAL: BAIXA RÁPIDA DE ESTOQUE POR CÓDIGO (CÓD.)
+           ==================================================================== -->
+      <div class="bg-gradient-to-br from-orange-50 via-white to-sky-50 rounded-3xl border-2 border-[#F38230]/40 p-6 sm:p-8 shadow-sm space-y-5">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+          <div class="space-y-1">
+            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#F38230] text-white font-heading font-bold text-xs">
+              <i data-lucide="zap" class="w-3.5 h-3.5"></i>
+              <span>FUNÇÃO RÁPIDA PARA O BALCÃO DA LOJA</span>
+            </div>
+            <h2 class="font-heading text-xl sm:text-2xl font-extrabold text-slate-900">
+              Baixa Rápida de Roupa Vendida por Código (CÓD.)
+            </h2>
+            <p class="text-xs sm:text-sm text-slate-600">
+              Vendeu uma peça na loja? Digite o <strong>CÓD. da etiqueta/foto</strong> abaixo (ex: <code class="px-1.5 py-0.5 rounded bg-slate-200/70 font-bold text-slate-800">21823</code>, <code class="px-1.5 py-0.5 rounded bg-slate-200/70 font-bold text-slate-800">21889</code>) para <strong>retirar do catálogo com 1 clique</strong> ou desativar apenas o tamanho que acabou!
+            </p>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-2 shrink-0">
+            <button type="button" onclick="showAllSoldOutItemsInQuick()"
+              class="px-4 py-3 rounded-2xl bg-rose-100 hover:bg-rose-200 text-rose-800 font-heading font-bold text-xs sm:text-sm flex items-center gap-2 transition cursor-pointer">
+              <i data-lucide="archive" class="w-4 h-4"></i>
+              <span>Ver Peças Retiradas / Esgotadas (<span id="admin-soldout-count-badge">0</span>)</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Barra de Busca por Código Grande -->
+        <div class="relative">
+          <i data-lucide="hash" class="w-6 h-6 text-[#F38230] absolute left-4 top-1/2 -translate-y-1/2"></i>
+          <input
+            id="admin-quick-code-input"
+            type="search"
+            oninput="handleQuickCodeSearchInput(this.value)"
+            placeholder="Digite aqui o CÓD. do produto (ex: 21823, 21889, 21476) ou nome da roupa..."
+            class="w-full pl-12 pr-28 py-4 rounded-2xl bg-white border-2 border-slate-300 focus:border-[#F38230] font-heading font-bold text-base sm:text-lg text-slate-900 placeholder:text-slate-400 placeholder:font-normal shadow-inner outline-none transition"
+          />
+          <button
+            type="button"
+            onclick="const inp = document.getElementById('admin-quick-code-input'); inp.value=''; handleQuickCodeSearchInput(''); inp.focus();"
+            class="absolute right-3 top-1/2 -translate-y-1/2 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 font-heading font-bold text-xs cursor-pointer">
+            Limpar
+          </button>
+        </div>
+
+        <!-- Resultados da Busca Rápida por Código -->
+        <div id="admin-quick-code-results" class="space-y-3"></div>
       </div>
 
       <!-- Grid Principal do CMS: Formulário de Cadastro/Edição (Esquerda) + Lista de Produtos (Direita) -->
@@ -817,11 +889,18 @@
           </div>
 
           <form id="admin-product-form" onsubmit="handleAdminFormSubmit(event)" class="space-y-4">
-            <!-- Nome -->
-            <div>
-              <label class="block text-xs font-heading font-bold text-slate-700 mb-1">Nome do Produto *</label>
-              <input id="admin-prod-name" type="text" required placeholder="Ex: Conjunto Infantil Moletom Ursinho"
-                class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 focus:border-[#F38230] text-sm outline-none" />
+            <!-- Nome e Código (CÓD.) -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div class="sm:col-span-2">
+                <label class="block text-xs font-heading font-bold text-slate-700 mb-1">Nome do Produto *</label>
+                <input id="admin-prod-name" type="text" required placeholder="Ex: Conjunto Infantil Moletom"
+                  class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 focus:border-[#F38230] text-sm outline-none" />
+              </div>
+              <div>
+                <label class="block text-xs font-heading font-bold text-slate-700 mb-1">CÓD. da Peça</label>
+                <input id="admin-prod-sku" type="text" placeholder="Ex: 21950"
+                  class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 focus:border-[#F38230] font-heading font-bold text-sm outline-none" />
+              </div>
             </div>
 
             <!-- Preço Atual e Preço Antigo -->
@@ -951,13 +1030,19 @@
         <div class="lg:col-span-7 bg-white rounded-3xl border border-slate-200 p-6 shadow-xs">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4 mb-4">
             <div>
-              <h2 class="font-heading font-extrabold text-lg text-slate-900">Catálogo Cadastrado</h2>
-              <p class="text-xs text-slate-500">Edite preços, descrições ou exclua itens esgotados:</p>
+              <h2 class="font-heading font-extrabold text-lg text-slate-900">Catálogo Completo</h2>
+              <p class="text-xs text-slate-500">Filtre por código, categoria ou status de estoque:</p>
             </div>
 
             <div class="flex flex-wrap items-center gap-2">
-              <input id="admin-search-input" type="search" placeholder="Buscar por nome ou código..."
+              <input id="admin-search-input" type="search" placeholder="Buscar por CÓD. ou nome..."
                 class="px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs outline-none focus:border-[#F38230]" />
+              <select id="admin-filter-stock"
+                class="px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs font-semibold outline-none">
+                <option value="todos">Todos Status</option>
+                <option value="ativos">Disponíveis</option>
+                <option value="vendidos">Já Vendidos</option>
+              </select>
               <select id="admin-filter-category"
                 class="px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs font-semibold outline-none">
                 <option value="todos">Todas Categorias</option>
@@ -975,12 +1060,12 @@
             <table class="w-full text-left border-collapse">
               <thead>
                 <tr class="border-b border-slate-200 text-[11px] font-heading font-bold uppercase tracking-wider text-slate-400">
-                  <th class="py-3 px-4">Produto</th>
+                  <th class="py-3 px-4">Produto / CÓD.</th>
                   <th class="py-3 px-4">Categoria</th>
-                  <th class="py-3 px-4">Grade (RN-18)</th>
+                  <th class="py-3 px-4">Tamanhos</th>
                   <th class="py-3 px-4">Preço</th>
-                  <th class="py-3 px-4 text-center">Destaque</th>
-                  <th class="py-3 px-4 text-right">Ações</th>
+                  <th class="py-3 px-4 text-center">Home</th>
+                  <th class="py-3 px-4 text-right">Estoque / Ações</th>
                 </tr>
               </thead>
               <tbody id="admin-products-tbody"></tbody>

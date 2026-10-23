@@ -17,7 +17,9 @@ const STORE_CONFIG = {
   hours: "Seg a Sex: 09h às 18h | Sáb: 09h às 13h",
   maxInstallments: 10,
   pixDiscountPercent: 5,
-  adminPassword: "210845"
+  adminPassword: "210845",
+  cloudRepoApiUrl: "https://api.github.com/repos/felipesfs7/happy-kids-moda-infantil/contents/db/catalog-state.json",
+  encryptedCloudKey: "55595f675c596d091735061c0c2e02246c26241e17417452735751183b071b1c0f285b3120351f25"
 };
 
 // Régua completa de tamanhos do RN ao 18

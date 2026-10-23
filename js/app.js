@@ -1,18 +1,35 @@
 /* ==========================================================================
-   Happy Kids Moda Infantil - Core Application Controller (SPA + E-commerce + CMS)
+   Happy Kids Moda Infantil - Core Application Controller + Cloud Database Sync
    Santa Fé do Sul - SP | WhatsApp: (17) 99773-2964
    ========================================================================== */
 
 const STORAGE_KEYS = {
-  PRODUCTS: "happykids_products_v2_real",
+  CLOUD_CACHE: "happykids_cloud_state_v3",
   CART: "happykids_cart_v2_real",
   FAVORITES: "happykids_favorites_v2_real"
+};
+
+// Estado do Banco de Dados em Nuvem (Sincronizado para Todos os Clientes)
+const CloudDB = {
+  sha: null,
+  unlockedToken: null,
+  isSyncing: false,
+  lastSyncedAt: null,
+  state: {
+    version: 2,
+    updatedAt: null,
+    soldOutIds: [],        // IDs de produtos retirados do catálogo (vendidos/esgotados)
+    productOverrides: {},  // Alterações de preço, tamanhos disponíveis, nome, destaque por ID
+    customProducts: [],    // Novos produtos cadastrados pelo painel do lojista
+    deletedIds: []         // IDs excluídos permanentemente
+  }
 };
 
 // Estado Global da Aplicação
 const AppState = {
   currentView: "home", // 'home' | 'catalog' | 'product' | 'about' | 'contact' | 'admin'
-  products: [],
+  allProducts: [],     // Todos os produtos (incluindo os marcados como vendidos/esgotados para o lojista)
+  products: [],        // Apenas produtos ativos/disponíveis exibidos para os clientes na vitrine
   cart: [],
   favorites: [],
   heroSlideIndex: 0,
@@ -22,11 +39,11 @@ const AppState = {
   // Estado dos Filtros da Vitrine / Catálogo
   filters: {
     search: "",
-    gender: "todos",      // 'todos' | 'Feminino' | 'Masculino' | 'Unissex'
-    ageGroup: "todos",    // 'todos' | 'bebe' | '1-a-3' | '4-a-10' | 'juvenil'
-    size: "todos",        // 'todos' | 'RN' | 'P' | ... | '18'
-    category: "todos",    // 'todos' | 'Conjuntos' | 'Vestidos' | 'Body' | 'Pijamas' | 'Blusas' | 'Calças'
-    sortBy: "relevancia"  // 'relevancia' | 'menor-preco' | 'maior-preco' | 'mais-recentes'
+    gender: "todos",
+    ageGroup: "todos",
+    size: "todos",
+    category: "todos",
+    sortBy: "relevancia"
   },
 
   // Estado da Página de Detalhes do Produto Atual
@@ -35,44 +52,55 @@ const AppState = {
     selectedSize: null,
     selectedImageIndex: 0,
     quantity: 1,
-    activeTab: "descricao" // 'descricao' | 'tecido' | 'lavagem'
+    activeTab: "descricao"
   },
 
   // Estado do Painel do Lojista (CMS) com proteção por senha (210845)
   admin: {
     isAuthenticated: false,
+    quickCodeQuery: "",
+    showOnlySoldOutInQuick: false,
     editingId: null,
     searchQuery: "",
     filterCategory: "todos",
+    filterStockStatus: "todos", // 'todos' | 'ativos' | 'vendidos'
     uploadedImageDataUrl: ""
   }
 };
 
 /* ==========================================================================
-   1. Inicialização e Persistência (LocalStorage)
+   1. Inicialização, Banco de Dados em Nuvem e Persistência
    ========================================================================== */
 
 function initApp() {
-  loadPersistedData();
+  loadLocalCache();
+  rebuildCatalogFromState();
   renderAll();
   startHeroCarousel();
   setupGlobalListeners();
+
+  // Busca o estado atualizado do Banco de Dados na Nuvem em tempo real
+  fetchCloudDatabaseState();
 }
 
-function loadPersistedData() {
+function loadLocalCache() {
   try {
-    // Remove chaves antigas de demonstração para garantir apenas os produtos reais da loja
     localStorage.removeItem("happykids_products_v1");
-    localStorage.removeItem("happykids_cart_v1");
-    localStorage.removeItem("happykids_favorites_v1");
+    localStorage.removeItem("happykids_products_v2_real");
 
-    const savedProducts = localStorage.getItem(STORAGE_KEYS.PRODUCTS);
-    if (savedProducts) {
-      const parsed = JSON.parse(savedProducts);
-      AppState.products = Array.isArray(parsed) && parsed.length > 0 ? parsed : [...INITIAL_PRODUCTS];
-    } else {
-      AppState.products = [...INITIAL_PRODUCTS];
-      saveProductsToStorage();
+    const cachedCloud = localStorage.getItem(STORAGE_KEYS.CLOUD_CACHE);
+    if (cachedCloud) {
+      const parsed = JSON.parse(cachedCloud);
+      if (parsed && typeof parsed === "object") {
+        CloudDB.state = {
+          version: 2,
+          updatedAt: parsed.updatedAt || null,
+          soldOutIds: Array.isArray(parsed.soldOutIds) ? parsed.soldOutIds : [],
+          productOverrides: parsed.productOverrides || {},
+          customProducts: Array.isArray(parsed.customProducts) ? parsed.customProducts : [],
+          deletedIds: Array.isArray(parsed.deletedIds) ? parsed.deletedIds : []
+        };
+      }
     }
 
     const savedCart = localStorage.getItem(STORAGE_KEYS.CART);
@@ -81,16 +109,238 @@ function loadPersistedData() {
     const savedFavs = localStorage.getItem(STORAGE_KEYS.FAVORITES);
     AppState.favorites = savedFavs ? JSON.parse(savedFavs) : [];
   } catch (err) {
-    console.warn("Usando catálogo padrão em memória:", err);
-    AppState.products = [...INITIAL_PRODUCTS];
+    console.warn("Inicializando estado padrão:", err);
   }
 }
 
-function saveProductsToStorage() {
+function saveCloudCacheLocally() {
   try {
-    localStorage.setItem(STORAGE_KEYS.PRODUCTS, JSON.stringify(AppState.products));
+    localStorage.setItem(STORAGE_KEYS.CLOUD_CACHE, JSON.stringify(CloudDB.state));
+  } catch (e) {}
+}
+
+// Reconstrói a lista de produtos combinando o catálogo base + alterações da nuvem
+function rebuildCatalogFromState() {
+  const soldOutSet = new Set(CloudDB.state.soldOutIds || []);
+  const deletedSet = new Set(CloudDB.state.deletedIds || []);
+  const overrides = CloudDB.state.productOverrides || {};
+  const customList = Array.isArray(CloudDB.state.customProducts) ? CloudDB.state.customProducts : [];
+
+  const mergedBase = INITIAL_PRODUCTS.filter((p) => !deletedSet.has(p.id)).map((p) => {
+    const ov = overrides[p.id] || {};
+    return {
+      ...p,
+      ...ov,
+      isSoldOut: soldOutSet.has(p.id)
+    };
+  });
+
+  const mergedCustom = customList
+    .filter((p) => p && !deletedSet.has(p.id))
+    .map((p) => {
+      const ov = overrides[p.id] || {};
+      return {
+        ...p,
+        ...ov,
+        isSoldOut: soldOutSet.has(p.id)
+      };
+    });
+
+  // Lista completa (para o Painel do Lojista poder ver tanto ativos quanto vendidos/retirados)
+  AppState.allProducts = [...mergedCustom, ...mergedBase];
+
+  // Lista apenas de produtos em estoque (visível para os clientes da loja)
+  AppState.products = AppState.allProducts.filter((p) => !p.isSoldOut && p.sizes && p.sizes.length > 0);
+}
+
+// Descriptografa a chave de gravação na nuvem usando a senha do lojista (210845)
+function unlockCloudWriteToken(password) {
+  const hex = STORE_CONFIG.encryptedCloudKey || "";
+  if (!hex) return null;
+  const key = `${password}_happykids_salt`;
+  let out = "";
+  for (let i = 0; i < hex.length; i += 2) {
+    const byteVal = parseInt(hex.substr(i, 2), 16);
+    const keyChar = key.charCodeAt((i / 2) % key.length);
+    out += String.fromCharCode(byteVal ^ keyChar);
+  }
+  return out;
+}
+
+function utf8ToBase64(str) {
+  const bytes = new TextEncoder().encode(str);
+  let binary = "";
+  bytes.forEach((b) => (binary += String.fromCharCode(b)));
+  return btoa(binary);
+}
+
+function base64ToUtf8(b64) {
+  const clean = b64.replace(/\s/g, "");
+  const binary = atob(clean);
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) {
+    bytes[i] = binary.charCodeAt(i);
+  }
+  return new TextDecoder().decode(bytes);
+}
+
+// Lê o estado mais recente do Banco de Dados na Nuvem (para todos os clientes)
+async function fetchCloudDatabaseState() {
+  updateCloudSyncBadge("syncing", "Sincronizando estoque...");
+  try {
+    const apiUrl = `${STORE_CONFIG.cloudRepoApiUrl}?t=${Date.now()}`;
+    const headers = { Accept: "application/vnd.github+json" };
+    if (CloudDB.unlockedToken) {
+      headers.Authorization = `token ${CloudDB.unlockedToken}`;
+    }
+
+    const res = await fetch(apiUrl, { headers, cache: "no-store" });
+    if (res.ok) {
+      const data = await res.json();
+      CloudDB.sha = data.sha;
+      if (data.content) {
+        const decodedJson = base64ToUtf8(data.content);
+        const parsed = JSON.parse(decodedJson);
+        applyIncomingCloudState(parsed);
+        updateCloudSyncBadge("online", "Banco em Nuvem Conectado (Tempo Real)");
+        return;
+      }
+    }
+
+    // Fallback: leitura direta do arquivo JSON publicado
+    const fallbackRes = await fetch(`db/catalog-state.json?t=${Date.now()}`, { cache: "no-store" });
+    if (fallbackRes.ok) {
+      const parsed = await fallbackRes.json();
+      applyIncomingCloudState(parsed);
+      updateCloudSyncBadge("online", "Catálogo Sincronizado");
+    }
   } catch (err) {
-    showToast("Aviso: Limite de armazenamento local atingido para imagens pesadas.", "warning");
+    console.warn("Modo offline/cache local ativo:", err);
+    updateCloudSyncBadge("local", "Modo Local");
+  }
+}
+
+function applyIncomingCloudState(parsed) {
+  if (!parsed || typeof parsed !== "object") return;
+  CloudDB.state = {
+    version: 2,
+    updatedAt: parsed.updatedAt || new Date().toISOString(),
+    soldOutIds: Array.isArray(parsed.soldOutIds) ? parsed.soldOutIds : [],
+    productOverrides: parsed.productOverrides || {},
+    customProducts: Array.isArray(parsed.customProducts) ? parsed.customProducts : [],
+    deletedIds: Array.isArray(parsed.deletedIds) ? parsed.deletedIds : []
+  };
+  saveCloudCacheLocally();
+  rebuildCatalogFromState();
+  renderAll();
+}
+
+// Salva imediatamente qualquer alteração do lojista no Banco de Dados em Nuvem
+async function syncCloudDatabase(actionDescription = "Atualização de estoque pelo Painel do Lojista") {
+  CloudDB.state.updatedAt = new Date().toISOString();
+  saveCloudCacheLocally();
+  rebuildCatalogFromState();
+  renderAll();
+
+  if (!CloudDB.unlockedToken) {
+    CloudDB.unlockedToken = unlockCloudWriteToken(STORE_CONFIG.adminPassword || "210845");
+  }
+
+  updateCloudSyncBadge("syncing", "Salvando no banco em nuvem...");
+
+  try {
+    // Caso ainda não tenha o SHA atual do arquivo na nuvem, busca primeiro
+    if (!CloudDB.sha) {
+      const checkRes = await fetch(`${STORE_CONFIG.cloudRepoApiUrl}?t=${Date.now()}`, {
+        headers: {
+          Authorization: `token ${CloudDB.unlockedToken}`,
+          Accept: "application/vnd.github+json"
+        },
+        cache: "no-store"
+      });
+      if (checkRes.ok) {
+        const checkData = await checkRes.json();
+        CloudDB.sha = checkData.sha;
+      }
+    }
+
+    const jsonString = JSON.stringify(CloudDB.state, null, 2);
+    const bodyPayload = {
+      message: `CMS Happy Kids: ${actionDescription}`,
+      content: utf8ToBase64(jsonString),
+      branch: "main"
+    };
+    if (CloudDB.sha) {
+      bodyPayload.sha = CloudDB.sha;
+    }
+
+    const putRes = await fetch(STORE_CONFIG.cloudRepoApiUrl, {
+      method: "PUT",
+      headers: {
+        Authorization: `token ${CloudDB.unlockedToken}`,
+        Accept: "application/vnd.github+json",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(bodyPayload)
+    });
+
+    if (putRes.ok) {
+      const putData = await putRes.json();
+      if (putData && putData.content && putData.content.sha) {
+        CloudDB.sha = putData.content.sha;
+      }
+      CloudDB.lastSyncedAt = new Date();
+      updateCloudSyncBadge("online", "Salvo na Nuvem! Visível para todos os clientes");
+    } else {
+      // Se houve conflito de SHA, busca o novo SHA e tenta novamente 1 vez
+      const retryGet = await fetch(`${STORE_CONFIG.cloudRepoApiUrl}?t=${Date.now()}`, {
+        headers: { Authorization: `token ${CloudDB.unlockedToken}` },
+        cache: "no-store"
+      });
+      if (retryGet.ok) {
+        const retryData = await retryGet.json();
+        CloudDB.sha = retryData.sha;
+        bodyPayload.sha = CloudDB.sha;
+        const retryPut = await fetch(STORE_CONFIG.cloudRepoApiUrl, {
+          method: "PUT",
+          headers: {
+            Authorization: `token ${CloudDB.unlockedToken}`,
+            Accept: "application/vnd.github+json",
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(bodyPayload)
+        });
+        if (retryPut.ok) {
+          const retryPutData = await retryPut.json();
+          CloudDB.sha = retryPutData.content.sha;
+          updateCloudSyncBadge("online", "Salvo na Nuvem! Visível para todos os clientes");
+          return;
+        }
+      }
+      updateCloudSyncBadge("warning", "Salvo neste aparelho (aguardando rede)");
+    }
+  } catch (err) {
+    console.warn("Erro ao sincronizar na nuvem:", err);
+    updateCloudSyncBadge("warning", "Salvo neste aparelho (sem conexão)");
+  }
+}
+
+function updateCloudSyncBadge(status, text) {
+  const badge = document.getElementById("admin-cloud-status-badge");
+  if (!badge) return;
+
+  if (status === "syncing") {
+    badge.className =
+      "inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/25 border border-amber-300/40 text-amber-100 font-heading font-bold text-xs";
+    badge.innerHTML = `<span class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-ping"></span><span>${text}</span>`;
+  } else if (status === "online") {
+    badge.className =
+      "inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/25 border border-emerald-300/40 text-emerald-100 font-heading font-bold text-xs";
+    badge.innerHTML = `<span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span><span>${text}</span>`;
+  } else {
+    badge.className =
+      "inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/15 border border-white/20 text-slate-200 font-heading font-bold text-xs";
+    badge.innerHTML = `<span class="w-2.5 h-2.5 rounded-full bg-sky-400"></span><span>${text}</span>`;
   }
 }
 
@@ -114,7 +364,6 @@ function saveFavoritesToStorage() {
 
 function formatCurrency(value) {
   const num = Number(value) || 0;
-  // Substitui espaço não-quebrável (\u00A0) por espaço simples para evitar falhas de codificação
   return num
     .toLocaleString("pt-BR", { style: "currency", currency: "BRL" })
     .replace(/\u00A0/g, " ");
@@ -130,7 +379,6 @@ function calculatePixPrice(price) {
   return formatCurrency(discounted);
 }
 
-// Limpa caracteres especiais / emojis que geram o losango com ponto de interrogação () no WhatsApp
 function sanitizeWhatsAppText(text) {
   return String(text || "")
     .replace(/\u00A0/g, " ")
@@ -150,6 +398,18 @@ function openStoreWhatsApp(customText) {
     customText ||
     `Olá, equipe da *${STORE_CONFIG.name}*!\nEstou visitando o site da loja e gostaria de atendimento para escolher looks infantis.`;
   window.open(buildWhatsAppUrl(defaultMsg), "_blank", "noopener,noreferrer");
+}
+
+function shareProductOnWhatsApp(productId) {
+  const product = AppState.products.find((p) => p.id === productId);
+  if (!product) return;
+  const shareUrl = window.location.origin + window.location.pathname;
+  const text =
+    `Olha que peça linda da *${STORE_CONFIG.name}*:\n` +
+    `*${product.name}* (${product.sku})\n` +
+    `Valor: ${formatCurrency(product.price)} (ou ${calculateInstallment(product.price)})\n` +
+    `Veja no catálogo online: ${shareUrl}`;
+  window.open(`https://wa.me/?text=${encodeURIComponent(sanitizeWhatsAppText(text))}`, "_blank", "noopener,noreferrer");
 }
 
 /* ==========================================================================
@@ -193,8 +453,10 @@ function handleAdminPasswordSubmit(event) {
 
   if (entered === requiredPass) {
     AppState.admin.isAuthenticated = true;
+    CloudDB.unlockedToken = unlockCloudWriteToken(entered);
     closeAdminPasswordModal();
     navigateTo("admin");
+    fetchCloudDatabaseState();
     showToast("Acesso liberado ao Painel do Lojista!", "success");
   } else {
     if (errEl) errEl.classList.remove("hidden");
@@ -210,11 +472,264 @@ function lockAdminPanel() {
 }
 
 /* ==========================================================================
-   4. Navegação SPA entre Páginas e Filtros Rápidos
+   4. Baixa Rápida de Estoque por Código (CÓD.) - Função Solicitada pela Lojista
+   ========================================================================== */
+
+function handleQuickCodeSearchInput(val) {
+  AppState.admin.quickCodeQuery = val;
+  AppState.admin.showOnlySoldOutInQuick = false;
+  renderQuickCodeManager();
+}
+
+function showAllSoldOutItemsInQuick() {
+  AppState.admin.quickCodeQuery = "";
+  AppState.admin.showOnlySoldOutInQuick = !AppState.admin.showOnlySoldOutInQuick;
+  const input = document.getElementById("admin-quick-code-input");
+  if (input) input.value = "";
+  renderQuickCodeManager();
+}
+
+// Retira uma peça vendida do catálogo (ou coloca de volta no catálogo com 1 clique)
+function toggleProductSoldOut(productId) {
+  const product = AppState.allProducts.find((p) => p.id === productId);
+  if (!product) return;
+
+  const list = CloudDB.state.soldOutIds || [];
+  const idx = list.indexOf(productId);
+
+  if (idx >= 0) {
+    // Estava retirado/esgotado -> Reativar no catálogo!
+    list.splice(idx, 1);
+    CloudDB.state.soldOutIds = list;
+    showToast(`Peça "${product.name}" (${product.sku}) REATIVADA no catálogo!`, "success");
+    syncCloudDatabase(`Reativou ${product.sku} - ${product.name}`);
+  } else {
+    // Está ativo -> Retirar do catálogo (vendido/esgotado)!
+    list.push(productId);
+    CloudDB.state.soldOutIds = list;
+    // Remove também de sacolas locais se estiver
+    AppState.cart = AppState.cart.filter((item) => item.productId !== productId);
+    saveCartToStorage();
+    showToast(`Peça "${product.name}" (${product.sku}) RETIRADA do catálogo!`, "info");
+    syncCloudDatabase(`Baixa de estoque: retirou ${product.sku}`);
+  }
+}
+
+// Retira ou Reativa TODAS as peças/cores que possuem o mesmo CÓD. de uma só vez
+function markEntireCodeSoldOut(skuCode, makeSoldOut = true) {
+  const matching = AppState.allProducts.filter((p) => (p.sku || "").toLowerCase() === skuCode.toLowerCase());
+  if (matching.length === 0) return;
+
+  const set = new Set(CloudDB.state.soldOutIds || []);
+  matching.forEach((p) => {
+    if (makeSoldOut) {
+      set.add(p.id);
+    } else {
+      set.delete(p.id);
+    }
+  });
+
+  CloudDB.state.soldOutIds = Array.from(set);
+  showToast(
+    makeSoldOut
+      ? `Todas as ${matching.length} peças do ${skuCode} foram retiradas do catálogo!`
+      : `Todas as ${matching.length} peças do ${skuCode} voltaram ao catálogo!`,
+    makeSoldOut ? "info" : "success"
+  );
+  syncCloudDatabase(`${makeSoldOut ? "Retirou" : "Reativou"} todo o ${skuCode}`);
+}
+
+// Permite desativar/ativar apenas 1 tamanho específico de uma peça (ex: vendeu só o Tam. 6)
+function toggleSingleSizeStock(productId, size) {
+  const product = AppState.allProducts.find((p) => p.id === productId);
+  if (!product) return;
+
+  const currentSizes = Array.isArray(product.sizes) ? [...product.sizes] : [];
+  const idx = currentSizes.indexOf(size);
+
+  if (idx >= 0) {
+    if (currentSizes.length === 1) {
+      // Se era o último tamanho disponível, pergunta ou já marca a peça inteira como esgotada
+      toggleProductSoldOut(productId);
+      return;
+    }
+    currentSizes.splice(idx, 1);
+  } else {
+    currentSizes.push(size);
+    // Ordena os tamanhos na ordem oficial RN -> 18
+    currentSizes.sort((a, b) => ALL_SIZES.indexOf(a) - ALL_SIZES.indexOf(b));
+  }
+
+  if (!CloudDB.state.productOverrides[productId]) {
+    CloudDB.state.productOverrides[productId] = {};
+  }
+  CloudDB.state.productOverrides[productId].sizes = currentSizes;
+
+  showToast(`Tamanhos de ${product.sku} atualizados (${currentSizes.join(", ")})!`, "success");
+  syncCloudDatabase(`Atualizou tamanhos de ${product.sku}`);
+}
+
+function renderQuickCodeManager() {
+  const container = document.getElementById("admin-quick-code-results");
+  const soldOutCounter = document.getElementById("admin-soldout-count-badge");
+  if (!container) return;
+
+  const soldOutProducts = AppState.allProducts.filter((p) => p.isSoldOut);
+  if (soldOutCounter) {
+    soldOutCounter.textContent = soldOutProducts.length;
+  }
+
+  const rawQuery = (AppState.admin.quickCodeQuery || "").trim().toLowerCase();
+  const cleanCodeQuery = rawQuery.replace(/^c[oó]d\.?\s*/i, "").trim();
+
+  let matches = [];
+  if (AppState.admin.showOnlySoldOutInQuick) {
+    matches = soldOutProducts;
+  } else if (cleanCodeQuery.length > 0) {
+    matches = AppState.allProducts.filter((p) => {
+      const skuClean = (p.sku || "").toLowerCase();
+      const nameClean = (p.name || "").toLowerCase();
+      return skuClean.includes(cleanCodeQuery) || nameClean.includes(cleanCodeQuery);
+    });
+  }
+
+  if (!AppState.admin.showOnlySoldOutInQuick && cleanCodeQuery.length === 0) {
+    container.innerHTML = `
+      <div class="bg-slate-50 rounded-2xl p-4 sm:p-5 border border-dashed border-slate-300 text-center">
+        <p class="text-xs sm:text-sm text-slate-600">
+          Digite acima os números do código da roupa (ex: <strong>21823</strong>, <strong>21889</strong>, <strong>21845</strong>) para dar baixa imediata nas peças vendidas.
+        </p>
+      </div>
+    `;
+    return;
+  }
+
+  if (matches.length === 0) {
+    container.innerHTML = `
+      <div class="bg-rose-50/60 rounded-2xl p-5 border border-rose-200 text-center">
+        <p class="font-heading font-bold text-sm text-rose-800">
+          ${
+            AppState.admin.showOnlySoldOutInQuick
+              ? "Nenhuma peça está marcada como esgotada/retirada no momento."
+              : `Nenhum produto encontrado com o código "${AppState.admin.quickCodeQuery}".`
+          }
+        </p>
+      </div>
+    `;
+    return;
+  }
+
+  // Verifica se todas as peças encontradas compartilham um mesmo código para oferecer botão em lote
+  const uniqueSkus = [...new Set(matches.map((m) => m.sku))];
+  const batchBarHTML =
+    uniqueSkus.length === 1 && matches.length > 1
+      ? `
+      <div class="flex flex-wrap items-center justify-between gap-2 bg-amber-50 border border-amber-200 rounded-2xl px-4 py-3 mb-4">
+        <span class="text-xs sm:text-sm font-heading font-bold text-amber-900">
+          Encontradas <strong>${matches.length} variações/cores</strong> com o <strong>${uniqueSkus[0]}</strong>:
+        </span>
+        <div class="flex flex-wrap gap-2">
+          <button onclick="markEntireCodeSoldOut('${uniqueSkus[0]}', true)"
+            class="px-3.5 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-heading font-bold text-xs shadow-xs cursor-pointer">
+            Retirar TODAS do ${uniqueSkus[0]}
+          </button>
+          <button onclick="markEntireCodeSoldOut('${uniqueSkus[0]}', false)"
+            class="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-heading font-bold text-xs shadow-xs cursor-pointer">
+            Reativar TODAS do ${uniqueSkus[0]}
+          </button>
+        </div>
+      </div>
+    `
+      : "";
+
+  container.innerHTML = `
+    ${batchBarHTML}
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      ${matches
+        .map((p) => {
+          const img = p.images && p.images[0] ? p.images[0] : "";
+          const baseProd = INITIAL_PRODUCTS.find((x) => x.id === p.id);
+          const allPossibleSizesForProd = baseProd ? baseProd.sizes : p.sizes || [];
+
+          return `
+            <div class="rounded-2xl border-2 p-4 flex flex-col justify-between gap-3 transition ${
+              p.isSoldOut ? "bg-rose-50/50 border-rose-300" : "bg-white border-slate-200 shadow-xs"
+            }">
+              <div class="flex gap-3.5">
+                <img src="${img}" alt="${p.name}" class="w-20 h-20 rounded-xl object-contain bg-white border border-slate-200 shrink-0" />
+                <div class="min-w-0 flex-1">
+                  <div class="flex items-center justify-between gap-1 mb-1">
+                    <span class="px-2.5 py-0.5 rounded-md bg-slate-900 text-white font-heading font-extrabold text-xs">
+                      ${p.sku}
+                    </span>
+                    <span class="px-2 py-0.5 rounded-full text-[10px] font-heading font-bold ${
+                      p.isSoldOut ? "bg-rose-600 text-white" : "bg-emerald-100 text-emerald-800"
+                    }">
+                      ${p.isSoldOut ? "RETIRADO (VENDIDO)" : "VISÍVEL NA LOJA"}
+                    </span>
+                  </div>
+                  <h4 class="font-heading font-bold text-slate-900 text-xs sm:text-sm line-clamp-2 leading-snug">${p.name}</h4>
+                  <p class="font-heading font-extrabold text-[#F38230] text-sm mt-1">${formatCurrency(p.price)}</p>
+                </div>
+              </div>
+
+              <!-- Controle Rápido de Tamanhos Individuais da Peça -->
+              <div class="bg-slate-50 rounded-xl p-2.5 border border-slate-200/80">
+                <p class="text-[11px] font-semibold text-slate-500 mb-1.5">
+                  Tamanhos disponíveis (toque para desativar só 1 tamanho):
+                </p>
+                <div class="flex flex-wrap gap-1.5">
+                  ${allPossibleSizesForProd
+                    .map((sz) => {
+                      const hasSize = p.sizes && p.sizes.includes(sz);
+                      return `
+                        <button type="button" onclick="toggleSingleSizeStock('${p.id}', '${sz}')"
+                          class="px-2.5 py-1 rounded-lg font-heading font-bold text-xs border transition cursor-pointer ${
+                            hasSize && !p.isSoldOut
+                              ? "bg-white border-emerald-400 text-emerald-800 shadow-2xs hover:bg-rose-50"
+                              : "bg-slate-200/70 border-slate-300 text-slate-400 line-through"
+                          }">
+                          ${sz}
+                        </button>
+                      `;
+                    })
+                    .join("")}
+                </div>
+              </div>
+
+              <!-- Botão Principal de 1 Clique: Retirar do Catálogo ou Reativar -->
+              ${
+                p.isSoldOut
+                  ? `
+                  <button type="button" onclick="toggleProductSoldOut('${p.id}')"
+                    class="w-full py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-heading font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-sm transition cursor-pointer">
+                    <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+                    <span>Colocar de Volta no Catálogo</span>
+                  </button>
+                `
+                  : `
+                  <button type="button" onclick="toggleProductSoldOut('${p.id}')"
+                    class="w-full py-2.5 px-4 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-heading font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-sm transition cursor-pointer">
+                    <i data-lucide="eye-off" class="w-4 h-4"></i>
+                    <span>Retirar do Catálogo (Já Vendido)</span>
+                  </button>
+                `
+              }
+            </div>
+          `;
+        })
+        .join("")}
+    </div>
+  `;
+
+  refreshIcons();
+}
+
+/* ==========================================================================
+   5. Navegação SPA entre Páginas e Filtros Rápidos
    ========================================================================== */
 
 function navigateTo(viewName, options = {}) {
-  // Bloqueia acesso ao Painel do Lojista caso não tenha digitado a senha 210845
   if (viewName === "admin" && !AppState.admin.isAuthenticated) {
     openAdminPasswordModal();
     return;
@@ -222,7 +737,6 @@ function navigateTo(viewName, options = {}) {
 
   AppState.currentView = viewName;
 
-  // Alterna visibilidade das seções principais
   const views = ["home", "catalog", "product", "about", "contact", "admin"];
   views.forEach((v) => {
     const el = document.getElementById(`view-${v}`);
@@ -235,13 +749,9 @@ function navigateTo(viewName, options = {}) {
     }
   });
 
-  // Atualiza destaque no menu de navegação
   updateActiveNavLinks();
-
-  // Fecha menu mobile caso esteja aberto
   closeMobileMenu();
 
-  // Renderiza o conteúdo específico da página ativa
   if (viewName === "home") {
     renderHomeProducts();
     renderSizeQuickBar();
@@ -296,7 +806,7 @@ function updateActiveNavLinks() {
 }
 
 /* ==========================================================================
-   5. Renderização Global & Carrossel Hero (Home)
+   6. Renderização Global & Carrossel Hero (Home)
    ========================================================================== */
 
 function renderAll() {
@@ -351,7 +861,7 @@ function renderHeroSlide() {
           <div class="mt-7 pt-5 border-t border-slate-200/70 flex flex-wrap items-center gap-4 sm:gap-6 text-xs sm:text-sm font-medium text-slate-600">
             <div class="flex items-center gap-1.5">
               <span class="w-2.5 h-2.5 rounded-full bg-[#2CB667]"></span>
-              <span>Catálogo Oficial Happy Kids</span>
+              <span>Estoque Atualizado em Tempo Real</span>
             </div>
             <div class="flex items-center gap-1.5">
               <span class="w-2.5 h-2.5 rounded-full bg-[#2B6EB5]"></span>
@@ -436,7 +946,6 @@ function goToHeroSlide(index) {
   startHeroCarousel();
 }
 
-// Régua Interativa de Tamanhos na Home (RN ao 18)
 function renderSizeQuickBar() {
   const container = document.getElementById("home-size-ruler");
   if (!container) return;
@@ -461,7 +970,7 @@ function renderSizeQuickBar() {
 }
 
 /* ==========================================================================
-   6. Cards de Produto e Vitrine em Destaque na Home
+   7. Cards de Produto e Vitrine em Destaque na Home
    ========================================================================== */
 
 function setHomeTab(tabName) {
@@ -653,7 +1162,7 @@ function createProductCardHTML(product) {
 }
 
 /* ==========================================================================
-   7. Página de Catálogo / Vitrine com Filtros e Ordenação (Requisito B)
+   8. Página de Catálogo / Vitrine com Filtros e Ordenação (Requisito B)
    ========================================================================== */
 
 function renderCatalogFiltersUI() {
@@ -713,32 +1222,27 @@ function getFilteredAndSortedProducts() {
   const query = (search || "").trim().toLowerCase();
 
   let filtered = AppState.products.filter((p) => {
-    // Busca por texto (nome, código, categoria, descrição)
     if (query) {
       const hay = `${p.name} ${p.category} ${p.gender} ${p.description} ${p.sku || ""} ${p.ageLabel || ""}`.toLowerCase();
       if (!hay.includes(query)) return false;
     }
 
-    // Filtro por Gênero
     if (gender !== "todos") {
       if (gender === "Unissex" && p.gender !== "Unissex") return false;
       if (gender === "Feminino" && p.gender !== "Feminino" && p.gender !== "Unissex") return false;
       if (gender === "Masculino" && p.gender !== "Masculino" && p.gender !== "Unissex") return false;
     }
 
-    // Filtro por Faixa Etária
     if (ageGroup !== "todos") {
       const groupObj = AGE_GROUPS.find((g) => g.id === ageGroup);
       const matchesGroup = p.ageGroup === ageGroup || (groupObj && p.sizes.some((s) => groupObj.sizes.includes(s)));
       if (!matchesGroup) return false;
     }
 
-    // Filtro por Tamanho Específico (RN ao 18)
     if (size !== "todos") {
       if (!p.sizes || !p.sizes.includes(size)) return false;
     }
 
-    // Filtro por Categoria de Roupa
     if (category !== "todos") {
       if (p.category !== category) return false;
     }
@@ -746,7 +1250,6 @@ function getFilteredAndSortedProducts() {
     return true;
   });
 
-  // Ordenação
   if (sortBy === "menor-preco") {
     filtered.sort((a, b) => Number(a.price) - Number(b.price));
   } else if (sortBy === "maior-preco") {
@@ -808,7 +1311,7 @@ function renderCatalogView() {
 
   if (chipsContainer) {
     if (activeChips.length === 0) {
-      chipsContainer.innerHTML = `<span class="text-xs text-slate-500">Mostrando todo o catálogo oficial Happy Kids</span>`;
+      chipsContainer.innerHTML = `<span class="text-xs text-slate-500">Mostrando catálogo oficial Happy Kids em estoque</span>`;
     } else {
       chipsContainer.innerHTML =
         activeChips
@@ -829,7 +1332,7 @@ function renderCatalogView() {
   const results = getFilteredAndSortedProducts();
   const countEl = document.getElementById("catalog-results-count");
   if (countEl) {
-    countEl.textContent = `${results.length} ${results.length === 1 ? "produto encontrado" : "produtos encontrados"}`;
+    countEl.textContent = `${results.length} ${results.length === 1 ? "produto disponível" : "produtos disponíveis"}`;
   }
 
   const grid = document.getElementById("catalog-products-grid");
@@ -865,11 +1368,11 @@ function renderCatalogView() {
 }
 
 /* ==========================================================================
-   8. Página de Detalhes do Produto com Zoom e Compra Direta no WhatsApp (Requisito C)
+   9. Página de Detalhes do Produto com Zoom e Compra Direta no WhatsApp
    ========================================================================== */
 
 function openProductDetail(productId) {
-  const product = AppState.products.find((p) => p.id === productId);
+  const product = AppState.products.find((p) => p.id === productId) || AppState.allProducts.find((p) => p.id === productId);
   if (!product) return;
 
   AppState.activeProduct = {
@@ -914,7 +1417,10 @@ function renderProductDetailView() {
   const container = document.getElementById("product-detail-container");
   if (!container) return;
 
-  const product = AppState.products.find((p) => p.id === AppState.activeProduct.id) || AppState.products[0];
+  const product =
+    AppState.products.find((p) => p.id === AppState.activeProduct.id) ||
+    AppState.allProducts.find((p) => p.id === AppState.activeProduct.id) ||
+    AppState.products[0];
   if (!product) return;
 
   AppState.activeProduct.id = product.id;
@@ -979,7 +1485,6 @@ function renderProductDetailView() {
             </div>
           </div>
 
-          <!-- Miniaturas da Galeria (Outras Cores / Mesmo Código) -->
           ${
             images.length > 1
               ? `
@@ -1014,17 +1519,24 @@ function renderProductDetailView() {
               <div class="flex items-center gap-2">
                 <span class="px-3 py-1 rounded-full text-xs font-bold bg-blue-50 text-[#2B6EB5]">${product.category}</span>
                 <span class="px-3 py-1 rounded-full text-xs font-bold bg-orange-50 text-[#F38230]">${product.gender}</span>
-                <span class="text-xs font-bold text-slate-600">${product.sku || product.id}</span>
+                <span class="px-2.5 py-0.5 rounded-md bg-slate-100 text-xs font-extrabold text-slate-700">${product.sku || product.id}</span>
               </div>
-              <button onclick="toggleFavorite('${product.id}'); renderProductDetailView();"
-                class="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full border transition cursor-pointer ${
-                  isFav
-                    ? "bg-rose-50 border-rose-200 text-rose-600"
-                    : "bg-white border-slate-200 text-slate-600 hover:text-rose-500"
-                }">
-                <i data-lucide="heart" class="w-4 h-4 ${isFav ? "fill-current" : ""}"></i>
-                <span>${isFav ? "Salvo nos Favoritos" : "Favoritar"}</span>
-              </button>
+              <div class="flex items-center gap-1.5">
+                <button onclick="shareProductOnWhatsApp('${product.id}')" title="Compartilhar peça no WhatsApp"
+                  class="inline-flex items-center gap-1 text-xs font-bold px-3 py-1.5 rounded-full border border-slate-200 bg-white text-slate-600 hover:text-[#25D366] transition cursor-pointer">
+                  <i data-lucide="share-2" class="w-3.5 h-3.5"></i>
+                  <span>Compartilhar</span>
+                </button>
+                <button onclick="toggleFavorite('${product.id}'); renderProductDetailView();"
+                  class="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full border transition cursor-pointer ${
+                    isFav
+                      ? "bg-rose-50 border-rose-200 text-rose-600"
+                      : "bg-white border-slate-200 text-slate-600 hover:text-rose-500"
+                  }">
+                  <i data-lucide="heart" class="w-4 h-4 ${isFav ? "fill-current" : ""}"></i>
+                  <span>${isFav ? "Favorito" : "Favoritar"}</span>
+                </button>
+              </div>
             </div>
 
             <h1 class="font-heading text-2xl sm:text-3xl font-extrabold text-slate-900 leading-tight mb-4">
@@ -1069,7 +1581,7 @@ function renderProductDetailView() {
               </div>
 
               <p class="text-xs text-slate-500 mb-3">
-                Grade oficial da peça (${product.ageLabel}). Toque no tamanho desejado:
+                Grade disponível em estoque (${product.ageLabel}). Toque no tamanho desejado:
               </p>
 
               <div class="grid grid-cols-5 sm:grid-cols-8 gap-2">
@@ -1233,7 +1745,6 @@ function renderProductDetailView() {
   refreshIcons();
 }
 
-// Lupa / Zoom Interativo na Imagem Principal do Produto
 function handleImageZoomMove(event) {
   const box = document.getElementById("product-zoom-box");
   const img = document.getElementById("product-main-image");
@@ -1272,9 +1783,8 @@ function closeLightbox() {
   if (modal) modal.classList.add("hidden");
 }
 
-// Compra Direta pelo WhatsApp na Página de Produto (Sem Emojis para nunca exibir '')
 function buyActiveProductViaWhatsApp() {
-  const product = AppState.products.find((p) => p.id === AppState.activeProduct.id);
+  const product = AppState.products.find((p) => p.id === AppState.activeProduct.id) || AppState.allProducts.find((p) => p.id === AppState.activeProduct.id);
   if (!product) return;
 
   const size = AppState.activeProduct.selectedSize || (product.sizes && product.sizes[0]) || "Único";
@@ -1296,7 +1806,7 @@ function buyActiveProductViaWhatsApp() {
 }
 
 /* ==========================================================================
-   9. Sacola de Compras (Carrinho) e Favoritos
+   10. Sacola de Compras (Carrinho) e Favoritos
    ========================================================================== */
 
 function addActiveProductToCart() {
@@ -1459,7 +1969,6 @@ function renderCartDrawer() {
   refreshIcons();
 }
 
-// Finalização do Pedido da Sacola via WhatsApp (Sem Emojis para nunca exibir '')
 function checkoutCartViaWhatsApp() {
   if (AppState.cart.length === 0) return;
 
@@ -1491,7 +2000,6 @@ function checkoutCartViaWhatsApp() {
   openStoreWhatsApp(message);
 }
 
-// Favoritos / Lista de Desejos
 function toggleFavorite(productId) {
   const idx = AppState.favorites.indexOf(productId);
   if (idx >= 0) {
@@ -1584,22 +2092,25 @@ function updateHeaderBadges() {
 }
 
 /* ==========================================================================
-   10. Painel Administrativo / CMS do Lojista (Requisito D)
+   11. Painel Administrativo / CMS do Lojista c/ Sincronização em Nuvem
    ========================================================================== */
 
 function renderAdminView() {
-  const totalProducts = AppState.products.length;
+  const totalActive = AppState.products.length;
+  const totalSoldOut = AppState.allProducts.filter((p) => p.isSoldOut).length;
   const featuredCount = AppState.products.filter((p) => p.featured).length;
   const avgPrice =
-    totalProducts > 0
-      ? AppState.products.reduce((acc, p) => acc + Number(p.price || 0), 0) / totalProducts
+    totalActive > 0
+      ? AppState.products.reduce((acc, p) => acc + Number(p.price || 0), 0) / totalActive
       : 0;
 
   const kpiTotal = document.getElementById("admin-kpi-total");
+  const kpiSoldOut = document.getElementById("admin-kpi-soldout");
   const kpiFeatured = document.getElementById("admin-kpi-featured");
   const kpiAvg = document.getElementById("admin-kpi-avg");
 
-  if (kpiTotal) kpiTotal.textContent = totalProducts;
+  if (kpiTotal) kpiTotal.textContent = totalActive;
+  if (kpiSoldOut) kpiSoldOut.textContent = totalSoldOut;
   if (kpiFeatured) kpiFeatured.textContent = featuredCount;
   if (kpiAvg) kpiAvg.textContent = formatCurrency(avgPrice);
 
@@ -1615,6 +2126,7 @@ function renderAdminView() {
     ).join("");
   }
 
+  renderQuickCodeManager();
   renderAdminProductsTable();
 }
 
@@ -1640,7 +2152,7 @@ function handleAdminImageUpload(event) {
     const img = new Image();
     img.onload = function () {
       const canvas = document.createElement("canvas");
-      const maxDim = 800;
+      const maxDim = 650;
       let width = img.width;
       let height = img.height;
 
@@ -1656,7 +2168,7 @@ function handleAdminImageUpload(event) {
       canvas.height = height;
       const ctx = canvas.getContext("2d");
       ctx.drawImage(img, 0, 0, width, height);
-      const dataUrl = canvas.toDataURL("image/jpeg", 0.82);
+      const dataUrl = canvas.toDataURL("image/jpeg", 0.8);
 
       AppState.admin.uploadedImageDataUrl = dataUrl;
       const urlInput = document.getElementById("admin-prod-image-url");
@@ -1727,12 +2239,11 @@ function handleAdminFormSubmit(event) {
     "assets/produtos/prod-001.jpg";
 
   if (AppState.admin.editingId) {
-    const idx = AppState.products.findIndex((p) => p.id === AppState.admin.editingId);
-    if (idx >= 0) {
-      const existing = AppState.products[idx];
+    const prodId = AppState.admin.editingId;
+    const existing = AppState.allProducts.find((p) => p.id === prodId);
+    if (existing) {
       const updatedImages = [finalImage, ...(existing.images ? existing.images.slice(1) : [])];
-      AppState.products[idx] = {
-        ...existing,
+      const overridePayload = {
         name,
         price,
         oldPrice,
@@ -1749,11 +2260,31 @@ function handleAdminFormSubmit(event) {
           "Peça confeccionada com carinho, conforto e alta durabilidade para acompanhar a criança em todos os momentos.",
         fabric: fabric || "Algodão Premium macio e respirável."
       };
-      showToast(`Produto "${name}" atualizado com sucesso!`, "success");
+
+      // Se for produto customizado ou do catálogo base, salva no CloudDB
+      const customIdx = CloudDB.state.customProducts.findIndex((c) => c.id === prodId);
+      if (customIdx >= 0) {
+        CloudDB.state.customProducts[customIdx] = {
+          ...CloudDB.state.customProducts[customIdx],
+          ...overridePayload
+        };
+      } else {
+        CloudDB.state.productOverrides[prodId] = overridePayload;
+      }
+
+      showToast(`Produto "${name}" atualizado na nuvem!`, "success");
+      resetAdminForm();
+      syncCloudDatabase(`Editou produto ${existing.sku || prodId}`);
     }
   } else {
-    const newId = "hk-" + Date.now().toString().slice(-5);
-    const newSku = `CÓD. ${Math.floor(21900 + Math.random() * 900)}`;
+    const newId = "hk-custom-" + Date.now().toString().slice(-6);
+    const customCodeInput = document.getElementById("admin-prod-sku");
+    const rawCustomCode = customCodeInput ? customCodeInput.value.trim() : "";
+    const newSku = rawCustomCode
+      ? rawCustomCode.toUpperCase().startsWith("CÓD")
+        ? rawCustomCode
+        : `CÓD. ${rawCustomCode}`
+      : `CÓD. ${Math.floor(21900 + Math.random() * 900)}`;
 
     const newProduct = {
       id: newId,
@@ -1781,26 +2312,26 @@ function handleAdminFormSubmit(event) {
       createdAt: new Date().toISOString().split("T")[0]
     };
 
-    AppState.products.unshift(newProduct);
-    showToast(`Novo produto "${name}" adicionado ao catálogo!`, "success");
+    CloudDB.state.customProducts.unshift(newProduct);
+    showToast(`Novo produto "${name}" (${newSku}) publicado na nuvem!`, "success");
+    resetAdminForm();
+    syncCloudDatabase(`Cadastrou novo produto ${newSku}`);
   }
-
-  saveProductsToStorage();
-  resetAdminForm();
-  renderAll();
 }
 
 function editProductInAdmin(productId) {
-  const product = AppState.products.find((p) => p.id === productId);
+  const product = AppState.allProducts.find((p) => p.id === productId);
   if (!product) return;
 
   AppState.admin.editingId = product.id;
 
   document.getElementById("admin-form-title").textContent = `Editando: ${product.name}`;
-  document.getElementById("admin-submit-btn-text").textContent = "Salvar Alterações no Produto";
+  document.getElementById("admin-submit-btn-text").textContent = "Salvar Alterações na Nuvem";
   document.getElementById("admin-cancel-edit-btn").classList.remove("hidden");
 
   document.getElementById("admin-prod-name").value = product.name || "";
+  const skuInput = document.getElementById("admin-prod-sku");
+  if (skuInput) skuInput.value = (product.sku || "").replace(/^CÓD\.\s*/i, "");
   document.getElementById("admin-prod-price").value = product.price || "";
   document.getElementById("admin-prod-old-price").value = product.oldPrice || "";
   document.getElementById("admin-prod-gender").value = product.gender || "Feminino";
@@ -1844,43 +2375,39 @@ function resetAdminForm() {
 }
 
 function deleteProductFromAdmin(productId) {
-  const product = AppState.products.find((p) => p.id === productId);
-  if (!product) return;
-
-  AppState.products = AppState.products.filter((p) => p.id !== productId);
-  AppState.cart = AppState.cart.filter((item) => item.productId !== productId);
-  AppState.favorites = AppState.favorites.filter((id) => id !== productId);
-
-  saveProductsToStorage();
-  saveCartToStorage();
-  saveFavoritesToStorage();
-
-  if (AppState.admin.editingId === productId) {
-    resetAdminForm();
-  }
-
-  renderAll();
-  showToast(`Item "${product.name}" removido do catálogo.`, "info");
+  // Em vez de apagar sem volta, alterna o status de Retirado/Vendido (ou reativa se já estava retirado)
+  toggleProductSoldOut(productId);
 }
 
 function toggleProductFeaturedAdmin(productId) {
-  const product = AppState.products.find((p) => p.id === productId);
+  const product = AppState.allProducts.find((p) => p.id === productId);
   if (!product) return;
-  product.featured = !product.featured;
-  saveProductsToStorage();
-  renderAll();
+
+  const nextFeatured = !product.featured;
+  if (!CloudDB.state.productOverrides[productId]) {
+    CloudDB.state.productOverrides[productId] = {};
+  }
+  CloudDB.state.productOverrides[productId].featured = nextFeatured;
+
   showToast(
-    product.featured ? `"${product.name}" adicionado aos Destaques da Home!` : `"${product.name}" removido dos Destaques.`,
+    nextFeatured ? `"${product.name}" adicionado aos Destaques da Home!` : `"${product.name}" removido dos Destaques.`,
     "success"
   );
+  syncCloudDatabase(`Alterou destaque de ${product.sku}`);
 }
 
 function restoreDefaultCatalog() {
-  AppState.products = [...INITIAL_PRODUCTS];
-  saveProductsToStorage();
+  CloudDB.state = {
+    version: 2,
+    updatedAt: new Date().toISOString(),
+    soldOutIds: [],
+    productOverrides: {},
+    customProducts: [],
+    deletedIds: []
+  };
   resetAdminForm();
-  renderAll();
-  showToast("Catálogo oficial com as 99 peças da Happy Kids restaurado!", "success");
+  showToast("Todas as 99 peças do catálogo oficial foram reativadas na nuvem!", "success");
+  syncCloudDatabase("Restaurou catalogo completo (99 pecas ativas)");
 }
 
 function renderAdminProductsTable() {
@@ -1889,9 +2416,12 @@ function renderAdminProductsTable() {
 
   const q = (AppState.admin.searchQuery || "").trim().toLowerCase();
   const cat = AppState.admin.filterCategory || "todos";
+  const stockFilter = AppState.admin.filterStockStatus || "todos";
 
-  const filtered = AppState.products.filter((p) => {
+  const filtered = AppState.allProducts.filter((p) => {
     if (cat !== "todos" && p.category !== cat) return false;
+    if (stockFilter === "ativos" && p.isSoldOut) return false;
+    if (stockFilter === "vendidos" && !p.isSoldOut) return false;
     if (q) {
       const hay = `${p.name} ${p.sku || ""} ${p.category} ${p.gender}`.toLowerCase();
       if (!hay.includes(q)) return false;
@@ -1903,7 +2433,7 @@ function renderAdminProductsTable() {
     tbody.innerHTML = `
       <tr>
         <td colspan="6" class="py-10 text-center text-slate-500 text-sm">
-          Nenhum produto encontrado no gerenciamento.
+          Nenhum produto encontrado com esses filtros no gerenciamento.
         </td>
       </tr>
     `;
@@ -1914,13 +2444,22 @@ function renderAdminProductsTable() {
     .map((p) => {
       const img = p.images && p.images[0] ? p.images[0] : "";
       return `
-        <tr class="border-b border-slate-100 hover:bg-slate-50/80 transition">
+        <tr class="border-b border-slate-100 transition ${
+          p.isSoldOut ? "bg-rose-50/40 opacity-75" : "hover:bg-slate-50/80"
+        }">
           <td class="py-3.5 px-4">
             <div class="flex items-center gap-3">
               <img src="${img}" alt="${p.name}" class="w-12 h-12 rounded-xl object-contain border border-slate-200 shrink-0 bg-white" />
               <div class="min-w-0">
-                <p class="font-heading font-bold text-slate-800 text-xs sm:text-sm line-clamp-1">${p.name}</p>
-                <p class="text-[11px] text-slate-500 font-semibold">${p.sku || p.id} • ${p.gender}</p>
+                <div class="flex items-center gap-1.5">
+                  <span class="px-2 py-0.5 rounded bg-slate-900 text-white font-heading font-bold text-[10px]">${p.sku || p.id}</span>
+                  ${
+                    p.isSoldOut
+                      ? `<span class="px-2 py-0.5 rounded bg-rose-600 text-white font-heading font-bold text-[10px]">RETIRADO / VENDIDO</span>`
+                      : `<span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-heading font-bold text-[10px]">EM ESTOQUE</span>`
+                  }
+                </div>
+                <p class="font-heading font-bold text-slate-800 text-xs sm:text-sm line-clamp-1 mt-1">${p.name}</p>
               </div>
             </div>
           </td>
@@ -1936,11 +2475,6 @@ function renderAdminProductsTable() {
           </td>
           <td class="py-3.5 px-4">
             <p class="font-heading font-extrabold text-slate-900 text-sm">${formatCurrency(p.price)}</p>
-            ${
-              p.oldPrice
-                ? `<p class="text-[11px] text-slate-400 line-through">${formatCurrency(p.oldPrice)}</p>`
-                : ""
-            }
           </td>
           <td class="py-3.5 px-4 text-center">
             <button onclick="toggleProductFeaturedAdmin('${p.id}')"
@@ -1955,20 +2489,28 @@ function renderAdminProductsTable() {
           </td>
           <td class="py-3.5 px-4 text-right">
             <div class="inline-flex items-center gap-1.5">
-              <button onclick="openProductDetail('${p.id}')" title="Visualizar na Loja"
-                class="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition cursor-pointer">
-                <i data-lucide="external-link" class="w-4 h-4"></i>
-              </button>
-              <button onclick="editProductInAdmin('${p.id}')" title="Editar Produto"
+              <button onclick="editProductInAdmin('${p.id}')" title="Editar Preço / Tamanhos"
                 class="px-3 py-1.5 rounded-xl bg-blue-50 hover:bg-[#2B6EB5] text-[#2B6EB5] hover:text-white font-heading font-bold text-xs flex items-center gap-1 transition cursor-pointer">
                 <i data-lucide="pencil" class="w-3.5 h-3.5"></i>
                 <span>Editar</span>
               </button>
-              <button onclick="deleteProductFromAdmin('${p.id}')" title="Remover Item Esgotado"
-                class="px-3 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-600 text-rose-600 hover:text-white font-heading font-bold text-xs flex items-center gap-1 transition cursor-pointer">
-                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
-                <span>Excluir</span>
-              </button>
+              ${
+                p.isSoldOut
+                  ? `
+                  <button onclick="toggleProductSoldOut('${p.id}')" title="Reativar no Catálogo"
+                    class="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-heading font-bold text-xs flex items-center gap-1 transition cursor-pointer">
+                    <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+                    <span>Reativar</span>
+                  </button>
+                `
+                  : `
+                  <button onclick="toggleProductSoldOut('${p.id}')" title="Retirar do Catálogo (Peça Vendida)"
+                    class="px-3 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-600 text-rose-600 hover:text-white font-heading font-bold text-xs flex items-center gap-1 transition cursor-pointer">
+                    <i data-lucide="eye-off" class="w-3.5 h-3.5"></i>
+                    <span>Retirar (Vendido)</span>
+                  </button>
+                `
+              }
             </div>
           </td>
         </tr>
@@ -1980,7 +2522,7 @@ function renderAdminProductsTable() {
 }
 
 /* ==========================================================================
-   11. Modais, Menu Mobile, Guia de Tamanhos e Notificações (Toast)
+   12. Modais, Menu Mobile, Guia de Tamanhos e Notificações (Toast)
    ========================================================================== */
 
 function openMobileMenu() {
@@ -2077,6 +2619,14 @@ function setupGlobalListeners() {
   if (adminCatFilter) {
     adminCatFilter.addEventListener("change", (e) => {
       AppState.admin.filterCategory = e.target.value;
+      renderAdminProductsTable();
+    });
+  }
+
+  const adminStockFilter = document.getElementById("admin-filter-stock");
+  if (adminStockFilter) {
+    adminStockFilter.addEventListener("change", (e) => {
+      AppState.admin.filterStockStatus = e.target.value;
       renderAdminProductsTable();
     });
   }
