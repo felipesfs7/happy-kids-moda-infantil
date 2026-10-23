@@ -1,0 +1,173 @@
+/* ==========================================================================
+   Happy Kids Moda Infantil - Custom Stylesheet & UI/UX Tokens
+   Santa Fé do Sul - SP | Tamanhos do RN ao 18
+   ========================================================================== */
+
+:root {
+  /* Cores oficiais inspiradas na logo da Happy Kids */
+  --hk-orange: #F38230;
+  --hk-orange-dark: #DC6B19;
+  --hk-orange-light: #FFF3E8;
+  --hk-blue: #2B6EB5;
+  --hk-blue-dark: #1E548F;
+  --hk-blue-light: #EBF4FF;
+  --hk-pink: #E84C93;
+  --hk-pink-light: #FDF0F6;
+  --hk-green: #2CB667;
+  --hk-green-light: #EAFBF1;
+  --hk-yellow: #FAD02C;
+  --hk-yellow-light: #FEFBEA;
+  --hk-red: #D92344;
+  --hk-whatsapp: #25D366;
+  --hk-whatsapp-dark: #1DA851;
+  --hk-bg-soft: #FAF8F5;
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background-color: var(--hk-bg-soft);
+  color: #1E293B;
+}
+
+h1, h2, h3, h4, h5, h6, .font-heading {
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Padrão de fundo sutil e lúdico para seções especiais */
+.bg-playful-dots {
+  background-color: #FAF8F5;
+  background-image: radial-gradient(#F3823018 1.5px, transparent 1.5px), radial-gradient(#2B6EB518 1.5px, #FAF8F5 1.5px);
+  background-size: 40px 40px;
+  background-position: 0 0, 20px 20px;
+}
+
+.bg-pastel-gradient {
+  background: linear-gradient(135deg, #FFF5EC 0%, #F0F7FF 50%, #FDF2F8 100%);
+}
+
+/* Animações suaves */
+@keyframes floatSlow {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-6px); }
+}
+
+@keyframes pulseSoft {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.04); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-float {
+  animation: floatSlow 4s ease-in-out infinite;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+/* Cards de Produto com micro-interações de alta conversão */
+.product-card {
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 30px -10px rgba(43, 110, 181, 0.12), 0 8px 16px -6px rgba(243, 130, 48, 0.08);
+}
+
+.product-card .product-img-zoom {
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.product-card:hover .product-img-zoom {
+  transform: scale(1.06);
+}
+
+/* Galeria de Produto com Zoom Interativo (Lupa) */
+.zoom-container {
+  position: relative;
+  overflow: hidden;
+  cursor: zoom-in;
+  user-select: none;
+}
+
+.zoom-container img {
+  transition: transform 0.2s ease-out;
+  transform-origin: center center;
+}
+
+.zoom-container.zoomed img {
+  transform: scale(2.15);
+}
+
+/* Seletor de Tamanhos RN ao 18 */
+.size-pill {
+  transition: all 0.18s ease;
+  min-width: 44px;
+  min-height: 44px;
+}
+
+.size-pill:hover:not(:disabled) {
+  border-color: var(--hk-orange);
+  color: var(--hk-orange);
+  background-color: var(--hk-orange-light);
+}
+
+.size-pill.selected {
+  background-color: var(--hk-orange) !important;
+  border-color: var(--hk-orange) !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 4px 12px rgba(243, 130, 48, 0.35);
+  transform: translateY(-1px);
+}
+
+.size-pill:disabled {
+  opacity: 0.38;
+  cursor: not-allowed;
+  text-decoration: line-through;
+  background-color: #F1F5F9;
+}
+
+/* Scrollbar customizada */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #F1F5F9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94A3B8;
+}
+
+/* Esconder barra de rolagem horizontal mantendo scroll em mobile */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Borda arco-íris Happy Kids */
+.hk-rainbow-bar {
+  height: 4px;
+  background: linear-gradient(90deg, #E84C93 0%, #2CB667 20%, #F38230 40%, #2B6EB5 60%, #D92344 80%, #FAD02C 100%);
+}

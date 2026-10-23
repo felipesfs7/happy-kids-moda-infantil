@@ -1,0 +1,1340 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Happy Kids Moda Infantil | Do RN ao 18 • Santa Fé do Sul - SP</title>
+  <meta name="description" content="Happy Kids Moda Infantil em Santa Fé do Sul - SP. Roupas infantis, bebê e juvenil do tamanho RN ao 18. Enviamos para todo o Brasil em até 10x sem juros!" />
+  <link rel="icon" type="image/png" href="assets/logo.png" />
+
+  <!-- Google Fonts: Poppins (Títulos) & Inter (Corpo) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS v4 Browser CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Estilos Customizados Happy Kids -->
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body class="min-h-screen flex flex-col bg-[#FAF8F5] text-slate-800 antialiased selection:bg-[#F38230] selection:text-white">
+
+  <!-- Barra Arco-Íris Identidade Happy Kids -->
+  <div class="hk-rainbow-bar w-full"></div>
+
+  <!-- ========================================================================
+       A.1 BARRA SUPERIOR (TOP BAR) - Avisos de Conversão & Contato Rápido
+       ======================================================================== -->
+  <div class="bg-[#2B6EB5] text-white text-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-2 flex flex-wrap items-center justify-between gap-2">
+      <!-- Avisos Principais -->
+      <div class="flex flex-wrap items-center gap-3 sm:gap-6 font-medium">
+        <span class="inline-flex items-center gap-1.5">
+          <i data-lucide="truck" class="w-3.5 h-3.5 text-[#FAD02C]"></i>
+          <span>Enviamos para <strong>todo o Brasil</strong></span>
+        </span>
+        <span class="hidden sm:inline text-white/40">|</span>
+        <span class="inline-flex items-center gap-1.5">
+          <i data-lucide="credit-card" class="w-3.5 h-3.5 text-[#FAD02C]"></i>
+          <span>Até <strong>10x sem juros</strong> ou <strong>5% OFF no PIX</strong></span>
+        </span>
+        <span class="hidden lg:inline text-white/40">|</span>
+        <span class="hidden lg:inline-flex items-center gap-1.5">
+          <i data-lucide="sparkles" class="w-3.5 h-3.5 text-[#FAD02C]"></i>
+          <span>Tamanhos do <strong>RN ao 18</strong></span>
+        </span>
+      </div>
+
+      <!-- Contato e Endereço Rápido -->
+      <div class="flex items-center gap-4 ml-auto">
+        <button onclick="navigateTo('contact')" class="hidden md:inline-flex items-center gap-1 hover:text-[#FAD02C] transition cursor-pointer">
+          <i data-lucide="map-pin" class="w-3.5 h-3.5"></i>
+          <span>Santa Fé do Sul - SP</span>
+        </button>
+        <button onclick="openStoreWhatsApp()" class="inline-flex items-center gap-1.5 font-bold bg-white/15 hover:bg-white/25 px-2.5 py-1 rounded-full transition cursor-pointer">
+          <i data-lucide="phone-call" class="w-3.5 h-3.5 text-[#FAD02C]"></i>
+          <span>(17) 99773-2964</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       A.2 CABEÇALHO E MENU DE NAVEGAÇÃO (STICKY HEADER)
+       ======================================================================== -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+      <div class="flex items-center justify-between h-20 gap-3 sm:gap-6">
+        
+        <!-- Botão Menu Mobile + Logotipo Oficial Happy Kids -->
+        <div class="flex items-center gap-3">
+          <button onclick="openMobileMenu()" aria-label="Abrir Menu"
+            class="lg:hidden p-2.5 rounded-xl bg-slate-100 hover:bg-orange-50 text-slate-700 hover:text-[#F38230] transition cursor-pointer">
+            <i data-lucide="menu" class="w-6 h-6"></i>
+          </button>
+
+          <a href="#inicio" onclick="event.preventDefault(); navigateTo('home');" class="flex items-center gap-3 group">
+            <img src="assets/logo.png" alt="Happy Kids Moda Infantil"
+              class="h-14 sm:h-16 w-auto object-contain rounded-xl transition-transform group-hover:scale-105" />
+            <div class="hidden sm:block">
+              <div class="font-heading font-extrabold text-lg leading-none tracking-tight">
+                <span class="text-[#F38230]">Happy</span> <span class="text-[#2B6EB5]">Kids</span>
+              </div>
+              <p class="text-[10px] font-heading font-bold tracking-[0.18em] text-[#2B6EB5] uppercase mt-0.5">
+                Moda Infantil • RN ao 18
+              </p>
+            </div>
+          </a>
+        </div>
+
+        <!-- Barra de Busca Inteligente (Desktop) -->
+        <div class="hidden md:flex flex-1 max-w-md relative">
+          <input id="header-search-input" type="search"
+            placeholder="Buscar vestido, conjunto, body, tamanho (ex: RN, 4, 14)..."
+            class="w-full pl-11 pr-20 py-2.5 rounded-2xl bg-slate-100/90 focus:bg-white border-2 border-transparent focus:border-[#F38230] text-sm text-slate-800 outline-none transition" />
+          <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2"></i>
+          <button onclick="navigateWithFilter({ search: document.getElementById('header-search-input').value })"
+            class="absolute right-1.5 top-1/2 -translate-y-1/2 px-3 py-1.5 rounded-xl bg-[#F38230] hover:bg-[#DC6B19] text-white font-heading font-bold text-xs transition cursor-pointer">
+            Buscar
+          </button>
+        </div>
+
+        <!-- Ícones de Ação: Painel do Lojista, Favoritos, Sacola e WhatsApp -->
+        <div class="flex items-center gap-2 sm:gap-2.5">
+          <!-- Botão Acesso Rápido ao Painel do Lojista (CMS) -->
+          <button onclick="navigateTo('admin')" data-nav-btn="admin"
+            title="Gerenciamento / Painel do Lojista"
+            class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200/80 font-heading font-bold text-xs transition cursor-pointer">
+            <i data-lucide="sliders-horizontal" class="w-4 h-4 text-[#F38230]"></i>
+            <span class="hidden sm:inline">Painel Lojista</span>
+          </button>
+
+          <!-- Favoritos -->
+          <button onclick="openFavoritesDrawer()" aria-label="Meus Favoritos"
+            class="relative p-2.5 rounded-xl bg-slate-100 hover:bg-rose-50 text-slate-700 hover:text-rose-600 transition cursor-pointer">
+            <i data-lucide="heart" class="w-5 h-5"></i>
+            <span class="fav-count-badge hidden absolute -top-1 -right-1 min-w-[20px] h-5 px-1 rounded-full bg-rose-500 text-white font-heading font-bold text-[11px] flex items-center justify-center shadow-xs">0</span>
+          </button>
+
+          <!-- Carrinho / Sacola de Compras -->
+          <button onclick="openCartDrawer()" aria-label="Sacola de Compras"
+            class="relative p-2.5 sm:px-3.5 sm:py-2.5 rounded-xl bg-orange-50 hover:bg-orange-100 text-[#F38230] border border-orange-200/70 flex items-center gap-2 transition cursor-pointer">
+            <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+            <span class="hidden xl:inline font-heading font-bold text-xs text-slate-800">Sacola</span>
+            <span class="cart-count-badge hidden absolute -top-1.5 -right-1.5 min-w-[20px] h-5 px-1 rounded-full bg-[#F38230] text-white font-heading font-bold text-[11px] flex items-center justify-center shadow-xs">0</span>
+          </button>
+
+          <!-- WhatsApp Direto -->
+          <button onclick="openStoreWhatsApp()" aria-label="Atendimento via WhatsApp"
+            class="p-2.5 sm:px-3.5 sm:py-2.5 rounded-xl bg-[#25D366] hover:bg-[#1DA851] text-white font-heading font-bold text-xs flex items-center gap-1.5 shadow-sm shadow-emerald-500/20 transition cursor-pointer">
+            <i data-lucide="message-circle" class="w-5 h-5"></i>
+            <span class="hidden md:inline">WhatsApp</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Menu de Navegação por Categorias (Desktop) -->
+      <nav class="hidden lg:flex items-center justify-between py-2.5 border-t border-slate-100 text-sm font-heading font-semibold">
+        <div class="flex items-center gap-6">
+          <button onclick="navigateTo('home')" data-nav-btn="home" class="hover:text-[#F38230] transition cursor-pointer flex items-center gap-1.5">
+            <i data-lucide="home" class="w-4 h-4"></i>
+            <span>Início</span>
+          </button>
+          <button onclick="navigateWithFilter({ gender: 'Feminino' })" data-nav-btn="meninas" class="hover:text-[#E84C93] transition cursor-pointer flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-[#E84C93]"></span>
+            <span>Meninas</span>
+          </button>
+          <button onclick="navigateWithFilter({ gender: 'Masculino' })" data-nav-btn="meninos" class="hover:text-[#2B6EB5] transition cursor-pointer flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-[#2B6EB5]"></span>
+            <span>Meninos</span>
+          </button>
+          <button onclick="navigateWithFilter({ ageGroup: 'bebe' })" data-nav-btn="bebes" class="hover:text-[#2CB667] transition cursor-pointer flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-[#2CB667]"></span>
+            <span>Bebês (RN ao G)</span>
+          </button>
+          <button onclick="navigateWithFilter({ ageGroup: 'juvenil' })" data-nav-btn="juvenil" class="hover:text-[#F38230] transition cursor-pointer flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-[#F38230]"></span>
+            <span>Juvenil (10 ao 18)</span>
+          </button>
+          <button onclick="resetCatalogFilters(); navigateTo('catalog');" data-nav-btn="catalog" class="hover:text-[#F38230] transition cursor-pointer">
+            Catálogo Completo
+          </button>
+          <button onclick="navigateTo('about')" data-nav-btn="about" class="hover:text-[#F38230] transition cursor-pointer">
+            Sobre a Loja
+          </button>
+          <button onclick="navigateTo('contact')" data-nav-btn="contact" class="hover:text-[#F38230] transition cursor-pointer">
+            Contato & Endereço
+          </button>
+        </div>
+
+        <button onclick="openSizeGuideModal()" class="text-xs font-bold text-[#2B6EB5] hover:text-[#F38230] flex items-center gap-1.5 transition cursor-pointer">
+          <i data-lucide="ruler" class="w-4 h-4"></i>
+          <span>Guia de Tamanhos (RN ao 18)</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ========================================================================
+       CONTEÚDO PRINCIPAL (VIEWS SPA)
+       ======================================================================== -->
+  <main class="flex-1">
+
+    <!-- ======================================================================
+         VIEW 1: PÁGINA INICIAL (HOME)
+         ====================================================================== -->
+    <section id="view-home" class="space-y-12 sm:space-y-16 pb-16">
+      
+      <!-- Hero Banner Carousel -->
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 pt-5 sm:pt-7">
+        <div id="hero-carousel-container"></div>
+      </div>
+
+      <!-- Vitrine de Categorias (Atalhos Visuais) -->
+      <div class="max-w-7xl mx-auto px-4 sm:px-6">
+        <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-2 mb-6">
+          <div>
+            <span class="text-xs font-heading font-bold uppercase tracking-wider text-[#F38230]">Navegue por Fase & Estilo</span>
+            <h2 class="font-heading text-2xl sm:text-3xl font-extrabold text-slate-900">Categorias em Destaque</h2>
+          </div>
+          <button onclick="resetCatalogFilters(); navigateTo('catalog');"
+            class="inline-flex items-center gap-1 text-sm font-heading font-bold text-[#2B6EB5] hover:text-[#F38230] transition cursor-pointer">
+            <span>Ver todas as categorias</span>
+            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </button>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-5">
+          <!-- Card 1: Bebê -->
+          <div onclick="navigateWithFilter({ ageGroup: 'bebe' })"
+            class="group relative rounded-3xl p-4 sm:p-5 bg-gradient-to-b from-sky-50 to-white border-2 border-sky-100 hover:border-[#2B6EB5] shadow-xs hover:shadow-md transition-all cursor-pointer text-center">
+            <div class="w-20 h-20 sm:w-24 sm:h-24 mx-auto rounded-full overflow-hidden border-4 border-white shadow-md mb-3 bg-white">
+              <img src="assets/produtos/prod-018.jpg" alt="Linha Bebê"
+                class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+            </div>
+            <span class="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-sky-100 text-[#2B6EB5] mb-1">RN, P, M, G</span>
+            <h3 class="font-heading font-extrabold text-slate-900 text-base group-hover:text-[#2B6EB5]">Mundo Bebê</h3>
+            <p class="text-xs text-slate-500 mt-0.5">Bodies, Macacões & Kits</p>
+          </div>
+
+          <!-- Card 2: Meninas -->
+          <div onclick="navigateWithFilter({ gender: 'Feminino' })"
+            class="group relative rounded-3xl p-4 sm:p-5 bg-gradient-to-b from-pink-50 to-white border-2 border-pink-100 hover:border-[#E84C93] shadow-xs hover:shadow-md transition-all cursor-pointer text-center">
+            <div class="w-20 h-20 sm:w-24 sm:h-24 mx-auto rounded-full overflow-hidden border-4 border-white shadow-md mb-3 bg-white">
+              <img src="assets/produtos/prod-002.jpg" alt="Moda Meninas"
+                class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+            </div>
+            <span class="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-pink-100 text-[#E84C93] mb-1">RN ao 16</span>
+            <h3 class="font-heading font-extrabold text-slate-900 text-base group-hover:text-[#E84C93]">Meninas</h3>
+            <p class="text-xs text-slate-500 mt-0.5">Vestidos, Conjuntos & Blusas</p>
+          </div>
+
+          <!-- Card 3: Meninos -->
+          <div onclick="navigateWithFilter({ gender: 'Masculino' })"
+            class="group relative rounded-3xl p-4 sm:p-5 bg-gradient-to-b from-orange-50 to-white border-2 border-orange-100 hover:border-[#F38230] shadow-xs hover:shadow-md transition-all cursor-pointer text-center">
+            <div class="w-20 h-20 sm:w-24 sm:h-24 mx-auto rounded-full overflow-hidden border-4 border-white shadow-md mb-3 bg-white">
+              <img src="assets/produtos/prod-055.jpg" alt="Moda Meninos"
+                class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+            </div>
+            <span class="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-orange-100 text-[#F38230] mb-1">RN ao 16</span>
+            <h3 class="font-heading font-extrabold text-slate-900 text-base group-hover:text-[#F38230]">Meninos</h3>
+            <p class="text-xs text-slate-500 mt-0.5">Conjuntos, Regatas & Cargo</p>
+          </div>
+
+          <!-- Card 4: Juvenil -->
+          <div onclick="navigateWithFilter({ ageGroup: 'juvenil' })"
+            class="group relative rounded-3xl p-4 sm:p-5 bg-gradient-to-b from-emerald-50 to-white border-2 border-emerald-100 hover:border-[#2CB667] shadow-xs hover:shadow-md transition-all cursor-pointer text-center">
+            <div class="w-20 h-20 sm:w-24 sm:h-24 mx-auto rounded-full overflow-hidden border-4 border-white shadow-md mb-3 bg-white">
+              <img src="assets/produtos/prod-001.jpg" alt="Moda Juvenil"
+                class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+            </div>
+            <span class="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-700 mb-1">Tam. 12 ao 16</span>
+            <h3 class="font-heading font-extrabold text-slate-900 text-base group-hover:text-emerald-700">Juvenil / Teen</h3>
+            <p class="text-xs text-slate-500 mt-0.5">Conjuntos, Blusas & Vestidos</p>
+          </div>
+
+          <!-- Card 5: Pijamas -->
+          <div onclick="navigateWithFilter({ category: 'Pijamas' })"
+            class="col-span-2 sm:col-span-1 group relative rounded-3xl p-4 sm:p-5 bg-gradient-to-b from-amber-50 to-white border-2 border-amber-100 hover:border-amber-400 shadow-xs hover:shadow-md transition-all cursor-pointer text-center">
+            <div class="w-20 h-20 sm:w-24 sm:h-24 mx-auto rounded-full overflow-hidden border-4 border-white shadow-md mb-3 bg-white">
+              <img src="assets/produtos/prod-076.jpg" alt="Pijamas Infantis e Juvenis"
+                class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+            </div>
+            <span class="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 mb-1">Hora do Sono</span>
+            <h3 class="font-heading font-extrabold text-slate-900 text-base group-hover:text-amber-700">Pijamas</h3>
+            <p class="text-xs text-slate-500 mt-0.5">Microfibra & Brilha no Escuro</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Régua Rápida de Tamanhos (RN ao 18) -->
+      <div class="max-w-7xl mx-auto px-4 sm:px-6">
+        <div class="bg-white rounded-3xl p-5 sm:p-7 border border-slate-200/80 shadow-xs">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+            <div>
+              <h3 class="font-heading font-extrabold text-lg sm:text-xl text-slate-900 flex items-center gap-2">
+                <i data-lucide="sparkles" class="w-5 h-5 text-[#F38230]"></i>
+                <span>Compre Direto pelo Tamanho da Criança (RN ao 18)</span>
+              </h3>
+              <p class="text-xs sm:text-sm text-slate-500">Toque em um tamanho abaixo para filtrar instantaneamente as peças disponíveis:</p>
+            </div>
+            <button onclick="openSizeGuideModal()" class="text-xs font-heading font-bold text-[#2B6EB5] hover:underline flex items-center gap-1 cursor-pointer">
+              <i data-lucide="ruler" class="w-4 h-4"></i>
+              <span>Dúvida no tamanho? Veja a tabela</span>
+            </button>
+          </div>
+          <div id="home-size-ruler" class="flex items-center gap-2 sm:gap-2.5 overflow-x-auto pb-2 no-scrollbar"></div>
+        </div>
+      </div>
+
+      <!-- Produtos em Destaque na Home -->
+      <div class="max-w-7xl mx-auto px-4 sm:px-6">
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-7">
+          <div>
+            <span class="text-xs font-heading font-bold uppercase tracking-wider text-[#2B6EB5]">Curadoria Especial Happy Kids</span>
+            <h2 class="font-heading text-2xl sm:text-3xl font-extrabold text-slate-900">Produtos em Destaque</h2>
+          </div>
+
+          <!-- Abas Rápidas -->
+          <div class="flex flex-wrap items-center gap-2">
+            <button onclick="setHomeTab('destaques')" data-home-tab="destaques"
+              class="px-4 py-2 rounded-full font-heading font-bold text-xs sm:text-sm bg-[#F38230] text-white shadow-sm transition cursor-pointer">
+              ⭐ Destaques
+            </button>
+            <button onclick="setHomeTab('meninas')" data-home-tab="meninas"
+              class="px-4 py-2 rounded-full font-heading font-semibold text-xs sm:text-sm bg-white text-slate-600 hover:bg-orange-50 hover:text-[#F38230] border border-slate-200 transition cursor-pointer">
+              👧 Meninas
+            </button>
+            <button onclick="setHomeTab('meninos')" data-home-tab="meninos"
+              class="px-4 py-2 rounded-full font-heading font-semibold text-xs sm:text-sm bg-white text-slate-600 hover:bg-orange-50 hover:text-[#F38230] border border-slate-200 transition cursor-pointer">
+              👦 Meninos
+            </button>
+            <button onclick="setHomeTab('bebe')" data-home-tab="bebe"
+              class="px-4 py-2 rounded-full font-heading font-semibold text-xs sm:text-sm bg-white text-slate-600 hover:bg-orange-50 hover:text-[#F38230] border border-slate-200 transition cursor-pointer">
+              🍼 Bebês (RN-G)
+            </button>
+            <button onclick="setHomeTab('juvenil')" data-home-tab="juvenil"
+              class="px-4 py-2 rounded-full font-heading font-semibold text-xs sm:text-sm bg-white text-slate-600 hover:bg-orange-50 hover:text-[#F38230] border border-slate-200 transition cursor-pointer">
+              😎 Juvenil (10-18)
+            </button>
+          </div>
+        </div>
+
+        <!-- Grade de Produtos -->
+        <div id="home-featured-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6"></div>
+
+        <div class="mt-9 text-center">
+          <button onclick="resetCatalogFilters(); navigateTo('catalog');"
+            class="inline-flex items-center gap-2 px-7 py-4 rounded-2xl bg-[#2B6EB5] hover:bg-[#1E548F] text-white font-heading font-bold text-sm sm:text-base shadow-lg shadow-blue-600/20 transition transform hover:-translate-y-0.5 cursor-pointer">
+            <i data-lucide="layout-grid" class="w-5 h-5"></i>
+            <span>Ver Catálogo Completo com Filtros</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Seção de Diferenciais (Trust & Conversão) -->
+      <div class="max-w-7xl mx-auto px-4 sm:px-6">
+        <div class="bg-pastel-gradient rounded-3xl p-6 sm:p-10 border border-orange-100">
+          <div class="text-center max-w-2xl mx-auto mb-8">
+            <span class="text-xs font-heading font-bold uppercase tracking-wider text-[#F38230]">Compre com Tranquilidade</span>
+            <h2 class="font-heading text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1">
+              Por que as mamães e papais amam a Happy Kids?
+            </h2>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            <!-- Diferencial 1 -->
+            <div class="bg-white/95 rounded-2xl p-5 border border-white shadow-xs flex flex-col items-start">
+              <div class="w-12 h-12 rounded-2xl bg-sky-100 text-[#2B6EB5] flex items-center justify-center mb-4">
+                <i data-lucide="truck" class="w-6 h-6"></i>
+              </div>
+              <h3 class="font-heading font-bold text-base text-slate-900 mb-1.5">Envio para Todo o Brasil</h3>
+              <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                Despachamos seu pedido com rapidez e código de rastreio de Santa Fé do Sul - SP para qualquer cidade do Brasil.
+              </p>
+            </div>
+
+            <!-- Diferencial 2 -->
+            <div class="bg-white/95 rounded-2xl p-5 border border-white shadow-xs flex flex-col items-start">
+              <div class="w-12 h-12 rounded-2xl bg-orange-100 text-[#F38230] flex items-center justify-center mb-4">
+                <i data-lucide="credit-card" class="w-6 h-6"></i>
+              </div>
+              <h3 class="font-heading font-bold text-base text-slate-900 mb-1.5">Parcelamento em até 10x</h3>
+              <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                Renove o guarda-roupa das crianças parcelando em até <strong>10x sem juros</strong> no cartão ou ganhe <strong>5% OFF no PIX</strong>.
+              </p>
+            </div>
+
+            <!-- Diferencial 3 -->
+            <div class="bg-white/95 rounded-2xl p-5 border border-white shadow-xs flex flex-col items-start">
+              <div class="w-12 h-12 rounded-2xl bg-emerald-100 text-[#25D366] flex items-center justify-center mb-4">
+                <i data-lucide="message-circle-heart" class="w-6 h-6"></i>
+              </div>
+              <h3 class="font-heading font-bold text-base text-slate-900 mb-1.5">Atendimento VIP via WhatsApp</h3>
+              <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                Quer ver vídeo da peça ou conferir medidas com fita métrica? Nossa equipe atende com carinho pelo <strong>(17) 99773-2964</strong>.
+              </p>
+            </div>
+
+            <!-- Diferencial 4 -->
+            <div class="bg-white/95 rounded-2xl p-5 border border-white shadow-xs flex flex-col items-start">
+              <div class="w-12 h-12 rounded-2xl bg-pink-100 text-[#E84C93] flex items-center justify-center mb-4">
+                <i data-lucide="shield-check" class="w-6 h-6"></i>
+              </div>
+              <h3 class="font-heading font-bold text-base text-slate-900 mb-1.5">Loja Física Real & Confiável</h3>
+              <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                Visite nossa loja na <strong>Rua 09, nº 865 - Centro, Santa Fé do Sul - SP</strong>. Compre online e retire grátis quando quiser!
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ======================================================================
+         VIEW 2: PÁGINA DE CATÁLOGO / VITRINE COM FILTROS (REQUISITO B)
+         ====================================================================== -->
+    <section id="view-catalog" class="hidden max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
+      
+      <!-- Cabeçalho da Vitrine -->
+      <div class="bg-gradient-to-r from-[#FFF5EC] via-white to-[#EBF4FF] rounded-3xl p-6 sm:p-8 border border-slate-200/80 mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <span class="text-xs font-heading font-bold uppercase tracking-wider text-[#F38230]">Vitrine Completa Happy Kids</span>
+          <h1 class="font-heading text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1">
+            Catálogo de Moda Infantil & Juvenil (RN ao 18)
+          </h1>
+          <p class="text-xs sm:text-sm text-slate-600 mt-1">
+            Use os filtros inteligentes para encontrar o look perfeito por gênero, idade, tamanho ou categoria.
+          </p>
+        </div>
+
+        <!-- Botão de Abrir Filtros no Celular -->
+        <button onclick="openMobileFiltersDrawer()"
+          class="lg:hidden inline-flex items-center justify-center gap-2 px-5 py-3 rounded-2xl bg-[#2B6EB5] text-white font-heading font-bold text-sm shadow-sm cursor-pointer">
+          <i data-lucide="filter" class="w-4 h-4"></i>
+          <span>Filtrar por Tamanho / Idade / Categoria</span>
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        
+        <!-- Barra Lateral de Filtros (Sidebar Desktop / Drawer Mobile) -->
+        <aside id="catalog-filters-sidebar" class="hidden lg:block lg:col-span-3 bg-white rounded-3xl border border-slate-200/90 p-5 space-y-6 shadow-xs">
+          
+          <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+            <h2 class="font-heading font-extrabold text-base text-slate-900 flex items-center gap-2">
+              <i data-lucide="sliders-horizontal" class="w-4 h-4 text-[#F38230]"></i>
+              <span>Filtros</span>
+            </h2>
+            <div class="flex items-center gap-3">
+              <button onclick="resetCatalogFilters()" class="text-xs font-bold text-[#2B6EB5] hover:underline cursor-pointer">
+                Limpar
+              </button>
+              <button onclick="closeMobileFiltersDrawer()" class="lg:hidden p-1.5 rounded-lg bg-slate-100 text-slate-700">
+                <i data-lucide="x" class="w-5 h-5"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Busca por Palavra-Chave -->
+          <div>
+            <label class="block font-heading font-bold text-xs uppercase tracking-wider text-slate-500 mb-2">
+              Buscar Peça
+            </label>
+            <div class="relative">
+              <input id="catalog-search-input" type="search" placeholder="Ex: vestido, polo, jeans..."
+                class="w-full pl-9 pr-3 py-2 rounded-xl bg-slate-50 border border-slate-200 focus:border-[#F38230] text-sm outline-none" />
+              <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
+            </div>
+          </div>
+
+          <!-- 1. Filtro por Gênero -->
+          <div>
+            <h3 class="font-heading font-bold text-xs uppercase tracking-wider text-slate-500 mb-2">
+              Por Gênero
+            </h3>
+            <div class="space-y-1">
+              <button onclick="setCatalogFilter('gender', 'todos')" data-filter-gender="todos">
+                <span>Todos os Gêneros</span>
+              </button>
+              <button onclick="setCatalogFilter('gender', 'Feminino')" data-filter-gender="Feminino">
+                <span>👧 Feminino (Meninas)</span>
+              </button>
+              <button onclick="setCatalogFilter('gender', 'Masculino')" data-filter-gender="Masculino">
+                <span>👦 Masculino (Meninos)</span>
+              </button>
+              <button onclick="setCatalogFilter('gender', 'Unissex')" data-filter-gender="Unissex">
+                <span>✨ Unissex</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- 2. Filtro por Faixa Etária -->
+          <div>
+            <h3 class="font-heading font-bold text-xs uppercase tracking-wider text-slate-500 mb-2">
+              Por Faixa Etária
+            </h3>
+            <div class="space-y-1">
+              <button onclick="setCatalogFilter('ageGroup', 'todos')" data-filter-age="todos">
+                <span>Todas as Faixas (RN ao 18)</span>
+              </button>
+              <button onclick="setCatalogFilter('ageGroup', 'bebe')" data-filter-age="bebe">
+                <span>🍼 Bebê (RN, P, M, G)</span>
+              </button>
+              <button onclick="setCatalogFilter('ageGroup', '1-a-3')" data-filter-age="1-a-3">
+                <span>🧸 1 a 3 anos</span>
+              </button>
+              <button onclick="setCatalogFilter('ageGroup', '4-a-10')" data-filter-age="4-a-10">
+                <span>🎈 4 a 10 anos</span>
+              </button>
+              <button onclick="setCatalogFilter('ageGroup', 'juvenil')" data-filter-age="juvenil">
+                <span>😎 Juvenil até 18</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- 3. Filtro por Tamanho Específico (RN ao 18) -->
+          <div>
+            <h3 class="font-heading font-bold text-xs uppercase tracking-wider text-slate-500 mb-2">
+              Por Tamanho Específico
+            </h3>
+            <div id="catalog-filter-sizes" class="flex flex-wrap gap-1.5"></div>
+          </div>
+
+          <!-- 4. Filtro por Categoria de Roupa -->
+          <div>
+            <h3 class="font-heading font-bold text-xs uppercase tracking-wider text-slate-500 mb-2">
+              Por Categoria de Roupa
+            </h3>
+            <div class="space-y-1">
+              <button onclick="setCatalogFilter('category', 'todos')" data-filter-category="todos">
+                <span>Todas as Categorias</span>
+              </button>
+              <button onclick="setCatalogFilter('category', 'Conjuntos')" data-filter-category="Conjuntos">
+                <span>👕 Conjuntos</span>
+              </button>
+              <button onclick="setCatalogFilter('category', 'Vestidos')" data-filter-category="Vestidos">
+                <span>👗 Vestidos</span>
+              </button>
+              <button onclick="setCatalogFilter('category', 'Body')" data-filter-category="Body">
+                <span>👶 Body & Macacões Bebê</span>
+              </button>
+              <button onclick="setCatalogFilter('category', 'Pijamas')" data-filter-category="Pijamas">
+                <span>🌙 Pijamas</span>
+              </button>
+              <button onclick="setCatalogFilter('category', 'Blusas')" data-filter-category="Blusas">
+                <span>👚 Blusas & Camisetas</span>
+              </button>
+              <button onclick="setCatalogFilter('category', 'Calças')" data-filter-category="Calças">
+                <span>🩳 Shorts & Calças</span>
+              </button>
+            </div>
+          </div>
+
+          <button onclick="closeMobileFiltersDrawer()"
+            class="lg:hidden w-full py-3 rounded-2xl bg-[#F38230] text-white font-heading font-bold text-sm">
+            Ver Resultados Filtrados
+          </button>
+        </aside>
+
+        <!-- Área Principal da Vitrine (Ordenação + Chips + Grade) -->
+        <div class="lg:col-span-9 space-y-5">
+          
+          <!-- Barra de Contagem, Chips e Ordenação -->
+          <div class="bg-white rounded-2xl p-4 border border-slate-200/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div class="space-y-1.5">
+              <p id="catalog-results-count" class="font-heading font-bold text-sm text-slate-800">Carregando produtos...</p>
+              <div id="catalog-active-chips" class="flex flex-wrap items-center gap-1.5"></div>
+            </div>
+
+            <!-- Ordenação -->
+            <div class="flex items-center gap-2 shrink-0">
+              <label for="catalog-sort-select" class="text-xs font-semibold text-slate-500">Ordenar por:</label>
+              <select id="catalog-sort-select" onchange="setCatalogFilter('sortBy', this.value)"
+                class="px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 font-heading font-semibold text-xs sm:text-sm text-slate-800 outline-none focus:border-[#F38230] cursor-pointer">
+                <option value="relevancia">Destaques / Relevância</option>
+                <option value="menor-preco">Menor Preço</option>
+                <option value="maior-preco">Maior Preço</option>
+                <option value="mais-recentes">Mais Recentes</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Grade de Produtos Filtrados -->
+          <div id="catalog-products-grid" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         VIEW 3: PÁGINA DE DETALHES DO PRODUTO (REQUISITO C)
+         ====================================================================== -->
+    <section id="view-product" class="hidden max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
+      <div id="product-detail-container"></div>
+    </section>
+
+    <!-- ======================================================================
+         VIEW 4: SOBRE A LOJA HAPPY KIDS (SANTA FÉ DO SUL - SP)
+         ====================================================================== -->
+    <section id="view-about" class="hidden max-w-6xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
+      <div class="bg-white rounded-3xl border border-slate-200 p-6 sm:p-12 shadow-xs">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          <div class="lg:col-span-6 space-y-4">
+            <span class="px-3 py-1 rounded-full bg-orange-100 text-[#F38230] font-heading font-bold text-xs">
+              Nossa História em Santa Fé do Sul - SP
+            </span>
+            <h1 class="font-heading text-3xl sm:text-4xl font-extrabold text-slate-900 leading-tight">
+              Vestindo a infância com alegria, qualidade e carinho do RN ao 18!
+            </h1>
+            <p class="text-slate-600 text-sm sm:text-base leading-relaxed">
+              A <strong>Happy Kids Moda Infantil</strong> nasceu com o propósito de oferecer às famílias de <strong>Santa Fé do Sul - SP</strong> e de todo o Brasil roupas infantis que unem conforto verdadeiro, durabilidade para brincar sem limites e aquele visual encantador que rende memórias inesquecíveis.
+            </p>
+            <p class="text-slate-600 text-sm sm:text-base leading-relaxed">
+              Trabalhamos com curadoria completa desde o enxoval de recém-nascido (<strong>RN, P, M, G</strong>), passando pelos primeiros passos (<strong>1 a 3 anos</strong>) e fase infantil (<strong>4 a 10 anos</strong>), até a moda juvenil cheia de atitude (<strong>tamanhos 12 ao 18</strong>).
+            </p>
+
+            <div class="grid grid-cols-2 gap-4 pt-3">
+              <div class="p-4 rounded-2xl bg-sky-50 border border-sky-100">
+                <p class="font-heading font-extrabold text-2xl text-[#2B6EB5]">RN ao 18</p>
+                <p class="text-xs text-slate-600 font-medium">Grade completa para todas as idades</p>
+              </div>
+              <div class="p-4 rounded-2xl bg-orange-50 border border-orange-100">
+                <p class="font-heading font-extrabold text-2xl text-[#F38230]">10x s/ Juros</p>
+                <p class="text-xs text-slate-600 font-medium">Parcelamento amigo do bolso</p>
+              </div>
+            </div>
+
+            <div class="pt-4 flex flex-wrap gap-3">
+              <button onclick="navigateTo('catalog')" class="px-6 py-3.5 rounded-2xl bg-[#F38230] text-white font-heading font-bold text-sm cursor-pointer">
+                Explorar Catálogo
+              </button>
+              <button onclick="openStoreWhatsApp()" class="px-6 py-3.5 rounded-2xl bg-[#25D366] text-white font-heading font-bold text-sm flex items-center gap-2 cursor-pointer">
+                <i data-lucide="message-circle" class="w-4 h-4"></i>
+                <span>Falar com a Loja no WhatsApp</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="lg:col-span-6 flex flex-col items-center">
+            <div class="bg-[#FAF8F5] p-8 rounded-3xl border border-slate-200 text-center max-w-md w-full">
+              <img src="assets/logo.png" alt="Logo Oficial Happy Kids Moda Infantil" class="w-64 h-64 object-contain mx-auto mb-6 rounded-2xl shadow-sm bg-white p-4" />
+              <h3 class="font-heading font-bold text-lg text-slate-900">Loja Física Oficial</h3>
+              <p class="text-sm text-slate-600 mt-1">Rua 09, nº 865 - Centro</p>
+              <p class="text-sm font-bold text-[#2B6EB5]">Santa Fé do Sul - SP</p>
+              <p class="text-xs text-slate-500 mt-2">WhatsApp: (17) 99773-2964</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         VIEW 5: CONTATO & LOCALIZAÇÃO DA LOJA FÍSICA
+         ====================================================================== -->
+    <section id="view-contact" class="hidden max-w-6xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
+        <!-- Informações de Contato Direto -->
+        <div class="lg:col-span-5 bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 space-y-6 shadow-xs">
+          <div>
+            <span class="text-xs font-heading font-bold uppercase tracking-wider text-[#F38230]">Atendimento Próximo e Humanizado</span>
+            <h1 class="font-heading text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1">Visite ou Fale Conosco</h1>
+            <p class="text-sm text-slate-600 mt-2">
+              Estamos no coração de Santa Fé do Sul - SP prontos para atender você presencialmente ou pelo WhatsApp!
+            </p>
+          </div>
+
+          <div class="space-y-4">
+            <div class="flex items-start gap-3.5 p-4 rounded-2xl bg-slate-50 border border-slate-200/70">
+              <div class="w-10 h-10 rounded-xl bg-orange-100 text-[#F38230] flex items-center justify-center shrink-0">
+                <i data-lucide="map-pin" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <h3 class="font-heading font-bold text-sm text-slate-900">Endereço da Loja Física</h3>
+                <p class="text-xs sm:text-sm text-slate-600 mt-0.5">Rua 09, nº 865 - Centro</p>
+                <p class="text-xs sm:text-sm font-semibold text-[#2B6EB5]">Santa Fé do Sul - SP</p>
+                <a href="https://www.google.com/maps/search/?api=1&query=Rua+09+865+Centro+Santa+Fe+do+Sul+SP" target="_blank" rel="noopener noreferrer"
+                  class="inline-flex items-center gap-1 text-xs font-bold text-[#F38230] hover:underline mt-1.5">
+                  <span>Abrir no Google Maps</span>
+                  <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+                </a>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-3.5 p-4 rounded-2xl bg-emerald-50/70 border border-emerald-200/70">
+              <div class="w-10 h-10 rounded-xl bg-[#25D366] text-white flex items-center justify-center shrink-0">
+                <i data-lucide="message-circle" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <h3 class="font-heading font-bold text-sm text-slate-900">WhatsApp & Televendas</h3>
+                <p class="text-sm font-extrabold text-emerald-800 mt-0.5">(17) 99773-2964</p>
+                <p class="text-xs text-slate-600 mt-0.5">Enviamos fotos reais, vídeos das peças e calculamos seu frete na hora.</p>
+                <button onclick="openStoreWhatsApp()" class="mt-2 px-4 py-1.5 rounded-xl bg-[#25D366] text-white font-heading font-bold text-xs cursor-pointer">
+                  Iniciar Conversa Agora
+                </button>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-3.5 p-4 rounded-2xl bg-slate-50 border border-slate-200/70">
+              <div class="w-10 h-10 rounded-xl bg-sky-100 text-[#2B6EB5] flex items-center justify-center shrink-0">
+                <i data-lucide="clock" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <h3 class="font-heading font-bold text-sm text-slate-900">Horário de Atendimento</h3>
+                <p class="text-xs sm:text-sm text-slate-600 mt-0.5">Segunda a Sexta: 09h00 às 18h00</p>
+                <p class="text-xs sm:text-sm text-slate-600">Sábados: 09h00 às 13h00</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Formulário que envia direto para o WhatsApp da loja -->
+        <div class="lg:col-span-7 bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-xs">
+          <h2 class="font-heading text-xl sm:text-2xl font-extrabold text-slate-900 mb-2">
+            Envie uma Mensagem Rápida para Nossa Equipe
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-500 mb-6">
+            Preencha abaixo o que você procura e clique em enviar para abrir a conversa já preenchida no WhatsApp da Happy Kids:
+          </p>
+
+          <form onsubmit="event.preventDefault(); const n=document.getElementById('contact-name').value; const a=document.getElementById('contact-age').value; const m=document.getElementById('contact-msg').value; openStoreWhatsApp(`Olá, Happy Kids! Meu nome é *${n}*.\nProcuro roupas para idade/tamanho: *${a}*.\nMensagem: ${m}`);" class="space-y-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-heading font-bold text-slate-700 mb-1">Seu Nome *</label>
+                <input id="contact-name" type="text" required placeholder="Ex: Mariana Silva"
+                  class="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:border-[#F38230] text-sm outline-none" />
+              </div>
+              <div>
+                <label class="block text-xs font-heading font-bold text-slate-700 mb-1">Tamanho ou Idade da Criança *</label>
+                <input id="contact-age" type="text" required placeholder="Ex: Menina Tam. 4 e Bebê RN"
+                  class="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:border-[#F38230] text-sm outline-none" />
+              </div>
+            </div>
+            <div>
+              <label class="block text-xs font-heading font-bold text-slate-700 mb-1">Como podemos ajudar? *</label>
+              <textarea id="contact-msg" rows="4" required placeholder="Gostaria de ver opções de vestidos de festa ou conjuntos para o dia a dia..."
+                class="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:border-[#F38230] text-sm outline-none"></textarea>
+            </div>
+            <button type="submit"
+              class="w-full py-4 rounded-2xl bg-[#25D366] hover:bg-[#1DA851] text-white font-heading font-bold text-sm sm:text-base flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20 transition cursor-pointer">
+              <i data-lucide="send" class="w-5 h-5"></i>
+              <span>Enviar para o WhatsApp (17) 99773-2964</span>
+            </button>
+          </form>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         VIEW 6: PAINEL ADMINISTRATIVO / CMS DO LOJISTA (REQUISITO D)
+         ====================================================================== -->
+    <section id="view-admin" class="hidden max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-10 space-y-8">
+      
+      <!-- Cabeçalho do Painel do Lojista -->
+      <div class="bg-gradient-to-r from-slate-900 via-[#1E3A5F] to-[#2B6EB5] text-white rounded-3xl p-6 sm:p-8 shadow-md flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/15 text-[#FAD02C] font-heading font-bold text-xs mb-2">
+            <i data-lucide="shield" class="w-3.5 h-3.5"></i>
+            <span>CMS / GESTÃO DE ESTOQUE EM TEMPO REAL</span>
+          </div>
+          <h1 class="font-heading text-2xl sm:text-3xl font-extrabold">Painel do Lojista • Happy Kids</h1>
+          <p class="text-xs sm:text-sm text-slate-200 mt-1">
+            Adicione novos produtos, faça upload de fotos, edite preços/descrições ou remova itens esgotados. Tudo reflete na vitrine na mesma hora!
+          </p>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2.5">
+          <button onclick="navigateTo('catalog')"
+            class="px-4 py-2.5 rounded-xl bg-white/15 hover:bg-white/25 text-white font-heading font-semibold text-xs flex items-center gap-1.5 transition cursor-pointer">
+            <i data-lucide="eye" class="w-4 h-4"></i>
+            <span>Ver Loja como Cliente</span>
+          </button>
+          <button onclick="restoreDefaultCatalog()"
+            class="px-4 py-2.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 border border-amber-300/40 text-amber-200 font-heading font-semibold text-xs flex items-center gap-1.5 transition cursor-pointer">
+            <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+            <span>Restaurar Catálogo Padrão</span>
+          </button>
+          <button onclick="lockAdminPanel()"
+            class="px-4 py-2.5 rounded-xl bg-rose-500/25 hover:bg-rose-500/40 border border-rose-300/40 text-rose-100 font-heading font-semibold text-xs flex items-center gap-1.5 transition cursor-pointer">
+            <i data-lucide="lock" class="w-4 h-4"></i>
+            <span>Bloquear Painel</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Indicadores Rápidos (KPIs) -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div class="bg-white rounded-2xl p-5 border border-slate-200 flex items-center gap-4">
+          <div class="w-12 h-12 rounded-2xl bg-blue-50 text-[#2B6EB5] flex items-center justify-center">
+            <i data-lucide="package" class="w-6 h-6"></i>
+          </div>
+          <div>
+            <p class="text-xs text-slate-500 font-medium">Total de Produtos Ativos</p>
+            <p id="admin-kpi-total" class="font-heading text-2xl font-extrabold text-slate-900">0</p>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-2xl p-5 border border-slate-200 flex items-center gap-4">
+          <div class="w-12 h-12 rounded-2xl bg-amber-50 text-[#F38230] flex items-center justify-center">
+            <i data-lucide="star" class="w-6 h-6"></i>
+          </div>
+          <div>
+            <p class="text-xs text-slate-500 font-medium">Destaques na Home</p>
+            <p id="admin-kpi-featured" class="font-heading text-2xl font-extrabold text-slate-900">0</p>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-2xl p-5 border border-slate-200 flex items-center gap-4">
+          <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+            <i data-lucide="tag" class="w-6 h-6"></i>
+          </div>
+          <div>
+            <p class="text-xs text-slate-500 font-medium">Ticket Médio do Catálogo</p>
+            <p id="admin-kpi-avg" class="font-heading text-2xl font-extrabold text-slate-900">R$ 0,00</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Grid Principal do CMS: Formulário de Cadastro/Edição (Esquerda) + Lista de Produtos (Direita) -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        
+        <!-- Formulário de Cadastro / Edição de Produto (5 Colunas) -->
+        <div id="admin-form-card" class="lg:col-span-5 bg-white rounded-3xl border border-slate-200 p-6 shadow-xs">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-4 mb-5">
+            <h2 id="admin-form-title" class="font-heading font-extrabold text-lg text-slate-900">
+              Cadastrar Novo Produto no Catálogo
+            </h2>
+            <button id="admin-cancel-edit-btn" onclick="resetAdminForm()"
+              class="hidden text-xs font-bold text-rose-600 hover:underline cursor-pointer">
+              Cancelar Edição
+            </button>
+          </div>
+
+          <form id="admin-product-form" onsubmit="handleAdminFormSubmit(event)" class="space-y-4">
+            <!-- Nome -->
+            <div>
+              <label class="block text-xs font-heading font-bold text-slate-700 mb-1">Nome do Produto *</label>
+              <input id="admin-prod-name" type="text" required placeholder="Ex: Conjunto Infantil Moletom Ursinho"
+                class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 focus:border-[#F38230] text-sm outline-none" />
+            </div>
+
+            <!-- Preço Atual e Preço Antigo -->
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs font-heading font-bold text-slate-700 mb-1">Preço de Venda (R$) *</label>
+                <input id="admin-prod-price" type="number" step="0.01" min="1" required placeholder="89.90"
+                  class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 focus:border-[#F38230] text-sm outline-none" />
+              </div>
+              <div>
+                <label class="block text-xs font-heading font-bold text-slate-700 mb-1">Preço "De" (Opcional)</label>
+                <input id="admin-prod-old-price" type="number" step="0.01" min="1" placeholder="119.90"
+                  class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 focus:border-[#F38230] text-sm outline-none" />
+              </div>
+            </div>
+
+            <!-- Gênero e Categoria -->
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs font-heading font-bold text-slate-700 mb-1">Gênero *</label>
+                <select id="admin-prod-gender"
+                  class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 focus:border-[#F38230] text-sm outline-none">
+                  <option value="Feminino">Feminino (Meninas)</option>
+                  <option value="Masculino">Masculino (Meninos)</option>
+                  <option value="Unissex">Unissex</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs font-heading font-bold text-slate-700 mb-1">Categoria de Roupa *</label>
+                <select id="admin-prod-category"
+                  class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 focus:border-[#F38230] text-sm outline-none">
+                  <option value="Conjuntos">Conjuntos</option>
+                  <option value="Vestidos">Vestidos</option>
+                  <option value="Body">Body & Macacões</option>
+                  <option value="Pijamas">Pijamas</option>
+                  <option value="Blusas">Blusas</option>
+                  <option value="Calças">Shorts & Calças</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Faixa Etária Principal e Selo/Badge -->
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs font-heading font-bold text-slate-700 mb-1">Faixa Etária Principal *</label>
+                <select id="admin-prod-age-group"
+                  class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 focus:border-[#F38230] text-sm outline-none">
+                  <option value="bebe">Bebê (RN, P, M, G)</option>
+                  <option value="1-a-3">1 a 3 anos</option>
+                  <option value="4-a-10">4 a 10 anos</option>
+                  <option value="juvenil">Juvenil até 18</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs font-heading font-bold text-slate-700 mb-1">Selo de Destaque</label>
+                <input id="admin-prod-badge" type="text" placeholder="Ex: Lançamento, Oferta"
+                  class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 focus:border-[#F38230] text-sm outline-none" />
+              </div>
+            </div>
+
+            <!-- Seletor de Tamanhos Disponíveis (RN ao 18) -->
+            <div>
+              <div class="flex flex-wrap items-center justify-between gap-1 mb-1.5">
+                <label class="text-xs font-heading font-bold text-slate-700">Tamanhos em Estoque (RN ao 18) *</label>
+                <div class="flex flex-wrap gap-1 text-[10px] font-bold">
+                  <button type="button" onclick="selectAdminSizePreset('bebe')" class="px-2 py-0.5 rounded bg-sky-50 text-[#2B6EB5] hover:bg-sky-100 cursor-pointer">RN-G</button>
+                  <button type="button" onclick="selectAdminSizePreset('1-3')" class="px-2 py-0.5 rounded bg-orange-50 text-[#F38230] hover:bg-orange-100 cursor-pointer">1-3</button>
+                  <button type="button" onclick="selectAdminSizePreset('4-10')" class="px-2 py-0.5 rounded bg-orange-50 text-[#F38230] hover:bg-orange-100 cursor-pointer">4-10</button>
+                  <button type="button" onclick="selectAdminSizePreset('juvenil')" class="px-2 py-0.5 rounded bg-pink-50 text-[#E84C93] hover:bg-pink-100 cursor-pointer">12-18</button>
+                  <button type="button" onclick="selectAdminSizePreset('all')" class="px-2 py-0.5 rounded bg-slate-100 text-slate-700 hover:bg-slate-200 cursor-pointer">Todos</button>
+                  <button type="button" onclick="selectAdminSizePreset('none')" class="px-2 py-0.5 rounded bg-rose-50 text-rose-600 cursor-pointer">Limpar</button>
+                </div>
+              </div>
+              <div id="admin-sizes-checkboxes" class="grid grid-cols-5 gap-1.5"></div>
+            </div>
+
+            <!-- Upload de Imagem ou Inserção de URL -->
+            <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
+              <label class="block text-xs font-heading font-bold text-slate-700">Foto do Produto (Upload ou Link)</label>
+              
+              <div class="flex items-center gap-3">
+                <div class="w-16 h-16 rounded-xl bg-white border border-slate-200 overflow-hidden flex items-center justify-center shrink-0">
+                  <img id="admin-image-preview" src="" alt="Preview" class="hidden w-full h-full object-cover" />
+                  <span id="admin-image-placeholder" class="text-[10px] text-slate-400 text-center px-1">Sem foto</span>
+                </div>
+
+                <div class="flex-1 space-y-2">
+                  <label class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#2B6EB5] hover:bg-[#1E548F] text-white font-heading font-bold text-xs cursor-pointer transition">
+                    <i data-lucide="upload" class="w-3.5 h-3.5"></i>
+                    <span>Enviar Foto do Computador/Celular</span>
+                    <input type="file" accept="image/*" onchange="handleAdminImageUpload(event)" class="hidden" />
+                  </label>
+                  <input id="admin-prod-image-url" type="text" placeholder="Ou cole aqui a URL da imagem (https://...)"
+                    class="w-full px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-xs outline-none focus:border-[#F38230]" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Descrição e Composição do Tecido -->
+            <div>
+              <label class="block text-xs font-heading font-bold text-slate-700 mb-1">Descrição Detalhada</label>
+              <textarea id="admin-prod-description" rows="2" placeholder="Descreva os detalhes da peça, modelagem e ocasiões de uso..."
+                class="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 focus:border-[#F38230] text-sm outline-none"></textarea>
+            </div>
+
+            <div>
+              <label class="block text-xs font-heading font-bold text-slate-700 mb-1">Tecido & Composição</label>
+              <input id="admin-prod-fabric" type="text" placeholder="Ex: 100% Algodão Suedine Hipoalergênico"
+                class="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 focus:border-[#F38230] text-sm outline-none" />
+            </div>
+
+            <!-- Checkbox Exibir na Home -->
+            <label class="flex items-center gap-2.5 p-3 rounded-xl bg-orange-50/70 border border-orange-200/70 cursor-pointer">
+              <input id="admin-prod-featured" type="checkbox" checked class="accent-[#F38230] w-4 h-4" />
+              <span class="text-xs font-heading font-bold text-slate-800">Exibir na seção "Produtos em Destaque" da Página Inicial</span>
+            </label>
+
+            <button type="submit"
+              class="w-full py-3.5 px-6 rounded-2xl bg-[#F38230] hover:bg-[#DC6B19] text-white font-heading font-bold text-sm shadow-lg shadow-orange-500/20 flex items-center justify-center gap-2 transition cursor-pointer">
+              <i data-lucide="check-circle-2" class="w-5 h-5"></i>
+              <span id="admin-submit-btn-text">Publicar Produto na Loja</span>
+            </button>
+          </form>
+        </div>
+
+        <!-- Tabela de Gerenciamento de Produtos Existentes (7 Colunas) -->
+        <div class="lg:col-span-7 bg-white rounded-3xl border border-slate-200 p-6 shadow-xs">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4 mb-4">
+            <div>
+              <h2 class="font-heading font-extrabold text-lg text-slate-900">Catálogo Cadastrado</h2>
+              <p class="text-xs text-slate-500">Edite preços, descrições ou exclua itens esgotados:</p>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-2">
+              <input id="admin-search-input" type="search" placeholder="Buscar por nome ou código..."
+                class="px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs outline-none focus:border-[#F38230]" />
+              <select id="admin-filter-category"
+                class="px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs font-semibold outline-none">
+                <option value="todos">Todas Categorias</option>
+                <option value="Conjuntos">Conjuntos</option>
+                <option value="Vestidos">Vestidos</option>
+                <option value="Body">Body & Macacões</option>
+                <option value="Pijamas">Pijamas</option>
+                <option value="Blusas">Blusas</option>
+                <option value="Calças">Shorts & Calças</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="border-b border-slate-200 text-[11px] font-heading font-bold uppercase tracking-wider text-slate-400">
+                  <th class="py-3 px-4">Produto</th>
+                  <th class="py-3 px-4">Categoria</th>
+                  <th class="py-3 px-4">Grade (RN-18)</th>
+                  <th class="py-3 px-4">Preço</th>
+                  <th class="py-3 px-4 text-center">Destaque</th>
+                  <th class="py-3 px-4 text-right">Ações</th>
+                </tr>
+              </thead>
+              <tbody id="admin-products-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========================================================================
+       A.7 RODAPÉ COMPLETO (FOOTER) - Dados Oficiais Santa Fé do Sul - SP
+       ======================================================================== -->
+  <footer class="bg-slate-900 text-slate-300 mt-auto border-t-4 border-[#F38230]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-10">
+        
+        <!-- Coluna 1: Marca & Propósito (4 cols) -->
+        <div class="lg:col-span-4 space-y-4">
+          <div class="flex items-center gap-3">
+            <img src="assets/logo.png" alt="Happy Kids Moda Infantil" class="w-16 h-16 rounded-2xl bg-white p-1.5 object-contain" />
+            <div>
+              <h3 class="font-heading font-extrabold text-xl text-white">
+                <span class="text-[#F38230]">Happy</span> <span class="text-[#60A5FA]">Kids</span>
+              </h3>
+              <p class="text-xs font-heading font-bold tracking-widest uppercase text-slate-400">Moda Infantil • RN ao 18</p>
+            </div>
+          </div>
+          <p class="text-xs sm:text-sm text-slate-400 leading-relaxed">
+            Sua loja completa de moda bebê, infantil e juvenil em Santa Fé do Sul - SP. Looks escolhidos com amor para vestir cada fase com conforto e estilo!
+          </p>
+          <div class="flex items-center gap-3 pt-1">
+            <button onclick="openStoreWhatsApp()" aria-label="WhatsApp"
+              class="w-10 h-10 rounded-xl bg-slate-800 hover:bg-[#25D366] text-white flex items-center justify-center transition cursor-pointer">
+              <i data-lucide="message-circle" class="w-5 h-5"></i>
+            </button>
+            <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"
+              class="w-10 h-10 rounded-xl bg-slate-800 hover:bg-[#E84C93] text-white flex items-center justify-center transition">
+              <i data-lucide="instagram" class="w-5 h-5"></i>
+            </a>
+            <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer" aria-label="Facebook"
+              class="w-10 h-10 rounded-xl bg-slate-800 hover:bg-[#2B6EB5] text-white flex items-center justify-center transition">
+              <i data-lucide="facebook" class="w-5 h-5"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- Coluna 2: Categorias & Atalhos (3 cols) -->
+        <div class="lg:col-span-3 space-y-3">
+          <h4 class="font-heading font-bold text-sm uppercase tracking-wider text-white">Departamentos</h4>
+          <ul class="space-y-2 text-xs sm:text-sm">
+            <li><button onclick="navigateWithFilter({ ageGroup: 'bebe' })" class="hover:text-[#F38230] transition cursor-pointer">Linha Bebê (RN, P, M, G)</button></li>
+            <li><button onclick="navigateWithFilter({ gender: 'Feminino' })" class="hover:text-[#F38230] transition cursor-pointer">Moda Meninas (RN ao 18)</button></li>
+            <li><button onclick="navigateWithFilter({ gender: 'Masculino' })" class="hover:text-[#F38230] transition cursor-pointer">Moda Meninos (RN ao 18)</button></li>
+            <li><button onclick="navigateWithFilter({ ageGroup: 'juvenil' })" class="hover:text-[#F38230] transition cursor-pointer">Moda Juvenil (10 ao 18)</button></li>
+            <li><button onclick="openSizeGuideModal()" class="hover:text-[#F38230] transition cursor-pointer">Guia de Medidas Infantil</button></li>
+            <li><button onclick="navigateTo('admin')" class="text-amber-400 hover:underline font-semibold cursor-pointer">Painel do Lojista (CMS)</button></li>
+          </ul>
+        </div>
+
+        <!-- Coluna 3: Endereço e Horário de Atendimento (5 cols) -->
+        <div class="lg:col-span-5 space-y-3">
+          <h4 class="font-heading font-bold text-sm uppercase tracking-wider text-white">Loja Física & Contato</h4>
+          <div class="bg-slate-800/90 rounded-2xl p-4 border border-slate-700/80 space-y-3 text-xs sm:text-sm">
+            <div class="flex items-start gap-3">
+              <i data-lucide="map-pin" class="w-5 h-5 text-[#F38230] shrink-0 mt-0.5"></i>
+              <div>
+                <p class="font-bold text-white">Endereço Oficial:</p>
+                <p class="text-slate-300">Rua 09, nº 865 - Centro, Santa Fé do Sul - SP</p>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-3">
+              <i data-lucide="phone" class="w-5 h-5 text-[#25D366] shrink-0 mt-0.5"></i>
+              <div>
+                <p class="font-bold text-white">WhatsApp / Atendimento:</p>
+                <button onclick="openStoreWhatsApp()" class="text-[#25D366] font-extrabold hover:underline cursor-pointer">
+                  (17) 99773-2964
+                </button>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-3">
+              <i data-lucide="clock" class="w-5 h-5 text-[#60A5FA] shrink-0 mt-0.5"></i>
+              <div>
+                <p class="font-bold text-white">Horário de Funcionamento:</p>
+                <p class="text-slate-300">Segunda a Sexta: 09h às 18h | Sábado: 09h às 13h</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Rodapé Inferior -->
+      <div class="mt-10 pt-6 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+        <p>© 2026 <strong>Happy Kids Moda Infantil</strong> — Rua 09, nº 865 - Centro, Santa Fé do Sul - SP. Todos os direitos reservados.</p>
+        <div class="flex items-center gap-3">
+          <span class="px-2.5 py-1 rounded bg-slate-800 text-slate-300 font-semibold">PIX 5% OFF</span>
+          <span class="px-2.5 py-1 rounded bg-slate-800 text-slate-300 font-semibold">10x Sem Juros</span>
+          <span class="px-2.5 py-1 rounded bg-slate-800 text-slate-300 font-semibold">Envio Brasil</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ========================================================================
+       MODAIS, DRAWERS LATERAIS E ELEMENTOS FLUTUANTES
+       ======================================================================== -->
+
+  <!-- Botão Flutuante do WhatsApp (Mobile & Desktop) -->
+  <button onclick="openStoreWhatsApp()"
+    aria-label="Falar pelo WhatsApp"
+    class="fixed bottom-5 right-5 z-30 flex items-center gap-2 bg-[#25D366] hover:bg-[#1DA851] text-white px-4 py-3.5 rounded-full shadow-xl shadow-emerald-600/30 font-heading font-bold text-xs sm:text-sm transition transform hover:scale-105 cursor-pointer">
+    <i data-lucide="message-circle" class="w-5 h-5"></i>
+    <span class="hidden sm:inline">Dúvidas? (17) 99773-2964</span>
+  </button>
+
+  <!-- Container de Notificações (Toasts) -->
+  <div id="toast-container" class="fixed bottom-20 right-5 z-50 flex flex-col gap-2 max-w-sm"></div>
+
+  <!-- Drawer: Sacola de Compras (Carrinho) -->
+  <div id="cart-drawer" class="hidden fixed inset-0 z-50">
+    <div onclick="closeCartDrawer()" class="absolute inset-0 bg-slate-900/50 backdrop-blur-xs"></div>
+    <div class="absolute right-0 top-0 bottom-0 w-full max-w-md bg-white shadow-2xl flex flex-col justify-between p-5 sm:p-6">
+      <div class="flex items-center justify-between border-b border-slate-200 pb-4">
+        <div class="flex items-center gap-2">
+          <i data-lucide="shopping-bag" class="w-5 h-5 text-[#F38230]"></i>
+          <h3 class="font-heading font-extrabold text-lg text-slate-900">Minha Sacola Happy Kids</h3>
+        </div>
+        <button onclick="closeCartDrawer()" class="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 cursor-pointer">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div id="cart-items-list" class="flex-1 overflow-y-auto py-4 space-y-3"></div>
+      <div id="cart-drawer-footer"></div>
+    </div>
+  </div>
+
+  <!-- Drawer: Favoritos (Lista de Desejos) -->
+  <div id="favorites-drawer" class="hidden fixed inset-0 z-50">
+    <div onclick="closeFavoritesDrawer()" class="absolute inset-0 bg-slate-900/50 backdrop-blur-xs"></div>
+    <div class="absolute right-0 top-0 bottom-0 w-full max-w-md bg-white shadow-2xl flex flex-col p-5 sm:p-6">
+      <div class="flex items-center justify-between border-b border-slate-200 pb-4">
+        <div class="flex items-center gap-2">
+          <i data-lucide="heart" class="w-5 h-5 text-rose-500 fill-current"></i>
+          <h3 class="font-heading font-extrabold text-lg text-slate-900">Meus Looks Favoritos</h3>
+        </div>
+        <button onclick="closeFavoritesDrawer()" class="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 cursor-pointer">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+      <div id="favorites-items-list" class="flex-1 overflow-y-auto py-4 space-y-3"></div>
+    </div>
+  </div>
+
+  <!-- Drawer: Menu Mobile (Smartphone Navigation) -->
+  <div id="mobile-menu-drawer" class="hidden fixed inset-0 z-50 lg:hidden">
+    <div onclick="closeMobileMenu()" class="absolute inset-0 bg-slate-900/50 backdrop-blur-xs"></div>
+    <div class="absolute left-0 top-0 bottom-0 w-80 max-w-[85vw] bg-white shadow-2xl flex flex-col justify-between p-5 overflow-y-auto">
+      <div>
+        <div class="flex items-center justify-between border-b border-slate-100 pb-4 mb-4">
+          <div class="flex items-center gap-2.5">
+            <img src="assets/logo.png" alt="Happy Kids" class="w-11 h-11 object-contain" />
+            <div>
+              <p class="font-heading font-extrabold text-base text-slate-900">Happy Kids</p>
+              <p class="text-[10px] font-bold text-[#2B6EB5] uppercase">Santa Fé do Sul - SP</p>
+            </div>
+          </div>
+          <button onclick="closeMobileMenu()" class="p-2 rounded-xl bg-slate-100 text-slate-600">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+
+        <!-- Busca no Menu Mobile -->
+        <div class="mb-4">
+          <div class="relative">
+            <input id="mobile-search-input" type="search" placeholder="Buscar roupinha ou tamanho..."
+              onkeydown="if(event.key==='Enter'){ navigateWithFilter({search: this.value}); }"
+              class="w-full pl-9 pr-16 py-2.5 rounded-xl bg-slate-100 text-xs outline-none" />
+            <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
+            <button onclick="navigateWithFilter({search: document.getElementById('mobile-search-input').value})"
+              class="absolute right-1.5 top-1/2 -translate-y-1/2 px-2.5 py-1 rounded-lg bg-[#F38230] text-white font-bold text-xs">
+              Ir
+            </button>
+          </div>
+        </div>
+
+        <nav class="space-y-1 font-heading font-semibold text-sm text-slate-700">
+          <button onclick="navigateTo('home')" class="w-full text-left px-3.5 py-3 rounded-xl hover:bg-orange-50 hover:text-[#F38230] flex items-center gap-3">
+            <i data-lucide="home" class="w-4 h-4 text-[#F38230]"></i>
+            <span>Início</span>
+          </button>
+          <button onclick="navigateWithFilter({ gender: 'Feminino' })" class="w-full text-left px-3.5 py-3 rounded-xl hover:bg-pink-50 hover:text-[#E84C93] flex items-center gap-3">
+            <span class="w-2.5 h-2.5 rounded-full bg-[#E84C93]"></span>
+            <span>Meninas (RN ao 18)</span>
+          </button>
+          <button onclick="navigateWithFilter({ gender: 'Masculino' })" class="w-full text-left px-3.5 py-3 rounded-xl hover:bg-blue-50 hover:text-[#2B6EB5] flex items-center gap-3">
+            <span class="w-2.5 h-2.5 rounded-full bg-[#2B6EB5]"></span>
+            <span>Meninos (RN ao 18)</span>
+          </button>
+          <button onclick="navigateWithFilter({ ageGroup: 'bebe' })" class="w-full text-left px-3.5 py-3 rounded-xl hover:bg-emerald-50 hover:text-emerald-700 flex items-center gap-3">
+            <span class="w-2.5 h-2.5 rounded-full bg-[#2CB667]"></span>
+            <span>Bebês (RN, P, M, G)</span>
+          </button>
+          <button onclick="navigateWithFilter({ ageGroup: 'juvenil' })" class="w-full text-left px-3.5 py-3 rounded-xl hover:bg-orange-50 hover:text-[#F38230] flex items-center gap-3">
+            <span class="w-2.5 h-2.5 rounded-full bg-[#F38230]"></span>
+            <span>Juvenil (10 ao 18)</span>
+          </button>
+          <button onclick="resetCatalogFilters(); navigateTo('catalog');" class="w-full text-left px-3.5 py-3 rounded-xl hover:bg-slate-100 flex items-center gap-3">
+            <i data-lucide="layout-grid" class="w-4 h-4 text-[#2B6EB5]"></i>
+            <span>Catálogo Completo</span>
+          </button>
+          <button onclick="navigateTo('about')" class="w-full text-left px-3.5 py-3 rounded-xl hover:bg-slate-100 flex items-center gap-3">
+            <i data-lucide="heart-handshake" class="w-4 h-4 text-[#E84C93]"></i>
+            <span>Sobre a Happy Kids</span>
+          </button>
+          <button onclick="navigateTo('contact')" class="w-full text-left px-3.5 py-3 rounded-xl hover:bg-slate-100 flex items-center gap-3">
+            <i data-lucide="map-pin" class="w-4 h-4 text-[#F38230]"></i>
+            <span>Contato & Endereço</span>
+          </button>
+          <button onclick="navigateTo('admin')" class="w-full text-left px-3.5 py-3 rounded-xl bg-amber-50 text-amber-900 font-bold flex items-center gap-3 mt-2">
+            <i data-lucide="sliders-horizontal" class="w-4 h-4 text-[#F38230]"></i>
+            <span>Painel do Lojista (CMS)</span>
+          </button>
+        </nav>
+      </div>
+
+      <div class="pt-4 border-t border-slate-100 text-xs text-slate-500 space-y-2">
+        <p class="font-bold text-slate-800">📍 Rua 09, nº 865 - Centro, Santa Fé do Sul - SP</p>
+        <button onclick="openStoreWhatsApp()" class="w-full py-2.5 rounded-xl bg-[#25D366] text-white font-heading font-bold flex items-center justify-center gap-2">
+          <i data-lucide="message-circle" class="w-4 h-4"></i>
+          <span>(17) 99773-2964</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Guia de Medidas Completo (Do RN ao 18) -->
+  <div id="size-guide-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div onclick="closeSizeGuideModal()" class="absolute inset-0 bg-slate-900/60 backdrop-blur-xs"></div>
+    <div class="relative bg-white rounded-3xl max-w-2xl w-full max-h-[88vh] overflow-y-auto p-6 sm:p-8 shadow-2xl">
+      <div class="flex items-center justify-between border-b border-slate-200 pb-4 mb-5">
+        <div>
+          <span class="text-xs font-heading font-bold uppercase text-[#F38230]">Referência Oficial Happy Kids</span>
+          <h3 class="font-heading font-extrabold text-xl text-slate-900">Guia de Tamanhos e Medidas (RN ao 18)</h3>
+        </div>
+        <button onclick="closeSizeGuideModal()" class="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 cursor-pointer">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <p class="text-xs sm:text-sm text-slate-600 mb-4">
+        Use a tabela abaixo como referência de idade, estatura e peso médio. Se preferir, chame nossa equipe no WhatsApp <strong>(17) 99773-2964</strong> que medimos a peça exata para você!
+      </p>
+
+      <div class="overflow-x-auto rounded-2xl border border-slate-200">
+        <table class="w-full text-left border-collapse text-xs sm:text-sm">
+          <thead>
+            <tr class="bg-slate-100 font-heading font-bold text-slate-800">
+              <th class="py-2.5 px-3">Tamanho</th>
+              <th class="py-2.5 px-3">Faixa / Idade Sugerida</th>
+              <th class="py-2.5 px-3">Altura Média</th>
+              <th class="py-2.5 px-3">Peso Médio</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100">
+            <tr><td class="py-2 px-3 font-bold text-[#2B6EB5]">RN</td><td class="py-2 px-3">Recém-Nascido (0 a 1 mês)</td><td class="py-2 px-3">48 a 52 cm</td><td class="py-2 px-3">2,5 a 4 kg</td></tr>
+            <tr><td class="py-2 px-3 font-bold text-[#2B6EB5]">P</td><td class="py-2 px-3">1 a 3 meses</td><td class="py-2 px-3">53 a 60 cm</td><td class="py-2 px-3">4 a 6 kg</td></tr>
+            <tr><td class="py-2 px-3 font-bold text-[#2B6EB5]">M</td><td class="py-2 px-3">3 a 6 meses</td><td class="py-2 px-3">61 a 67 cm</td><td class="py-2 px-3">6 a 8 kg</td></tr>
+            <tr><td class="py-2 px-3 font-bold text-[#2B6EB5]">G</td><td class="py-2 px-3">6 a 11 meses</td><td class="py-2 px-3">68 a 74 cm</td><td class="py-2 px-3">8 a 10 kg</td></tr>
+            <tr><td class="py-2 px-3 font-bold text-[#F38230]">1</td><td class="py-2 px-3">1 ano</td><td class="py-2 px-3">75 a 82 cm</td><td class="py-2 px-3">10 a 12 kg</td></tr>
+            <tr><td class="py-2 px-3 font-bold text-[#F38230]">2</td><td class="py-2 px-3">2 anos</td><td class="py-2 px-3">83 a 90 cm</td><td class="py-2 px-3">12 a 14 kg</td></tr>
+            <tr><td class="py-2 px-3 font-bold text-[#F38230]">3</td><td class="py-2 px-3">3 anos</td><td class="py-2 px-3">91 a 98 cm</td><td class="py-2 px-3">14 a 16 kg</td></tr>
+            <tr><td class="py-2 px-3 font-bold text-[#F38230]">4</td><td class="py-2 px-3">4 anos</td><td class="py-2 px-3">99 a 105 cm</td><td class="py-2 px-3">16 a 18 kg</td></tr>
+            <tr><td class="py-2 px-3 font-bold text-[#F38230]">6</td><td class="py-2 px-3">5 a 6 anos</td><td class="py-2 px-3">106 a 117 cm</td><td class="py-2 px-3">19 a 23 kg</td></tr>
+            <tr><td class="py-2 px-3 font-bold text-[#F38230]">8</td><td class="py-2 px-3">7 a 8 anos</td><td class="py-2 px-3">118 a 128 cm</td><td class="py-2 px-3">24 a 28 kg</td></tr>
+            <tr><td class="py-2 px-3 font-bold text-[#F38230]">10</td><td class="py-2 px-3">9 a 10 anos</td><td class="py-2 px-3">129 a 137 cm</td><td class="py-2 px-3">29 a 34 kg</td></tr>
+            <tr><td class="py-2 px-3 font-bold text-[#E84C93]">12</td><td class="py-2 px-3">11 a 12 anos (Juvenil)</td><td class="py-2 px-3">138 a 150 cm</td><td class="py-2 px-3">35 a 42 kg</td></tr>
+            <tr><td class="py-2 px-3 font-bold text-[#E84C93]">14</td><td class="py-2 px-3">13 a 14 anos (Juvenil)</td><td class="py-2 px-3">151 a 158 cm</td><td class="py-2 px-3">43 a 50 kg</td></tr>
+            <tr><td class="py-2 px-3 font-bold text-[#E84C93]">16</td><td class="py-2 px-3">15 a 16 anos (Juvenil)</td><td class="py-2 px-3">159 a 165 cm</td><td class="py-2 px-3">50 a 56 kg</td></tr>
+            <tr><td class="py-2 px-3 font-bold text-[#E84C93]">18</td><td class="py-2 px-3">16 a 18 anos (Juvenil)</td><td class="py-2 px-3">166 a 170 cm</td><td class="py-2 px-3">56 a 62 kg</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Lightbox de Zoom Tela Cheia da Galeria de Produto -->
+  <div id="lightbox-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-950/90 p-4">
+    <button onclick="closeLightbox()" class="absolute top-5 right-5 w-11 h-11 rounded-full bg-white/15 hover:bg-white/30 text-white flex items-center justify-center cursor-pointer">
+      <i data-lucide="x" class="w-6 h-6"></i>
+    </button>
+    <div class="max-w-3xl w-full text-center">
+      <img id="lightbox-image" src="" alt="Zoom Produto" class="max-h-[82vh] w-auto mx-auto rounded-2xl object-contain shadow-2xl" />
+      <p id="lightbox-caption" class="text-white font-heading font-semibold text-sm mt-3"></p>
+    </div>
+  </div>
+
+  <!-- Modal de Senha de Acesso ao Painel do Lojista -->
+  <div id="admin-auth-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div onclick="closeAdminPasswordModal()" class="absolute inset-0 bg-slate-900/65 backdrop-blur-xs"></div>
+    <div class="relative bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-slate-200 animate-fade-in">
+      <button onclick="closeAdminPasswordModal()" aria-label="Fechar"
+        class="absolute top-4 right-4 p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 cursor-pointer">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <div class="text-center mb-6">
+        <div class="w-14 h-14 rounded-2xl bg-orange-100 text-[#F38230] flex items-center justify-center mx-auto mb-3 shadow-xs">
+          <i data-lucide="lock" class="w-7 h-7"></i>
+        </div>
+        <span class="text-[11px] font-heading font-bold uppercase tracking-wider text-[#2B6EB5]">Área Restrita</span>
+        <h3 class="font-heading font-extrabold text-xl text-slate-900 mt-0.5">Acesso ao Painel do Lojista</h3>
+        <p class="text-xs sm:text-sm text-slate-500 mt-1">
+          Digite a senha exclusiva da administração da Happy Kids para gerenciar os produtos:
+        </p>
+      </div>
+
+      <form id="admin-password-form" onsubmit="handleAdminPasswordSubmit(event)" class="space-y-4">
+        <div class="relative">
+          <input id="admin-password-input" type="password" inputmode="numeric" required
+            placeholder="Digite a senha de acesso..."
+            class="w-full px-4 py-3.5 pr-12 rounded-2xl bg-slate-50 border-2 border-slate-200 focus:border-[#F38230] focus:bg-white font-heading font-bold text-center text-lg tracking-widest text-slate-900 outline-none transition" />
+          <button type="button" onclick="toggleAdminPasswordVisibility()" title="Mostrar/Ocultar Senha"
+            class="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 cursor-pointer">
+            <i data-lucide="eye" class="w-5 h-5"></i>
+          </button>
+        </div>
+
+        <p id="admin-auth-error" class="hidden text-xs font-heading font-bold text-rose-600 bg-rose-50 border border-rose-200 rounded-xl p-2.5 text-center">
+          Senha incorreta! Acesso exclusivo para o lojista.
+        </p>
+
+        <div class="flex items-center gap-2.5 pt-1">
+          <button type="button" onclick="closeAdminPasswordModal()"
+            class="w-1/3 py-3.5 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-heading font-bold text-xs sm:text-sm transition cursor-pointer">
+            Cancelar
+          </button>
+          <button type="submit"
+            class="w-2/3 py-3.5 rounded-2xl bg-[#F38230] hover:bg-[#DC6B19] text-white font-heading font-bold text-xs sm:text-sm shadow-lg shadow-orange-500/25 flex items-center justify-center gap-2 transition cursor-pointer">
+            <i data-lucide="unlock" class="w-4 h-4"></i>
+            <span>Entrar no Painel</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Scripts da Aplicação -->
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
