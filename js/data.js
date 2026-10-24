@@ -2,6 +2,7 @@
    Happy Kids Moda Infantil - Dados Oficiais da Loja e Configurações
    Endereço: Rua 09, nº 865 - Centro, Santa Fé do Sul - SP
    WhatsApp: (17) 99773-2964
+   Domínio Oficial: https://happykidssfs.com.br
    ========================================================================== */
 
 const STORE_CONFIG = {
@@ -18,7 +19,10 @@ const STORE_CONFIG = {
   maxInstallments: 10,
   pixDiscountPercent: 5,
   adminPassword: "210845",
+  siteUrl: "https://happykidssfs.com.br",
   cloudRepoApiUrl: "https://api.github.com/repos/felipesfs7/happy-kids-moda-infantil/contents/db/catalog-state.json",
+  cloudUploadsApiBaseUrl: "https://api.github.com/repos/felipesfs7/happy-kids-moda-infantil/contents/assets/uploads",
+  cloudUploadsCdnBaseUrl: "https://raw.githubusercontent.com/felipesfs7/happy-kids-moda-infantil/main/assets/uploads",
   encryptedCloudKey: "55595f675c596d091735061c0c2e02246c26241e17417452735751183b071b1c0f285b3120351f25"
 };
 
@@ -30,15 +34,15 @@ const ALL_SIZES = [
   "12", "14", "16"
 ];
 
-// Mapeamento de Faixas Etárias (Sem categoria Juvenil)
+// Mapeamento de Faixas Etárias (Sem "RN ao G" em Bebês e sem categoria Juvenil)
 const AGE_GROUPS = [
-  { id: "todos", label: "Todas as Idades", shortLabel: "Todos os Tamanhos", sizes: ALL_SIZES },
-  { id: "bebe", label: "Bebê (RN, P, M, G)", shortLabel: "RN ao G", sizes: ["RN", "P", "M", "G"] },
+  { id: "todos", label: "Todas as Idades", shortLabel: "Todas as Idades", sizes: ALL_SIZES },
+  { id: "bebe", label: "Bebês", shortLabel: "Bebês", sizes: ["RN", "P", "M", "G"] },
   { id: "1-a-3", label: "Primeiros Passos (1 ao 3)", shortLabel: "1 ao 3", sizes: ["1", "2", "3"] },
   { id: "4-a-10", label: "Infantil (4 ao 16)", shortLabel: "4 ao 16", sizes: ["4", "6", "8", "10", "12", "14", "16"] }
 ];
 
-// Categorias de Roupa da Loja
+// Categorias Padrão de Roupa da Loja (O lojista também pode criar novas categorias no painel)
 const CLOTHING_CATEGORIES = [
   "Conjuntos",
   "Vestidos",
@@ -66,16 +70,16 @@ const HERO_SLIDES = [
   },
   {
     id: 2,
-    badge: "LINHA BEBÊ • TAMANHOS RN, P, M e G",
-    title: "Roupas macias e delicadas para os primeiros meses do bebê",
-    subtitle: "Conjuntinhos, bodies, macacões e peças confortáveis pensadas para o bem-estar e liberdade dos pequenos.",
+    badge: "LINHA BEBÊ • CONFORTO & DELICADEZA",
+    title: "Roupas macias e delicadas para os pequenos",
+    subtitle: "Conjuntinhos, bodies, macacões e peças confortáveis pensadas para o bem-estar e liberdade dos bebês.",
     ctaPrimary: "Explorar Linha Bebê",
     ctaSecondary: "Ver Bodies & Macacões",
     filterPreset: { gender: "todos", ageGroup: "bebe", category: "todos" },
     bgClass: "from-[#EBF4FF] via-[#F5FAFF] to-[#FDF0F6]",
     accentColor: "#2B6EB5",
     image: "assets/produtos/prod-018.jpg",
-    floatingTag: "Do RN ao G",
+    floatingTag: "Linha Bebê",
     floatingPrice: "Atendimento VIP via WhatsApp"
   },
   {

@@ -9,6 +9,16 @@ const STORAGE_KEYS = {
   FAVORITES: "happykids_favorites_v3_clean"
 };
 
+// Categorias Padrão da Loja (Podem ser expandidas pela lojista no Painel)
+const DEFAULT_CATEGORIES = [
+  { value: "Conjuntos", label: "Conjuntos", icon: "👕" },
+  { value: "Vestidos", label: "Vestidos", icon: "👗" },
+  { value: "Body", label: "Body & Macacões", icon: "👶" },
+  { value: "Pijamas", label: "Pijamas", icon: "🌙" },
+  { value: "Blusas", label: "Blusas & Camisetas", icon: "👚" },
+  { value: "Calças", label: "Shorts & Calças", icon: "🩳" }
+];
+
 // Estado do Banco de Dados em Nuvem (Sincronizado para Todos os Clientes)
 const CloudDB = {
   sha: null,
@@ -21,6 +31,7 @@ const CloudDB = {
     soldOutIds: [],        // IDs de produtos retirados do catálogo (vendidos/esgotados)
     productOverrides: {},  // Alterações de preço, tamanhos disponíveis, nome, destaque por ID
     customProducts: [],    // Novos produtos cadastrados pelo painel do lojista
+    customCategories: [],  // Novas categorias criadas pela lojista no painel
     deletedIds: []         // IDs excluídos permanentemente
   }
 };
@@ -98,6 +109,7 @@ function loadLocalCache() {
           soldOutIds: Array.isArray(parsed.soldOutIds) ? parsed.soldOutIds : [],
           productOverrides: parsed.productOverrides || {},
           customProducts: Array.isArray(parsed.customProducts) ? parsed.customProducts : [],
+          customCategories: Array.isArray(parsed.customCategories) ? parsed.customCategories : [],
           deletedIds: Array.isArray(parsed.deletedIds) ? parsed.deletedIds : []
         };
       }
@@ -228,11 +240,13 @@ function applyIncomingCloudState(parsed) {
     soldOutIds: Array.isArray(parsed.soldOutIds) ? parsed.soldOutIds : [],
     productOverrides: parsed.productOverrides || {},
     customProducts: Array.isArray(parsed.customProducts) ? parsed.customProducts : [],
+    customCategories: Array.isArray(parsed.customCategories) ? parsed.customCategories : [],
     deletedIds: Array.isArray(parsed.deletedIds) ? parsed.deletedIds : []
   };
   saveCloudCacheLocally();
   rebuildCatalogFromState();
   renderAll();
+  checkDeepLinkProduct();
 }
 
 // Salva imediatamente qualquer alteração do lojista no Banco de Dados em Nuvem
@@ -401,15 +415,32 @@ function openStoreWhatsApp(customText) {
 }
 
 function shareProductOnWhatsApp(productId) {
-  const product = AppState.products.find((p) => p.id === productId);
+  const product = AppState.products.find((p) => p.id === productId) || AppState.allProducts.find((p) => p.id === productId);
   if (!product) return;
-  const shareUrl = window.location.origin + window.location.pathname;
+  const baseUrl = STORE_CONFIG.siteUrl || (window.location.origin + window.location.pathname);
+  const shareUrl = `${baseUrl.replace(/\/$/, "")}/?produto=${encodeURIComponent(product.id)}`;
   const text =
     `Olha que peça linda da *${STORE_CONFIG.name}*:\n` +
     `*${product.name}* (${product.sku})\n` +
     `Valor: ${formatCurrency(product.price)} (ou ${calculateInstallment(product.price)})\n` +
     `Veja no catálogo online: ${shareUrl}`;
   window.open(`https://wa.me/?text=${encodeURIComponent(sanitizeWhatsAppText(text))}`, "_blank", "noopener,noreferrer");
+}
+
+let hasHandledInitialDeepLink = false;
+function checkDeepLinkProduct() {
+  if (hasHandledInitialDeepLink) return;
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const prodId = params.get("produto");
+    if (prodId && AppState.allProducts.length > 0) {
+      const target = AppState.products.find((p) => p.id === prodId) || AppState.allProducts.find((p) => p.id === prodId);
+      if (target) {
+        hasHandledInitialDeepLink = true;
+        openProductDetail(target.id);
+      }
+    }
+  } catch (e) {}
 }
 
 /* ==========================================================================
@@ -1192,7 +1223,130 @@ function createProductCardHTML(product) {
    8. Página de Catálogo / Vitrine com Filtros e Ordenação (Requisito B)
    ========================================================================== */
 
+function getAllCategories() {
+  const customCats = Array.isArray(CloudDB.state.customCategories) ? CloudDB.state.customCategories : [];
+  const map = new Map();
+
+  DEFAULT_CATEGORIES.forEach((c) => {
+    map.set(c.value.toLowerCase(), {
+      value: c.value,
+      label: c.label,
+      icon: c.icon || "🏷️",
+      isCustom: false
+    });
+  });
+
+  customCats.forEach((rawName) => {
+    const clean = String(rawName || "").trim();
+    if (!clean) return;
+    const key = clean.toLowerCase();
+    if (!map.has(key)) {
+      map.set(key, {
+        value: clean,
+        label: clean,
+        icon: "🏷️",
+        isCustom: true
+      });
+    }
+  });
+
+  // Garante que qualquer categoria já associada a um produto ativo apareça nos filtros
+  (AppState.allProducts || []).forEach((p) => {
+    const cat = String((p && p.category) || "").trim();
+    if (!cat) return;
+    const key = cat.toLowerCase();
+    if (!map.has(key)) {
+      map.set(key, {
+        value: cat,
+        label: cat,
+        icon: "🏷️",
+        isCustom: true
+      });
+    }
+  });
+
+  return Array.from(map.values());
+}
+
+function renderCategoryOptionsUI() {
+  const categories = getAllCategories();
+
+  // 1. Filtro lateral do catálogo público
+  const catListEl = document.getElementById("catalog-filter-categories-list");
+  if (catListEl) {
+    const activeCat = AppState.filters.category || "todos";
+    const btnClass = (isActive) =>
+      `w-full text-left px-3 py-2 rounded-xl text-sm font-medium flex items-center justify-between transition cursor-pointer ${
+        isActive ? "bg-orange-50 text-[#F38230] font-bold border border-orange-200" : "text-slate-600 hover:bg-slate-50"
+      }`;
+
+    catListEl.innerHTML = `
+      <button onclick="setCatalogFilter('category', 'todos')" data-filter-category="todos" class="${btnClass(activeCat === "todos")}">
+        <span>Todas as Categorias</span>
+      </button>
+      ${categories
+        .map((c) => {
+          const safeVal = c.value.replace(/'/g, "\\'");
+          const isActive = activeCat === c.value;
+          return `
+            <button onclick="setCatalogFilter('category', '${safeVal}')" data-filter-category="${c.value}" class="${btnClass(isActive)}">
+              <span>${c.icon} ${c.label}</span>
+            </button>
+          `;
+        })
+        .join("")}
+    `;
+  }
+
+  // 2. Select de Categoria no formulário do Painel do Lojista
+  const adminSelect = document.getElementById("admin-prod-category");
+  if (adminSelect) {
+    const currentVal = adminSelect.value || "Conjuntos";
+    adminSelect.innerHTML = categories
+      .map((c) => `<option value="${c.value}">${c.label}</option>`)
+      .join("");
+    if (categories.some((c) => c.value === currentVal)) {
+      adminSelect.value = currentVal;
+    }
+  }
+
+  // 3. Select de Filtro de Categoria na Tabela do Painel do Lojista
+  const adminFilterSelect = document.getElementById("admin-filter-category");
+  if (adminFilterSelect) {
+    const currentFilterVal = AppState.admin.filterCategory || "todos";
+    adminFilterSelect.innerHTML = `
+      <option value="todos">Todas Categorias</option>
+      ${categories.map((c) => `<option value="${c.value}">${c.label}</option>`).join("")}
+    `;
+    adminFilterSelect.value = categories.some((c) => c.value === currentFilterVal) ? currentFilterVal : "todos";
+  }
+
+  // 4. Chips discretos de categorias criadas pela lojista dentro da aba "+ Categoria"
+  const customChipsEl = document.getElementById("admin-custom-categories-chips");
+  if (customChipsEl) {
+    const customList = Array.isArray(CloudDB.state.customCategories) ? CloudDB.state.customCategories : [];
+    if (customList.length === 0) {
+      customChipsEl.innerHTML = `<span class="text-[11px] text-slate-400">Suas novas categorias aparecerão no formulário e nos filtros do site.</span>`;
+    } else {
+      customChipsEl.innerHTML = customList
+        .map((catName) => {
+          const safeCat = String(catName).replace(/'/g, "\\'");
+          return `
+            <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white border border-blue-200 text-[11px] font-heading font-bold text-[#2B6EB5] shadow-2xs">
+              <span>${catName}</span>
+              <button type="button" onclick="removeCustomCategoryFromAdmin('${safeCat}')"
+                title="Remover categoria ${catName}"
+                class="ml-0.5 text-slate-400 hover:text-rose-500 font-extrabold cursor-pointer">×</button>
+            </span>
+          `;
+        })
+        .join("");
+    }
+  }
+}
+
 function renderCatalogFiltersUI() {
+  renderCategoryOptionsUI();
   const sizeFilterContainer = document.getElementById("catalog-filter-sizes");
   if (sizeFilterContainer) {
     sizeFilterContainer.innerHTML = `
@@ -2153,8 +2307,74 @@ function renderAdminView() {
     ).join("");
   }
 
+  renderCategoryOptionsUI();
   renderQuickCodeManager();
   renderAdminProductsTable();
+}
+
+function toggleAdminNewCategoryBox(forceState) {
+  const box = document.getElementById("admin-new-category-box");
+  if (!box) return;
+  const shouldOpen = typeof forceState === "boolean" ? forceState : box.classList.contains("hidden");
+  if (shouldOpen) {
+    box.classList.remove("hidden");
+    renderCategoryOptionsUI();
+    refreshIcons();
+    const input = document.getElementById("admin-new-category-input");
+    if (input) {
+      setTimeout(() => input.focus(), 50);
+    }
+  } else {
+    box.classList.add("hidden");
+  }
+}
+
+function addCustomCategoryFromAdmin() {
+  const input = document.getElementById("admin-new-category-input");
+  if (!input) return;
+
+  const rawName = input.value.trim();
+  if (!rawName) {
+    showToast("Digite o nome da nova categoria para adicionar.", "warning");
+    input.focus();
+    return;
+  }
+
+  // Formata com a primeira letra maiúscula
+  const cleanName = rawName.charAt(0).toUpperCase() + rawName.slice(1);
+
+  if (!Array.isArray(CloudDB.state.customCategories)) {
+    CloudDB.state.customCategories = [];
+  }
+
+  const allExisting = getAllCategories();
+  const alreadyExists = allExisting.some((c) => c.value.toLowerCase() === cleanName.toLowerCase());
+
+  if (!alreadyExists) {
+    CloudDB.state.customCategories.push(cleanName);
+  }
+
+  input.value = "";
+  renderCategoryOptionsUI();
+
+  const adminSelect = document.getElementById("admin-prod-category");
+  if (adminSelect) {
+    const matched = getAllCategories().find((c) => c.value.toLowerCase() === cleanName.toLowerCase());
+    adminSelect.value = matched ? matched.value : cleanName;
+  }
+
+  showToast(`Categoria "${cleanName}" adicionada e selecionada!`, "success");
+  syncCloudDatabase(`Adicionou categoria ${cleanName}`);
+}
+
+function removeCustomCategoryFromAdmin(catName) {
+  if (!Array.isArray(CloudDB.state.customCategories)) return;
+  CloudDB.state.customCategories = CloudDB.state.customCategories.filter(
+    (c) => String(c).toLowerCase() !== String(catName).toLowerCase()
+  );
+  renderCategoryOptionsUI();
+  showToast(`Categoria "${catName}" removida.`, "info");
+  syncCloudDatabase(`Removeu categoria ${catName}`);
 }
 
 function selectAdminSizePreset(preset) {
@@ -2170,6 +2390,45 @@ function selectAdminSizePreset(preset) {
   });
 }
 
+async function uploadImageToCloudStorage(dataUrl) {
+  try {
+    if (!CloudDB.unlockedToken) {
+      CloudDB.unlockedToken = unlockCloudWriteToken(STORE_CONFIG.adminPassword || "210845");
+    }
+    const base64Content = dataUrl.split(",")[1];
+    if (!base64Content || !CloudDB.unlockedToken) return null;
+
+    const fileName = `hk-${Date.now()}-${Math.floor(100 + Math.random() * 899)}.jpg`;
+    const apiBase =
+      STORE_CONFIG.cloudUploadsApiBaseUrl ||
+      "https://api.github.com/repos/felipesfs7/happy-kids-moda-infantil/contents/assets/uploads";
+    const cdnBase =
+      STORE_CONFIG.cloudUploadsCdnBaseUrl ||
+      "https://raw.githubusercontent.com/felipesfs7/happy-kids-moda-infantil/main/assets/uploads";
+
+    const res = await fetch(`${apiBase}/${fileName}`, {
+      method: "PUT",
+      headers: {
+        Authorization: `token ${CloudDB.unlockedToken}`,
+        Accept: "application/vnd.github+json",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        message: `Upload de foto do produto: ${fileName}`,
+        content: base64Content,
+        branch: "main"
+      })
+    });
+
+    if (res.ok) {
+      return `${cdnBase}/${fileName}`;
+    }
+  } catch (err) {
+    console.warn("Fallback local para imagem:", err);
+  }
+  return null;
+}
+
 function handleAdminImageUpload(event) {
   const file = event.target.files && event.target.files[0];
   if (!file) return;
@@ -2177,9 +2436,9 @@ function handleAdminImageUpload(event) {
   const reader = new FileReader();
   reader.onload = function (e) {
     const img = new Image();
-    img.onload = function () {
+    img.onload = async function () {
       const canvas = document.createElement("canvas");
-      const maxDim = 650;
+      const maxDim = 800;
       let width = img.width;
       let height = img.height;
 
@@ -2195,13 +2454,23 @@ function handleAdminImageUpload(event) {
       canvas.height = height;
       const ctx = canvas.getContext("2d");
       ctx.drawImage(img, 0, 0, width, height);
-      const dataUrl = canvas.toDataURL("image/jpeg", 0.8);
+      const dataUrl = canvas.toDataURL("image/jpeg", 0.82);
 
       AppState.admin.uploadedImageDataUrl = dataUrl;
       const urlInput = document.getElementById("admin-prod-image-url");
       if (urlInput) urlInput.value = dataUrl;
       updateAdminImagePreview(dataUrl);
-      showToast("Imagem carregada com sucesso!", "success");
+
+      showToast("Otimizando e salvando foto na nuvem...", "info");
+      const cloudImageUrl = await uploadImageToCloudStorage(dataUrl);
+      if (cloudImageUrl) {
+        AppState.admin.uploadedImageDataUrl = cloudImageUrl;
+        if (urlInput) urlInput.value = cloudImageUrl;
+        updateAdminImagePreview(cloudImageUrl);
+        showToast("Foto enviada e otimizada na nuvem com sucesso!", "success");
+      } else {
+        showToast("Foto carregada com sucesso!", "success");
+      }
     };
     img.src = e.target.result;
   };
@@ -2677,6 +2946,17 @@ function setupGlobalListeners() {
       updateAdminImagePreview(e.target.value);
     });
   }
+
+  // Sincroniza automaticamente o estoque quando o cliente ou lojista volta para a aba do navegador
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") {
+      const now = Date.now();
+      const last = CloudDB.lastSyncedAt ? new Date(CloudDB.lastSyncedAt).getTime() : 0;
+      if (now - last > 20000) {
+        fetchCloudDatabaseState();
+      }
+    }
+  });
 }
 
 function refreshIcons() {
