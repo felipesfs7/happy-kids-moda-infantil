@@ -1,12 +1,13 @@
 {
   "version": 2,
-  "updatedAt": "2026-10-24T02:01:39.397Z",
+  "updatedAt": "2026-10-24T02:01:57.765Z",
   "soldOutIds": [],
   "productOverrides": {},
   "customProducts": [],
   "customCategories": [
     "Conjuntos",
-    "Vestidos"
+    "Vestidos",
+    "Pijamas"
   ],
   "deletedIds": []
 }
