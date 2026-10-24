@@ -25,6 +25,7 @@ const CloudDB = {
     productOverrides: {},  // Alterações de preço, tamanhos disponíveis, nome, destaque por ID
     customProducts: [],    // Novos produtos cadastrados pelo painel do lojista
     customCategories: [],  // Novas categorias criadas pela lojista no painel
+    heroBanners: null,     // Fotos/slides personalizados do Banner do Topo (null = usar padrão)
     deletedIds: []         // IDs excluídos permanentemente
   }
 };
@@ -103,6 +104,7 @@ function loadLocalCache() {
           productOverrides: parsed.productOverrides || {},
           customProducts: Array.isArray(parsed.customProducts) ? parsed.customProducts : [],
           customCategories: Array.isArray(parsed.customCategories) ? parsed.customCategories : [],
+          heroBanners: Array.isArray(parsed.heroBanners) ? parsed.heroBanners : null,
           deletedIds: Array.isArray(parsed.deletedIds) ? parsed.deletedIds : []
         };
       }
@@ -234,6 +236,7 @@ function applyIncomingCloudState(parsed) {
     productOverrides: parsed.productOverrides || {},
     customProducts: Array.isArray(parsed.customProducts) ? parsed.customProducts : [],
     customCategories: Array.isArray(parsed.customCategories) ? parsed.customCategories : [],
+    heroBanners: Array.isArray(parsed.heroBanners) ? parsed.heroBanners : null,
     deletedIds: Array.isArray(parsed.deletedIds) ? parsed.deletedIds : []
   };
   saveCloudCacheLocally();
@@ -843,35 +846,49 @@ function renderAll() {
   renderAdminView();
 }
 
+function getActiveHeroSlides() {
+  if (Array.isArray(CloudDB.state.heroBanners)) {
+    return CloudDB.state.heroBanners;
+  }
+  return HERO_SLIDES;
+}
+
 function renderHeroSlide() {
   const container = document.getElementById("hero-carousel-container");
   if (!container) return;
 
-  const slide = HERO_SLIDES[AppState.heroSlideIndex];
+  const slides = getActiveHeroSlides();
+  if (AppState.heroSlideIndex >= slides.length) {
+    AppState.heroSlideIndex = 0;
+  }
+
+  const fallbackSlide = HERO_SLIDES[0];
+  const slide = slides.length > 0 ? slides[AppState.heroSlideIndex] : { ...fallbackSlide, image: "" };
+  const hasImage = Boolean(slide && slide.image && String(slide.image).trim() !== "");
 
   container.innerHTML = `
-    <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r ${slide.bgClass} border border-orange-100/80 shadow-sm transition-all duration-500">
+    <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r ${slide.bgClass || fallbackSlide.bgClass} border border-orange-100/80 shadow-sm transition-all duration-500">
       <div class="grid grid-cols-1 lg:grid-cols-12 items-center min-h-[420px] lg:min-h-[470px]">
         
         <!-- Coluna de Texto e Chamada (CTA) -->
-        <div class="lg:col-span-7 p-6 sm:p-10 lg:p-14 z-10 animate-fade-in">
+        <div class="${hasImage ? "lg:col-span-7" : "lg:col-span-12"} p-6 sm:p-10 lg:p-14 z-10 animate-fade-in">
           <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/90 border border-orange-200 text-xs sm:text-sm font-bold text-[#F38230] shadow-sm mb-4">
-            <span>${slide.badge}</span>
+            <span>${slide.badge || fallbackSlide.badge}</span>
           </div>
           
           <h1 class="font-heading text-2xl sm:text-4xl lg:text-[42px] font-extrabold text-slate-900 leading-[1.18] tracking-tight mb-4">
-            ${slide.title}
+            ${slide.title || fallbackSlide.title}
           </h1>
           
           <p class="text-slate-600 text-sm sm:text-base lg:text-lg leading-relaxed mb-7 max-w-xl">
-            ${slide.subtitle}
+            ${slide.subtitle || fallbackSlide.subtitle}
           </p>
           
           <div class="flex flex-wrap items-center gap-3.5">
-            <button onclick='navigateWithFilter(${JSON.stringify(slide.filterPreset)})'
+            <button onclick='navigateWithFilter(${JSON.stringify(slide.filterPreset || fallbackSlide.filterPreset)})'
               class="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl bg-[#F38230] hover:bg-[#DC6B19] text-white font-heading font-bold text-sm sm:text-base shadow-lg shadow-orange-500/25 transition-all transform hover:-translate-y-0.5 cursor-pointer">
               <i data-lucide="sparkles" class="w-5 h-5"></i>
-              <span>${slide.ctaPrimary}</span>
+              <span>${slide.ctaPrimary || "Ver Catálogo Completo"}</span>
             </button>
             
             <button onclick="openStoreWhatsApp('Olá! Vi o destaque no site da Happy Kids e gostaria de atendimento!')"
@@ -898,9 +915,12 @@ function renderHeroSlide() {
           </div>
         </div>
 
+        ${
+          hasImage
+            ? `
         <!-- Coluna da Imagem em Destaque -->
         <div class="lg:col-span-5 relative h-80 sm:h-96 lg:h-[470px] w-full overflow-hidden bg-white/50 flex items-center justify-center p-4">
-          <img src="${slide.image}" alt="${slide.title}"
+          <img src="${slide.image}" alt="${slide.title || "Coleção Happy Kids"}"
             class="w-full h-full object-contain rounded-2xl transform hover:scale-105 transition-transform duration-700" />
           
           <!-- Card Flutuante Lúdico -->
@@ -909,23 +929,31 @@ function renderHeroSlide() {
               RN-18
             </div>
             <div>
-              <p class="text-xs font-bold uppercase tracking-wider text-[#2B6EB5]">${slide.floatingTag}</p>
-              <p class="text-sm font-heading font-bold text-slate-900">${slide.floatingPrice}</p>
+              <p class="text-xs font-bold uppercase tracking-wider text-[#2B6EB5]">${slide.floatingTag || "Coleção Oficial Happy Kids"}</p>
+              <p class="text-sm font-heading font-bold text-slate-900">${slide.floatingPrice || "Parcelamento em até 10x Sem Juros"}</p>
             </div>
           </div>
         </div>
+        `
+            : ""
+        }
       </div>
 
+      ${
+        slides.length > 1
+          ? `
       <!-- Controles do Carrossel -->
       <div class="absolute bottom-3 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2 bg-white/80 backdrop-blur-sm px-3 py-1.5 rounded-full shadow-sm border border-slate-200/60">
-        ${HERO_SLIDES.map(
-          (s, idx) => `
+        ${slides
+          .map(
+            (s, idx) => `
           <button onclick="goToHeroSlide(${idx})" aria-label="Slide ${idx + 1}"
             class="h-2.5 rounded-full transition-all cursor-pointer ${
               idx === AppState.heroSlideIndex ? "w-7 bg-[#F38230]" : "w-2.5 bg-slate-300 hover:bg-slate-400"
             }"></button>
         `
-        ).join("")}
+          )
+          .join("")}
       </div>
 
       <button onclick="prevHeroSlide()" aria-label="Slide Anterior"
@@ -936,6 +964,9 @@ function renderHeroSlide() {
         class="hidden sm:flex absolute right-3 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white/85 hover:bg-white text-slate-800 shadow-md items-center justify-center transition cursor-pointer">
         <i data-lucide="chevron-right" class="w-5 h-5"></i>
       </button>
+      `
+          : ""
+      }
     </div>
   `;
 
@@ -945,21 +976,26 @@ function renderHeroSlide() {
 function startHeroCarousel() {
   if (AppState.heroTimer) clearInterval(AppState.heroTimer);
   AppState.heroTimer = setInterval(() => {
-    if (AppState.currentView === "home") {
-      AppState.heroSlideIndex = (AppState.heroSlideIndex + 1) % HERO_SLIDES.length;
+    const slides = getActiveHeroSlides();
+    if (AppState.currentView === "home" && slides.length > 1) {
+      AppState.heroSlideIndex = (AppState.heroSlideIndex + 1) % slides.length;
       renderHeroSlide();
     }
   }, 6500);
 }
 
 function nextHeroSlide() {
-  AppState.heroSlideIndex = (AppState.heroSlideIndex + 1) % HERO_SLIDES.length;
+  const slides = getActiveHeroSlides();
+  if (slides.length <= 1) return;
+  AppState.heroSlideIndex = (AppState.heroSlideIndex + 1) % slides.length;
   renderHeroSlide();
   startHeroCarousel();
 }
 
 function prevHeroSlide() {
-  AppState.heroSlideIndex = (AppState.heroSlideIndex - 1 + HERO_SLIDES.length) % HERO_SLIDES.length;
+  const slides = getActiveHeroSlides();
+  if (slides.length <= 1) return;
+  AppState.heroSlideIndex = (AppState.heroSlideIndex - 1 + slides.length) % slides.length;
   renderHeroSlide();
   startHeroCarousel();
 }
@@ -2305,8 +2341,208 @@ function renderAdminView() {
   }
 
   renderCategoryOptionsUI();
+  renderAdminHeroBannersManager();
   renderQuickCodeManager();
   renderAdminProductsTable();
+}
+
+function toggleAdminHeroBannerBox(forceState) {
+  const box = document.getElementById("admin-hero-banner-box");
+  if (!box) return;
+  const shouldOpen = typeof forceState === "boolean" ? forceState : box.classList.contains("hidden");
+  if (shouldOpen) {
+    box.classList.remove("hidden");
+    renderAdminHeroBannersManager();
+    refreshIcons();
+    box.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  } else {
+    box.classList.add("hidden");
+  }
+}
+
+function updateAdminBannerPreview(src) {
+  const previewImg = document.getElementById("admin-banner-preview");
+  const placeholder = document.getElementById("admin-banner-placeholder");
+  if (!previewImg || !placeholder) return;
+
+  if (src && src.trim() !== "") {
+    previewImg.src = src;
+    previewImg.classList.remove("hidden");
+    placeholder.classList.add("hidden");
+  } else {
+    previewImg.src = "";
+    previewImg.classList.add("hidden");
+    placeholder.classList.remove("hidden");
+  }
+}
+
+function handleAdminBannerImageUpload(event) {
+  const file = event.target.files && event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function (e) {
+    const img = new Image();
+    img.onload = async function () {
+      const canvas = document.createElement("canvas");
+      const maxDim = 1200;
+      let width = img.width;
+      let height = img.height;
+
+      if (width > height && width > maxDim) {
+        height = Math.round((height * maxDim) / width);
+        width = maxDim;
+      } else if (height > maxDim) {
+        width = Math.round((width * maxDim) / height);
+        height = maxDim;
+      }
+
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(img, 0, 0, width, height);
+      const dataUrl = canvas.toDataURL("image/jpeg", 0.85);
+
+      AppState.admin.uploadedBannerDataUrl = dataUrl;
+      const urlInput = document.getElementById("admin-banner-image-url");
+      if (urlInput) urlInput.value = dataUrl;
+      updateAdminBannerPreview(dataUrl);
+
+      showToast("Otimizando foto da coleção na nuvem...", "info");
+      const cloudImageUrl = await uploadImageToCloudStorage(dataUrl);
+      if (cloudImageUrl) {
+        AppState.admin.uploadedBannerDataUrl = cloudImageUrl;
+        if (urlInput) urlInput.value = cloudImageUrl;
+        updateAdminBannerPreview(cloudImageUrl);
+        showToast("Foto da coleção pronta! Clique em 'Adicionar Foto ao Banner do Topo'.", "success");
+      } else {
+        showToast("Foto carregada! Clique em 'Adicionar Foto ao Banner do Topo'.", "success");
+      }
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function addHeroBannerFromAdmin() {
+  const urlInput = document.getElementById("admin-banner-image-url");
+  const badgeInput = document.getElementById("admin-banner-badge");
+  const tagInput = document.getElementById("admin-banner-tag");
+  const titleInput = document.getElementById("admin-banner-title");
+
+  const imageUrl = (urlInput && urlInput.value.trim()) || AppState.admin.uploadedBannerDataUrl || "";
+  if (!imageUrl) {
+    showToast("Escolha uma foto do celular/computador ou cole o link da imagem primeiro.", "warning");
+    return;
+  }
+
+  if (!Array.isArray(CloudDB.state.heroBanners)) {
+    CloudDB.state.heroBanners = HERO_SLIDES.map((s) => ({ ...s }));
+  }
+
+  const baseSlide = HERO_SLIDES[0];
+  const bgClasses = [
+    "from-[#FFF5EC] via-[#FFF9F2] to-[#EBF4FF]",
+    "from-[#EBF4FF] via-[#F5FAFF] to-[#FDF0F6]",
+    "from-[#FDF0F6] via-[#FFF8FA] to-[#FEFBEA]"
+  ];
+  const bgClass = bgClasses[CloudDB.state.heroBanners.length % bgClasses.length];
+
+  const newBanner = {
+    id: "banner-" + Date.now(),
+    badge: (badgeInput && badgeInput.value.trim()) || baseSlide.badge,
+    title: (titleInput && titleInput.value.trim()) || baseSlide.title,
+    subtitle: baseSlide.subtitle,
+    ctaPrimary: "Ver Catálogo Completo",
+    ctaSecondary: "Chamar no WhatsApp",
+    filterPreset: { gender: "todos", ageGroup: "todos", category: "todos" },
+    bgClass,
+    accentColor: "#F38230",
+    image: imageUrl,
+    floatingTag: (tagInput && tagInput.value.trim()) || "Coleção Oficial Happy Kids",
+    floatingPrice: "Parcelamento em até 10x Sem Juros"
+  };
+
+  CloudDB.state.heroBanners.unshift(newBanner);
+  AppState.heroSlideIndex = 0;
+  AppState.admin.uploadedBannerDataUrl = "";
+
+  if (urlInput) urlInput.value = "";
+  if (badgeInput) badgeInput.value = "";
+  if (tagInput) tagInput.value = "";
+  if (titleInput) titleInput.value = "";
+  updateAdminBannerPreview("");
+
+  renderHeroSlide();
+  renderAdminHeroBannersManager();
+  showToast("Nova foto de coleção adicionada ao Banner do Topo!", "success");
+  syncCloudDatabase("Adicionou foto de colecao ao banner do topo");
+}
+
+function removeHeroBannerFromAdmin(bannerId) {
+  if (!Array.isArray(CloudDB.state.heroBanners)) {
+    CloudDB.state.heroBanners = HERO_SLIDES.map((s) => ({ ...s }));
+  }
+
+  CloudDB.state.heroBanners = CloudDB.state.heroBanners.filter((b) => String(b.id) !== String(bannerId));
+  AppState.heroSlideIndex = 0;
+
+  renderHeroSlide();
+  renderAdminHeroBannersManager();
+  showToast("Foto removida do carrossel do topo.", "info");
+  syncCloudDatabase("Removeu foto do banner do topo");
+}
+
+function restoreDefaultHeroBanners() {
+  CloudDB.state.heroBanners = null;
+  AppState.heroSlideIndex = 0;
+  renderHeroSlide();
+  renderAdminHeroBannersManager();
+  showToast("Banners padrão restaurados com sucesso!", "success");
+  syncCloudDatabase("Restaurou banners padrao do topo");
+}
+
+function renderAdminHeroBannersManager() {
+  const listEl = document.getElementById("admin-hero-banners-list");
+  const countEl = document.getElementById("admin-banner-count");
+  if (!listEl) return;
+
+  const slides = getActiveHeroSlides();
+  if (countEl) countEl.textContent = slides.length;
+
+  if (slides.length === 0) {
+    listEl.innerHTML = `
+      <div class="col-span-full p-6 rounded-2xl bg-slate-50 border border-dashed border-slate-300 text-center text-xs text-slate-500">
+        Nenhuma foto ativa no banner no momento. Use o formulário ao lado para enviar as fotos de coleção da loja!
+      </div>
+    `;
+    return;
+  }
+
+  listEl.innerHTML = slides
+    .map(
+      (s, idx) => `
+      <div class="flex items-center gap-3 p-3 rounded-2xl bg-slate-50 border border-slate-200">
+        <div class="w-16 h-16 rounded-xl bg-white border border-slate-200 overflow-hidden shrink-0 flex items-center justify-center">
+          <img src="${s.image}" alt="Banner ${idx + 1}" class="w-full h-full object-contain" />
+        </div>
+        <div class="flex-1 min-w-0">
+          <span class="inline-block px-2 py-0.5 rounded bg-sky-100 text-[#2B6EB5] font-heading font-bold text-[10px] mb-0.5">
+            Slide ${idx + 1} • ${s.floatingTag || "Coleção"}
+          </span>
+          <p class="font-heading font-bold text-slate-800 text-xs line-clamp-1">${s.title || "Coleção Happy Kids"}</p>
+          <button type="button" onclick="removeHeroBannerFromAdmin('${s.id}')"
+            class="mt-1.5 inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-rose-50 hover:bg-rose-600 text-rose-600 hover:text-white font-heading font-bold text-[11px] transition cursor-pointer">
+            <i data-lucide="trash-2" class="w-3 h-3"></i>
+            <span>Remover Foto</span>
+          </button>
+        </div>
+      </div>
+    `
+    )
+    .join("");
+
+  refreshIcons();
 }
 
 function toggleAdminNewCategoryBox(forceState) {

@@ -734,6 +734,11 @@
         </div>
 
         <div class="flex flex-wrap items-center gap-2.5">
+          <button onclick="toggleAdminHeroBannerBox()"
+            class="px-4 py-2.5 rounded-xl bg-sky-500/25 hover:bg-sky-500/40 border border-sky-300/40 text-sky-100 font-heading font-semibold text-xs flex items-center gap-1.5 transition cursor-pointer">
+            <i data-lucide="image" class="w-4 h-4"></i>
+            <span>Fotos do Banner (Topo)</span>
+          </button>
           <button onclick="navigateTo('catalog')"
             class="px-4 py-2.5 rounded-xl bg-white/15 hover:bg-white/25 text-white font-heading font-semibold text-xs flex items-center gap-1.5 transition cursor-pointer">
             <i data-lucide="eye" class="w-4 h-4"></i>
@@ -842,6 +847,104 @@
 
         <!-- Resultados da Busca Rápida por Código -->
         <div id="admin-quick-code-results" class="space-y-3"></div>
+      </div>
+
+      <!-- ====================================================================
+           ABA RETRÁTIL: GERENCIADOR DE FOTOS DO BANNER DO TOPO (COLEÇÕES)
+           ==================================================================== -->
+      <div id="admin-hero-banner-box" class="hidden bg-white rounded-3xl border-2 border-sky-200 p-6 shadow-sm space-y-5 transition-all">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
+          <div>
+            <span class="inline-flex items-center gap-1.5 text-xs font-heading font-bold uppercase tracking-wider text-[#2B6EB5]">
+              <i data-lucide="image" class="w-4 h-4"></i>
+              <span>Carrossel da Página Inicial</span>
+            </span>
+            <h2 class="font-heading text-lg sm:text-xl font-extrabold text-slate-900 mt-0.5">
+              Gerenciar Fotos do Banner Principal (Coleções)
+            </h2>
+            <p class="text-xs text-slate-500">
+              Adicione fotos de coleções ao banner do topo da loja ou remova as fotos que não quiser exibir:
+            </p>
+          </div>
+          <div class="flex items-center gap-2 shrink-0">
+            <button type="button" onclick="restoreDefaultHeroBanners()"
+              class="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 font-heading font-bold text-xs transition cursor-pointer">
+              Restaurar Padrão
+            </button>
+            <button type="button" onclick="toggleAdminHeroBannerBox(false)"
+              class="px-3 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 font-heading font-bold text-xs transition cursor-pointer">
+              Fechar ✕
+            </button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+          <!-- Coluna Esquerda: Adicionar Nova Foto ao Banner (5 cols) -->
+          <div class="lg:col-span-5 p-4 rounded-2xl bg-sky-50/60 border border-sky-200/80 space-y-3.5">
+            <h3 class="font-heading font-bold text-sm text-slate-900 flex items-center gap-1.5">
+              <i data-lucide="plus-circle" class="w-4 h-4 text-[#2B6EB5]"></i>
+              <span>Adicionar Nova Foto de Coleção ao Banner</span>
+            </h3>
+
+            <div class="flex items-center gap-3">
+              <div class="w-20 h-20 rounded-2xl bg-white border border-slate-200 overflow-hidden flex items-center justify-center shrink-0">
+                <img id="admin-banner-preview" src="" alt="Preview Banner" class="hidden w-full h-full object-cover" />
+                <span id="admin-banner-placeholder" class="text-[10px] text-slate-400 text-center px-1.5">Sem foto</span>
+              </div>
+
+              <div class="flex-1 space-y-2">
+                <label class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#2B6EB5] hover:bg-[#1E548F] text-white font-heading font-bold text-xs cursor-pointer transition shadow-xs">
+                  <i data-lucide="upload" class="w-3.5 h-3.5"></i>
+                  <span>Escolher Foto da Coleção (Celular/PC)</span>
+                  <input type="file" accept="image/*" onchange="handleAdminBannerImageUpload(event)" class="hidden" />
+                </label>
+                <input id="admin-banner-image-url" type="text"
+                  oninput="updateAdminBannerPreview(this.value)"
+                  placeholder="Ou cole o link da imagem (https://...)"
+                  class="w-full px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-xs outline-none focus:border-[#2B6EB5]" />
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              <div>
+                <label class="block text-[11px] font-heading font-bold text-slate-700 mb-1">Selo Superior (Opcional)</label>
+                <input id="admin-banner-badge" type="text"
+                  placeholder="Ex: NOVA COLEÇÃO HAPPY KIDS"
+                  class="w-full px-3 py-2 rounded-xl bg-white border border-slate-200 focus:border-[#2B6EB5] text-xs outline-none" />
+              </div>
+              <div>
+                <label class="block text-[11px] font-heading font-bold text-slate-700 mb-1">Etiqueta da Foto (Opcional)</label>
+                <input id="admin-banner-tag" type="text"
+                  placeholder="Ex: Coleção Primavera/Verão"
+                  class="w-full px-3 py-2 rounded-xl bg-white border border-slate-200 focus:border-[#2B6EB5] text-xs outline-none" />
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-[11px] font-heading font-bold text-slate-700 mb-1">Título Principal do Banner (Opcional)</label>
+              <input id="admin-banner-title" type="text"
+                placeholder="Deixe em branco para usar o texto padrão da loja"
+                class="w-full px-3 py-2 rounded-xl bg-white border border-slate-200 focus:border-[#2B6EB5] text-xs outline-none" />
+            </div>
+
+            <button type="button" onclick="addHeroBannerFromAdmin()"
+              class="w-full py-2.5 px-4 rounded-xl bg-[#F38230] hover:bg-[#DC6B19] text-white font-heading font-bold text-xs shadow-sm flex items-center justify-center gap-1.5 transition cursor-pointer">
+              <i data-lucide="check-circle-2" class="w-4 h-4"></i>
+              <span>Adicionar Foto ao Banner do Topo</span>
+            </button>
+          </div>
+
+          <!-- Coluna Direita: Lista de Fotos Atuais no Banner (7 cols) -->
+          <div class="lg:col-span-7 space-y-2.5">
+            <div class="flex items-center justify-between">
+              <h3 class="font-heading font-bold text-sm text-slate-900">
+                Fotos Ativas no Carrossel do Topo (<span id="admin-banner-count">0</span>)
+              </h3>
+              <span class="text-[11px] text-slate-400">Clique em "Remover" para tirar uma foto do carrossel</span>
+            </div>
+            <div id="admin-hero-banners-list" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
+          </div>
+        </div>
       </div>
 
       <!-- Grid Principal do CMS: Formulário de Cadastro/Edição (Esquerda) + Lista de Produtos (Direita) -->
