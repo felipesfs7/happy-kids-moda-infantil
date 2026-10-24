@@ -1,12 +1,13 @@
 {
   "version": 2,
-  "updatedAt": "2026-10-24T01:51:54.096Z",
+  "updatedAt": "2026-10-24T01:52:02.703Z",
   "soldOutIds": [],
   "productOverrides": {},
   "customProducts": [],
   "customCategories": [
     "Moda Praia",
-    "Bodys"
+    "Bodys",
+    "Macacão"
   ],
   "deletedIds": []
 }
