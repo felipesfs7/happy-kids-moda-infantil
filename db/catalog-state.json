@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updatedAt": "2026-10-24T02:17:28.864Z",
+  "updatedAt": "2026-10-24T12:30:33.126Z",
   "soldOutIds": [],
   "productOverrides": {},
   "customProducts": [],
@@ -17,6 +17,9 @@
     "Bodys",
     "Macacão Manga Curta",
     "Macacão Manga longa"
+  ],
+  "customBrands": [
+    "Alakazoo"
   ],
   "heroBanners": [],
   "deletedIds": []
