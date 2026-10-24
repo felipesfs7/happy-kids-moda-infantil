@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updatedAt": "2026-10-24T19:32:12.012Z",
+  "updatedAt": "2026-10-24T19:33:23.428Z",
   "soldOutIds": [],
   "productOverrides": {},
   "customProducts": [
@@ -41,7 +41,7 @@
       "name": "Conjunto Masculino Camiseta Meia Malha e Bermuda de Moletinho",
       "price": 98.9,
       "oldPrice": null,
-      "gender": "Feminino",
+      "gender": "Masculino",
       "category": "Conjuntos",
       "brand": "Alakazoo",
       "season": "Verão",
