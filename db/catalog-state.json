@@ -1,11 +1,12 @@
 {
   "version": 2,
-  "updatedAt": "2026-10-24T02:01:28.918Z",
+  "updatedAt": "2026-10-24T02:01:39.397Z",
   "soldOutIds": [],
   "productOverrides": {},
   "customProducts": [],
   "customCategories": [
-    "Conjuntos"
+    "Conjuntos",
+    "Vestidos"
   ],
   "deletedIds": []
 }
