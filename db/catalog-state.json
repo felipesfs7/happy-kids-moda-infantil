@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updatedAt": "2026-10-24T02:04:57.985Z",
+  "updatedAt": "2026-10-24T02:05:04.125Z",
   "soldOutIds": [],
   "productOverrides": {},
   "customProducts": [],
@@ -11,7 +11,8 @@
     "Moda Praia",
     "Camisetas",
     "Blusas",
-    "Shorts"
+    "Shorts",
+    "Bermuda"
   ],
   "deletedIds": []
 }
