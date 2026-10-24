@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updatedAt": "2026-10-24T02:02:06.215Z",
+  "updatedAt": "2026-10-24T02:04:31.948Z",
   "soldOutIds": [],
   "productOverrides": {},
   "customProducts": [],
@@ -8,7 +8,8 @@
     "Conjuntos",
     "Vestidos",
     "Pijamas",
-    "Moda Praia"
+    "Moda Praia",
+    "Camisetas"
   ],
   "deletedIds": []
 }
