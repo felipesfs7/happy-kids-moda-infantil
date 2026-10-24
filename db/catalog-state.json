@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updatedAt": "2026-10-24T02:06:41.111Z",
+  "updatedAt": "2026-10-24T02:06:51.359Z",
   "soldOutIds": [],
   "productOverrides": {},
   "customProducts": [],
@@ -15,7 +15,8 @@
     "Bermudas",
     "Calças",
     "Bodys",
-    "Macacão Manga Curta"
+    "Macacão Manga Curta",
+    "Macacão Manga longa"
   ],
   "deletedIds": []
 }
