@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updatedAt": "2026-10-24T17:10:08.775Z",
+  "updatedAt": "2026-10-24T17:10:52.264Z",
   "soldOutIds": [],
   "productOverrides": {
     "hk-custom-071646": {
@@ -24,8 +24,6 @@
       "ageLabel": "Tam. 4 ao 10",
       "sizes": [
         "4",
-        "6",
-        "8",
         "10"
       ],
       "badge": "Novo",
