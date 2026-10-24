@@ -3,23 +3,24 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Happy Kids Moda Infantil | Do RN ao 18 • Santa Fé do Sul - SP</title>
-  <meta name="description" content="Happy Kids Moda Infantil em Santa Fé do Sul - SP. Roupas infantis, bebê e juvenil do tamanho RN ao 18. Enviamos para todo o Brasil em até 10x sem juros!" />
+  <title>Happy Kids Moda Infantil | Santa Fé do Sul - SP</title>
+  <meta name="description" content="Happy Kids Moda Infantil em Santa Fé do Sul - SP. Coleções exclusivas de roupas infantis com envio para todo o Brasil em até 10x sem juros!" />
   <meta property="og:site_name" content="Happy Kids Moda Infantil" />
   <meta property="og:locale" content="pt_BR" />
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="Happy Kids Moda Infantil | Catálogo Oficial (RN ao 18)" />
-  <meta property="og:description" content="Vestindo a infância com alegria, conforto e amor do RN ao 18 em Santa Fé do Sul - SP! Escolha o tamanho e peça direto pelo WhatsApp (17) 99773-2964. Enviamos para todo o Brasil em até 10x sem juros!" />
-  <meta property="og:url" content="https://happy-kids-moda-infantil.vercel.app/" />
+  <meta property="og:title" content="Happy Kids Moda Infantil | Catálogo Oficial" />
+  <meta property="og:description" content="Vestindo a infância com alegria, conforto e amor em Santa Fé do Sul - SP! Confira nossa coleção de roupas infantis e peça direto pelo WhatsApp (17) 99773-2964. Enviamos para todo o Brasil em até 10x sem juros!" />
+  <link rel="canonical" href="https://happykidssfs.com.br/" />
+  <meta property="og:url" content="https://happykidssfs.com.br/" />
   <meta property="og:image" content="https://happy-kids-moda-infantil.vercel.app/assets/og-logo.jpg" />
   <meta property="og:image:secure_url" content="https://happy-kids-moda-infantil.vercel.app/assets/og-logo.jpg" />
   <meta property="og:image:type" content="image/jpeg" />
   <meta property="og:image:width" content="600" />
   <meta property="og:image:height" content="600" />
-  <meta property="og:image:alt" content="Logo Oficial Happy Kids Moda Infantil - Do RN ao 18" />
+  <meta property="og:image:alt" content="Logo Oficial Happy Kids Moda Infantil" />
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Happy Kids Moda Infantil | Catálogo Oficial (RN ao 18)" />
-  <meta name="twitter:description" content="Moda bebê, infantil e juvenil em Santa Fé do Sul - SP. Escolha o tamanho e peça direto pelo WhatsApp (17) 99773-2964!" />
+  <meta name="twitter:title" content="Happy Kids Moda Infantil | Catálogo Oficial" />
+  <meta name="twitter:description" content="Coleções de roupas infantis em Santa Fé do Sul - SP. Escolha o tamanho e peça direto pelo WhatsApp (17) 99773-2964!" />
   <meta name="twitter:image" content="https://happy-kids-moda-infantil.vercel.app/assets/og-logo.jpg" />
   <link rel="icon" type="image/png" href="assets/logo.png" />
 
@@ -172,10 +173,6 @@
             <span class="w-2 h-2 rounded-full bg-[#2CB667]"></span>
             <span>Bebês (RN ao G)</span>
           </button>
-          <button onclick="navigateWithFilter({ ageGroup: 'juvenil' })" data-nav-btn="juvenil" class="hover:text-[#F38230] transition cursor-pointer flex items-center gap-1.5">
-            <span class="w-2 h-2 rounded-full bg-[#F38230]"></span>
-            <span>Juvenil (10 ao 18)</span>
-          </button>
           <button onclick="resetCatalogFilters(); navigateTo('catalog');" data-nav-btn="catalog" class="hover:text-[#F38230] transition cursor-pointer">
             Catálogo Completo
           </button>
@@ -224,7 +221,7 @@
           </button>
         </div>
 
-        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-5">
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
           <!-- Card 1: Bebê -->
           <div onclick="navigateWithFilter({ ageGroup: 'bebe' })"
             class="group relative rounded-3xl p-4 sm:p-5 bg-gradient-to-b from-sky-50 to-white border-2 border-sky-100 hover:border-[#2B6EB5] shadow-xs hover:shadow-md transition-all cursor-pointer text-center">
@@ -234,7 +231,7 @@
             </div>
             <span class="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-sky-100 text-[#2B6EB5] mb-1">RN, P, M, G</span>
             <h3 class="font-heading font-extrabold text-slate-900 text-base group-hover:text-[#2B6EB5]">Mundo Bebê</h3>
-            <p class="text-xs text-slate-500 mt-0.5">Bodies, Macacões & Kits</p>
+            <p class="text-xs text-slate-500 mt-0.5">Bodies, Macacões & Conjuntos</p>
           </div>
 
           <!-- Card 2: Meninas -->
@@ -244,7 +241,7 @@
               <img src="assets/produtos/prod-002.jpg" alt="Moda Meninas"
                 class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
             </div>
-            <span class="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-pink-100 text-[#E84C93] mb-1">RN ao 16</span>
+            <span class="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-pink-100 text-[#E84C93] mb-1">Coleção Infantil</span>
             <h3 class="font-heading font-extrabold text-slate-900 text-base group-hover:text-[#E84C93]">Meninas</h3>
             <p class="text-xs text-slate-500 mt-0.5">Vestidos, Conjuntos & Blusas</p>
           </div>
@@ -256,33 +253,21 @@
               <img src="assets/produtos/prod-055.jpg" alt="Moda Meninos"
                 class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
             </div>
-            <span class="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-orange-100 text-[#F38230] mb-1">RN ao 16</span>
+            <span class="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-orange-100 text-[#F38230] mb-1">Coleção Infantil</span>
             <h3 class="font-heading font-extrabold text-slate-900 text-base group-hover:text-[#F38230]">Meninos</h3>
-            <p class="text-xs text-slate-500 mt-0.5">Conjuntos, Regatas & Cargo</p>
+            <p class="text-xs text-slate-500 mt-0.5">Conjuntos, Camisetas & Bermudas</p>
           </div>
 
-          <!-- Card 4: Juvenil -->
-          <div onclick="navigateWithFilter({ ageGroup: 'juvenil' })"
-            class="group relative rounded-3xl p-4 sm:p-5 bg-gradient-to-b from-emerald-50 to-white border-2 border-emerald-100 hover:border-[#2CB667] shadow-xs hover:shadow-md transition-all cursor-pointer text-center">
-            <div class="w-20 h-20 sm:w-24 sm:h-24 mx-auto rounded-full overflow-hidden border-4 border-white shadow-md mb-3 bg-white">
-              <img src="assets/produtos/prod-001.jpg" alt="Moda Juvenil"
-                class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
-            </div>
-            <span class="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-700 mb-1">Tam. 12 ao 16</span>
-            <h3 class="font-heading font-extrabold text-slate-900 text-base group-hover:text-emerald-700">Juvenil / Teen</h3>
-            <p class="text-xs text-slate-500 mt-0.5">Conjuntos, Blusas & Vestidos</p>
-          </div>
-
-          <!-- Card 5: Pijamas -->
+          <!-- Card 4: Pijamas -->
           <div onclick="navigateWithFilter({ category: 'Pijamas' })"
-            class="col-span-2 sm:col-span-1 group relative rounded-3xl p-4 sm:p-5 bg-gradient-to-b from-amber-50 to-white border-2 border-amber-100 hover:border-amber-400 shadow-xs hover:shadow-md transition-all cursor-pointer text-center">
+            class="group relative rounded-3xl p-4 sm:p-5 bg-gradient-to-b from-amber-50 to-white border-2 border-amber-100 hover:border-amber-400 shadow-xs hover:shadow-md transition-all cursor-pointer text-center">
             <div class="w-20 h-20 sm:w-24 sm:h-24 mx-auto rounded-full overflow-hidden border-4 border-white shadow-md mb-3 bg-white">
-              <img src="assets/produtos/prod-076.jpg" alt="Pijamas Infantis e Juvenis"
+              <img src="assets/produtos/prod-076.jpg" alt="Pijamas Infantis"
                 class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
             </div>
             <span class="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 mb-1">Hora do Sono</span>
             <h3 class="font-heading font-extrabold text-slate-900 text-base group-hover:text-amber-700">Pijamas</h3>
-            <p class="text-xs text-slate-500 mt-0.5">Microfibra & Brilha no Escuro</p>
+            <p class="text-xs text-slate-500 mt-0.5">Conforto & Diversão</p>
           </div>
         </div>
       </div>
@@ -332,10 +317,6 @@
             <button onclick="setHomeTab('bebe')" data-home-tab="bebe"
               class="px-4 py-2 rounded-full font-heading font-semibold text-xs sm:text-sm bg-white text-slate-600 hover:bg-orange-50 hover:text-[#F38230] border border-slate-200 transition cursor-pointer">
               🍼 Bebês (RN-G)
-            </button>
-            <button onclick="setHomeTab('juvenil')" data-home-tab="juvenil"
-              class="px-4 py-2 rounded-full font-heading font-semibold text-xs sm:text-sm bg-white text-slate-600 hover:bg-orange-50 hover:text-[#F38230] border border-slate-200 transition cursor-pointer">
-              😎 Juvenil (10-18)
             </button>
           </div>
         </div>
@@ -497,7 +478,7 @@
             </h3>
             <div class="space-y-1">
               <button onclick="setCatalogFilter('ageGroup', 'todos')" data-filter-age="todos">
-                <span>Todas as Faixas (RN ao 18)</span>
+                <span>Todas as Faixas</span>
               </button>
               <button onclick="setCatalogFilter('ageGroup', 'bebe')" data-filter-age="bebe">
                 <span>🍼 Bebê (RN, P, M, G)</span>
@@ -506,10 +487,7 @@
                 <span>🧸 1 a 3 anos</span>
               </button>
               <button onclick="setCatalogFilter('ageGroup', '4-a-10')" data-filter-age="4-a-10">
-                <span>🎈 4 a 10 anos</span>
-              </button>
-              <button onclick="setCatalogFilter('ageGroup', 'juvenil')" data-filter-age="juvenil">
-                <span>😎 Juvenil até 18</span>
+                <span>🎈 Infantil (4 ao 16)</span>
               </button>
             </div>
           </div>
@@ -605,19 +583,19 @@
               Nossa História em Santa Fé do Sul - SP
             </span>
             <h1 class="font-heading text-3xl sm:text-4xl font-extrabold text-slate-900 leading-tight">
-              Vestindo a infância com alegria, qualidade e carinho do RN ao 18!
+              Vestindo a infância com alegria, qualidade e carinho!
             </h1>
             <p class="text-slate-600 text-sm sm:text-base leading-relaxed">
-              A <strong>Happy Kids Moda Infantil</strong> nasceu com o propósito de oferecer às famílias de <strong>Santa Fé do Sul - SP</strong> e de todo o Brasil roupas infantis que unem conforto verdadeiro, durabilidade para brincar sem limites e aquele visual encantador que rende memórias inesquecíveis.
+              A <strong>Happy Kids Moda Infantil</strong> nasceu com o propósito de oferecer às famílias de <strong>Santa Fé do Sul - SP</strong> e de todo o Brasil coleções de roupas infantis que unem conforto verdadeiro, durabilidade para brincar sem limites e aquele visual encantador que rende memórias inesquecíveis.
             </p>
             <p class="text-slate-600 text-sm sm:text-base leading-relaxed">
-              Trabalhamos com curadoria completa desde o enxoval de recém-nascido (<strong>RN, P, M, G</strong>), passando pelos primeiros passos (<strong>1 a 3 anos</strong>) e fase infantil (<strong>4 a 10 anos</strong>), até a moda juvenil cheia de atitude (<strong>tamanhos 12 ao 18</strong>).
+              Trabalhamos exclusivamente com <strong>coleções selecionadas de roupas infantis</strong> — incluindo conjuntos, vestidos, blusas, camisetas, shorts, calças, pijamas e linha bebê — sempre acompanhando as tendências de cada estação com muito estilo, maciez e qualidade.
             </p>
 
             <div class="grid grid-cols-2 gap-4 pt-3">
               <div class="p-4 rounded-2xl bg-sky-50 border border-sky-100">
-                <p class="font-heading font-extrabold text-2xl text-[#2B6EB5]">RN ao 18</p>
-                <p class="text-xs text-slate-600 font-medium">Grade completa para todas as idades</p>
+                <p class="font-heading font-extrabold text-2xl text-[#2B6EB5]">Coleção Infantil</p>
+                <p class="text-xs text-slate-600 font-medium">Looks completos para meninas e meninos</p>
               </div>
               <div class="p-4 rounded-2xl bg-orange-50 border border-orange-100">
                 <p class="font-heading font-extrabold text-2xl text-[#F38230]">10x s/ Juros</p>
@@ -702,8 +680,8 @@
               </div>
               <div>
                 <h3 class="font-heading font-bold text-sm text-slate-900">Horário de Atendimento</h3>
-                <p class="text-xs sm:text-sm text-slate-600 mt-0.5">Segunda a Sexta: 09h00 às 18h00</p>
-                <p class="text-xs sm:text-sm text-slate-600">Sábados: 09h00 às 13h00</p>
+                <p class="text-xs sm:text-sm text-slate-600 mt-0.5">Segunda a Sexta: 08h00 às 18h00</p>
+                <p class="text-xs sm:text-sm text-slate-600">Sábados: 08h00 às 13h00</p>
               </div>
             </div>
           </div>
@@ -961,8 +939,7 @@
                   class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 focus:border-[#F38230] text-sm outline-none">
                   <option value="bebe">Bebê (RN, P, M, G)</option>
                   <option value="1-a-3">1 a 3 anos</option>
-                  <option value="4-a-10">4 a 10 anos</option>
-                  <option value="juvenil">Juvenil até 18</option>
+                  <option value="4-a-10">Infantil (4 ao 16)</option>
                 </select>
               </div>
               <div>
@@ -972,15 +949,15 @@
               </div>
             </div>
 
-            <!-- Seletor de Tamanhos Disponíveis (RN ao 18) -->
+            <!-- Seletor de Tamanhos Disponíveis -->
             <div>
               <div class="flex flex-wrap items-center justify-between gap-1 mb-1.5">
-                <label class="text-xs font-heading font-bold text-slate-700">Tamanhos em Estoque (RN ao 18) *</label>
+                <label class="text-xs font-heading font-bold text-slate-700">Tamanhos em Estoque *</label>
                 <div class="flex flex-wrap gap-1 text-[10px] font-bold">
                   <button type="button" onclick="selectAdminSizePreset('bebe')" class="px-2 py-0.5 rounded bg-sky-50 text-[#2B6EB5] hover:bg-sky-100 cursor-pointer">RN-G</button>
                   <button type="button" onclick="selectAdminSizePreset('1-3')" class="px-2 py-0.5 rounded bg-orange-50 text-[#F38230] hover:bg-orange-100 cursor-pointer">1-3</button>
                   <button type="button" onclick="selectAdminSizePreset('4-10')" class="px-2 py-0.5 rounded bg-orange-50 text-[#F38230] hover:bg-orange-100 cursor-pointer">4-10</button>
-                  <button type="button" onclick="selectAdminSizePreset('juvenil')" class="px-2 py-0.5 rounded bg-pink-50 text-[#E84C93] hover:bg-pink-100 cursor-pointer">12-18</button>
+                  <button type="button" onclick="selectAdminSizePreset('12-16')" class="px-2 py-0.5 rounded bg-pink-50 text-[#E84C93] hover:bg-pink-100 cursor-pointer">12-16</button>
                   <button type="button" onclick="selectAdminSizePreset('all')" class="px-2 py-0.5 rounded bg-slate-100 text-slate-700 hover:bg-slate-200 cursor-pointer">Todos</button>
                   <button type="button" onclick="selectAdminSizePreset('none')" class="px-2 py-0.5 rounded bg-rose-50 text-rose-600 cursor-pointer">Limpar</button>
                 </div>
@@ -1108,20 +1085,31 @@
             </div>
           </div>
           <p class="text-xs sm:text-sm text-slate-400 leading-relaxed">
-            Sua loja completa de moda bebê, infantil e juvenil em Santa Fé do Sul - SP. Looks escolhidos com amor para vestir cada fase com conforto e estilo!
+            Sua loja completa de coleções de roupas infantis em Santa Fé do Sul - SP. Looks escolhidos com amor para vestir cada fase com conforto e estilo!
           </p>
           <div class="flex items-center gap-3 pt-1">
-            <button onclick="openStoreWhatsApp()" aria-label="WhatsApp"
-              class="w-10 h-10 rounded-xl bg-slate-800 hover:bg-[#25D366] text-white flex items-center justify-center transition cursor-pointer">
-              <i data-lucide="message-circle" class="w-5 h-5"></i>
+            <!-- Botão Oficial WhatsApp (SVG) -->
+            <button onclick="openStoreWhatsApp()" aria-label="WhatsApp" title="WhatsApp (17) 99773-2964"
+              class="w-11 h-11 rounded-xl bg-[#25D366]/15 hover:bg-[#25D366] border border-[#25D366]/40 text-[#25D366] hover:text-white flex items-center justify-center transition cursor-pointer">
+              <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.1.824zm-3.423-14.416c-6.627 0-12 5.373-12 12 0 2.126.556 4.122 1.529 5.854l-1.529 5.586 5.719-1.5c1.689.916 3.621 1.44 5.681 1.44 6.627 0 12-5.373 12-12s-5.373-12-12-12z"/>
+              </svg>
             </button>
-            <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"
-              class="w-10 h-10 rounded-xl bg-slate-800 hover:bg-[#E84C93] text-white flex items-center justify-center transition">
-              <i data-lucide="instagram" class="w-5 h-5"></i>
+
+            <!-- Botão Oficial Instagram (SVG) -->
+            <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" title="Instagram da Happy Kids"
+              class="w-11 h-11 rounded-xl bg-[#E84C93]/15 hover:bg-gradient-to-tr hover:from-[#F58529] hover:via-[#DD2A7B] hover:to-[#8134AF] border border-[#E84C93]/40 text-[#E84C93] hover:text-white flex items-center justify-center transition">
+              <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+              </svg>
             </a>
-            <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer" aria-label="Facebook"
-              class="w-10 h-10 rounded-xl bg-slate-800 hover:bg-[#2B6EB5] text-white flex items-center justify-center transition">
-              <i data-lucide="facebook" class="w-5 h-5"></i>
+
+            <!-- Botão Oficial Facebook (SVG) -->
+            <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer" aria-label="Facebook" title="Facebook da Happy Kids"
+              class="w-11 h-11 rounded-xl bg-[#2B6EB5]/20 hover:bg-[#1877F2] border border-[#60A5FA]/40 text-[#60A5FA] hover:text-white flex items-center justify-center transition">
+              <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M22.675 0h-21.35c-.732 0-1.325.593-1.325 1.325v21.351c0 .731.593 1.324 1.325 1.324h11.495v-9.294h-3.128v-3.622h3.128v-2.671c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.313h3.587l-.467 3.622h-3.12v9.293h6.116c.73 0 1.323-.593 1.323-1.325v-21.35c0-.732-.593-1.325-1.325-1.325z"/>
+              </svg>
             </a>
           </div>
         </div>
@@ -1131,9 +1119,8 @@
           <h4 class="font-heading font-bold text-sm uppercase tracking-wider text-white">Departamentos</h4>
           <ul class="space-y-2 text-xs sm:text-sm">
             <li><button onclick="navigateWithFilter({ ageGroup: 'bebe' })" class="hover:text-[#F38230] transition cursor-pointer">Linha Bebê (RN, P, M, G)</button></li>
-            <li><button onclick="navigateWithFilter({ gender: 'Feminino' })" class="hover:text-[#F38230] transition cursor-pointer">Moda Meninas (RN ao 18)</button></li>
-            <li><button onclick="navigateWithFilter({ gender: 'Masculino' })" class="hover:text-[#F38230] transition cursor-pointer">Moda Meninos (RN ao 18)</button></li>
-            <li><button onclick="navigateWithFilter({ ageGroup: 'juvenil' })" class="hover:text-[#F38230] transition cursor-pointer">Moda Juvenil (10 ao 18)</button></li>
+            <li><button onclick="navigateWithFilter({ gender: 'Feminino' })" class="hover:text-[#F38230] transition cursor-pointer">Moda Meninas</button></li>
+            <li><button onclick="navigateWithFilter({ gender: 'Masculino' })" class="hover:text-[#F38230] transition cursor-pointer">Moda Meninos</button></li>
             <li><button onclick="openSizeGuideModal()" class="hover:text-[#F38230] transition cursor-pointer">Guia de Medidas Infantil</button></li>
             <li><button onclick="navigateTo('admin')" class="text-amber-400 hover:underline font-semibold cursor-pointer">Painel do Lojista (CMS)</button></li>
           </ul>
@@ -1165,7 +1152,7 @@
               <i data-lucide="clock" class="w-5 h-5 text-[#60A5FA] shrink-0 mt-0.5"></i>
               <div>
                 <p class="font-bold text-white">Horário de Funcionamento:</p>
-                <p class="text-slate-300">Segunda a Sexta: 09h às 18h | Sábado: 09h às 13h</p>
+                <p class="text-slate-300">Segunda a Sexta: 08h às 18h | Sábado: 08h às 13h</p>
               </div>
             </div>
           </div>
@@ -1285,10 +1272,6 @@
             <span class="w-2.5 h-2.5 rounded-full bg-[#2CB667]"></span>
             <span>Bebês (RN, P, M, G)</span>
           </button>
-          <button onclick="navigateWithFilter({ ageGroup: 'juvenil' })" class="w-full text-left px-3.5 py-3 rounded-xl hover:bg-orange-50 hover:text-[#F38230] flex items-center gap-3">
-            <span class="w-2.5 h-2.5 rounded-full bg-[#F38230]"></span>
-            <span>Juvenil (10 ao 18)</span>
-          </button>
           <button onclick="resetCatalogFilters(); navigateTo('catalog');" class="w-full text-left px-3.5 py-3 rounded-xl hover:bg-slate-100 flex items-center gap-3">
             <i data-lucide="layout-grid" class="w-4 h-4 text-[#2B6EB5]"></i>
             <span>Catálogo Completo</span>
@@ -1358,10 +1341,9 @@
             <tr><td class="py-2 px-3 font-bold text-[#F38230]">6</td><td class="py-2 px-3">5 a 6 anos</td><td class="py-2 px-3">106 a 117 cm</td><td class="py-2 px-3">19 a 23 kg</td></tr>
             <tr><td class="py-2 px-3 font-bold text-[#F38230]">8</td><td class="py-2 px-3">7 a 8 anos</td><td class="py-2 px-3">118 a 128 cm</td><td class="py-2 px-3">24 a 28 kg</td></tr>
             <tr><td class="py-2 px-3 font-bold text-[#F38230]">10</td><td class="py-2 px-3">9 a 10 anos</td><td class="py-2 px-3">129 a 137 cm</td><td class="py-2 px-3">29 a 34 kg</td></tr>
-            <tr><td class="py-2 px-3 font-bold text-[#E84C93]">12</td><td class="py-2 px-3">11 a 12 anos (Juvenil)</td><td class="py-2 px-3">138 a 150 cm</td><td class="py-2 px-3">35 a 42 kg</td></tr>
-            <tr><td class="py-2 px-3 font-bold text-[#E84C93]">14</td><td class="py-2 px-3">13 a 14 anos (Juvenil)</td><td class="py-2 px-3">151 a 158 cm</td><td class="py-2 px-3">43 a 50 kg</td></tr>
-            <tr><td class="py-2 px-3 font-bold text-[#E84C93]">16</td><td class="py-2 px-3">15 a 16 anos (Juvenil)</td><td class="py-2 px-3">159 a 165 cm</td><td class="py-2 px-3">50 a 56 kg</td></tr>
-            <tr><td class="py-2 px-3 font-bold text-[#E84C93]">18</td><td class="py-2 px-3">16 a 18 anos (Juvenil)</td><td class="py-2 px-3">166 a 170 cm</td><td class="py-2 px-3">56 a 62 kg</td></tr>
+            <tr><td class="py-2 px-3 font-bold text-[#E84C93]">12</td><td class="py-2 px-3">11 a 12 anos</td><td class="py-2 px-3">138 a 150 cm</td><td class="py-2 px-3">35 a 42 kg</td></tr>
+            <tr><td class="py-2 px-3 font-bold text-[#E84C93]">14</td><td class="py-2 px-3">13 a 14 anos</td><td class="py-2 px-3">151 a 158 cm</td><td class="py-2 px-3">43 a 50 kg</td></tr>
+            <tr><td class="py-2 px-3 font-bold text-[#E84C93]">16</td><td class="py-2 px-3">15 a 16 anos</td><td class="py-2 px-3">159 a 165 cm</td><td class="py-2 px-3">50 a 56 kg</td></tr>
           </tbody>
         </table>
       </div>

@@ -4,9 +4,9 @@
    ========================================================================== */
 
 const STORAGE_KEYS = {
-  CLOUD_CACHE: "happykids_cloud_state_v3",
-  CART: "happykids_cart_v2_real",
-  FAVORITES: "happykids_favorites_v2_real"
+  CLOUD_CACHE: "happykids_cloud_state_v4_clean",
+  CART: "happykids_cart_v3_clean",
+  FAVORITES: "happykids_favorites_v3_clean"
 };
 
 // Estado do Banco de Dados em Nuvem (Sincronizado para Todos os Clientes)
@@ -1010,14 +1010,41 @@ function renderHomeProducts() {
   const displayList = list.slice(0, 12);
 
   if (displayList.length === 0) {
-    grid.innerHTML = `
-      <div class="col-span-full bg-white rounded-3xl p-10 text-center border border-slate-200">
-        <p class="text-slate-600 font-medium mb-4">Nenhum produto encontrado nesta aba no momento.</p>
-        <button onclick="setHomeTab('destaques')" class="px-5 py-2.5 rounded-xl bg-[#F38230] text-white font-bold text-sm">
-          Ver Todos os Destaques
-        </button>
-      </div>
-    `;
+    if (AppState.allProducts.length === 0) {
+      grid.innerHTML = `
+        <div class="col-span-full bg-white rounded-3xl p-10 sm:p-12 text-center border border-slate-200 shadow-xs">
+          <div class="w-16 h-16 rounded-2xl bg-orange-50 text-[#F38230] flex items-center justify-center mx-auto mb-4">
+            <i data-lucide="sparkles" class="w-8 h-8"></i>
+          </div>
+          <h3 class="font-heading text-xl font-extrabold text-slate-900 mb-2">Nova Coleção sendo atualizada!</h3>
+          <p class="text-slate-600 text-sm max-w-md mx-auto mb-6">
+            Estamos cadastrando as novidades da estação em nossa vitrine! Enquanto isso, chame nossa equipe no WhatsApp para receber fotos das peças disponíveis na loja.
+          </p>
+          <div class="flex flex-wrap justify-center gap-3">
+            <button onclick="openStoreWhatsApp('Olá! Gostaria de ver as novidades da coleção Happy Kids!')"
+              class="px-5 py-3 rounded-xl bg-[#25D366] hover:bg-[#1DA851] text-white font-heading font-bold text-xs sm:text-sm flex items-center gap-2 cursor-pointer">
+              <i data-lucide="message-circle" class="w-4 h-4"></i>
+              <span>Atendimento no WhatsApp</span>
+            </button>
+            <button onclick="navigateTo('admin')"
+              class="px-5 py-3 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200 font-heading font-bold text-xs sm:text-sm flex items-center gap-2 cursor-pointer">
+              <i data-lucide="sliders-horizontal" class="w-4 h-4 text-[#F38230]"></i>
+              <span>Cadastrar Peças (Painel Lojista)</span>
+            </button>
+          </div>
+        </div>
+      `;
+    } else {
+      grid.innerHTML = `
+        <div class="col-span-full bg-white rounded-3xl p-10 text-center border border-slate-200">
+          <p class="text-slate-600 font-medium mb-4">Nenhum produto encontrado nesta categoria no momento.</p>
+          <button onclick="setHomeTab('destaques')" class="px-5 py-2.5 rounded-xl bg-[#F38230] text-white font-bold text-sm cursor-pointer">
+            Ver Todos os Destaques
+          </button>
+        </div>
+      `;
+    }
+    refreshIcons();
     return;
   }
 
@@ -2139,7 +2166,7 @@ function selectAdminSizePreset(preset) {
     else if (preset === "bebe") cb.checked = ["RN", "P", "M", "G"].includes(val);
     else if (preset === "1-3") cb.checked = ["1", "2", "3"].includes(val);
     else if (preset === "4-10") cb.checked = ["4", "6", "8", "10"].includes(val);
-    else if (preset === "juvenil") cb.checked = ["12", "14", "16", "18"].includes(val);
+    else if (preset === "12-16" || preset === "juvenil") cb.checked = ["12", "14", "16"].includes(val);
   });
 }
 
@@ -2397,17 +2424,26 @@ function toggleProductFeaturedAdmin(productId) {
 }
 
 function restoreDefaultCatalog() {
-  CloudDB.state = {
-    version: 2,
-    updatedAt: new Date().toISOString(),
-    soldOutIds: [],
-    productOverrides: {},
-    customProducts: [],
-    deletedIds: []
-  };
+  CloudDB.state.soldOutIds = [];
+  CloudDB.state.updatedAt = new Date().toISOString();
   resetAdminForm();
-  showToast("Todas as 99 peças do catálogo oficial foram reativadas na nuvem!", "success");
-  syncCloudDatabase("Restaurou catalogo completo (99 pecas ativas)");
+  showToast("Todas as peças retiradas foram reativadas na vitrine!", "success");
+  syncCloudDatabase("Reativou pecas no estoque");
+}
+
+function permanentlyDeleteProductFromAdmin(productId) {
+  const product = AppState.allProducts.find((p) => p.id === productId);
+  if (!product) return;
+
+  CloudDB.state.customProducts = (CloudDB.state.customProducts || []).filter((c) => c.id !== productId);
+  if (!CloudDB.state.deletedIds.includes(productId)) {
+    CloudDB.state.deletedIds.push(productId);
+  }
+  CloudDB.state.soldOutIds = (CloudDB.state.soldOutIds || []).filter((id) => id !== productId);
+  delete CloudDB.state.productOverrides[productId];
+
+  showToast(`Produto "${product.name}" excluído permanentemente do catálogo.`, "info");
+  syncCloudDatabase(`Excluiu produto ${product.sku || productId}`);
 }
 
 function renderAdminProductsTable() {
@@ -2511,6 +2547,10 @@ function renderAdminProductsTable() {
                   </button>
                 `
               }
+              <button onclick="permanentlyDeleteProductFromAdmin('${p.id}')" title="Excluir Produto Definitivamente"
+                class="p-1.5 rounded-xl bg-slate-100 hover:bg-rose-600 text-slate-500 hover:text-white transition cursor-pointer">
+                <i data-lucide="trash-2" class="w-4 h-4"></i>
+              </button>
             </div>
           </td>
         </tr>
