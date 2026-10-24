@@ -26,31 +26,24 @@ const STORE_CONFIG = {
   encryptedCloudKey: "55595f675c596d091735061c0c2e02246c26241e17417452735751183b071b1c0f285b3120351f25"
 };
 
-// Régua completa de tamanhos infantis
+// Régua completa de tamanhos infantis (do RN ao 18)
 const ALL_SIZES = [
   "RN", "P", "M", "G",
   "1", "2", "3",
   "4", "6", "8", "10",
-  "12", "14", "16"
+  "12", "14", "16", "18"
 ];
 
-// Mapeamento de Faixas Etárias (Sem "RN ao G" em Bebês e sem categoria Juvenil)
+// Mapeamento de Faixas Etárias (Sem "RN ao G" em Bebês e até o 18)
 const AGE_GROUPS = [
   { id: "todos", label: "Todas as Idades", shortLabel: "Todas as Idades", sizes: ALL_SIZES },
   { id: "bebe", label: "Bebês", shortLabel: "Bebês", sizes: ["RN", "P", "M", "G"] },
   { id: "1-a-3", label: "Primeiros Passos (1 ao 3)", shortLabel: "1 ao 3", sizes: ["1", "2", "3"] },
-  { id: "4-a-10", label: "Infantil (4 ao 16)", shortLabel: "4 ao 16", sizes: ["4", "6", "8", "10", "12", "14", "16"] }
+  { id: "4-a-10", label: "Infantil (4 ao 18)", shortLabel: "4 ao 18", sizes: ["4", "6", "8", "10", "12", "14", "16", "18"] }
 ];
 
-// Categorias Padrão de Roupa da Loja (O lojista também pode criar novas categorias no painel)
-const CLOTHING_CATEGORIES = [
-  "Conjuntos",
-  "Vestidos",
-  "Body",
-  "Pijamas",
-  "Blusas",
-  "Calças"
-];
+// Categorias de Roupa (Inicia vazio para a lojista criar suas próprias categorias no painel)
+const CLOTHING_CATEGORIES = [];
 
 // Slides do Carrossel Principal (Hero Section)
 const HERO_SLIDES = [

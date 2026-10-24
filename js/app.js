@@ -9,15 +9,8 @@ const STORAGE_KEYS = {
   FAVORITES: "happykids_favorites_v3_clean"
 };
 
-// Categorias Padrão da Loja (Podem ser expandidas pela lojista no Painel)
-const DEFAULT_CATEGORIES = [
-  { value: "Conjuntos", label: "Conjuntos", icon: "👕" },
-  { value: "Vestidos", label: "Vestidos", icon: "👗" },
-  { value: "Body", label: "Body & Macacões", icon: "👶" },
-  { value: "Pijamas", label: "Pijamas", icon: "🌙" },
-  { value: "Blusas", label: "Blusas & Camisetas", icon: "👚" },
-  { value: "Calças", label: "Shorts & Calças", icon: "🩳" }
-];
+// Categorias de Roupa (Iniciam vazias para a lojista criar suas próprias categorias no botão "+ Categoria")
+const DEFAULT_CATEGORIES = [];
 
 // Estado do Banco de Dados em Nuvem (Sincronizado para Todos os Clientes)
 const CloudDB = {
@@ -913,7 +906,7 @@ function renderHeroSlide() {
           <!-- Card Flutuante Lúdico -->
           <div class="absolute bottom-4 left-4 right-4 sm:left-auto sm:right-6 sm:bottom-6 bg-white/95 backdrop-blur-md p-3.5 sm:p-4 rounded-2xl shadow-xl border border-slate-100 flex items-center gap-3 animate-float">
             <div class="w-11 h-11 rounded-xl bg-orange-100 text-[#F38230] flex items-center justify-center shrink-0 font-heading font-extrabold text-xs">
-              RN-16
+              RN-18
             </div>
             <div>
               <p class="text-xs font-bold uppercase tracking-wider text-[#2B6EB5]">${slide.floatingTag}</p>
@@ -1144,7 +1137,7 @@ function createProductCardHTML(product) {
           <!-- Faixa Etária no Canto Inferior da Foto -->
           <div class="absolute bottom-2.5 left-2.5 right-2.5 flex items-center justify-between pointer-events-none">
             <span class="px-2.5 py-1 rounded-lg bg-slate-900/80 backdrop-blur-xs text-white text-[11px] font-semibold">
-              ${product.ageLabel || "RN ao 16"}
+              ${product.ageLabel || "RN ao 18"}
             </span>
             <span class="px-2 py-0.5 rounded-md text-[10px] font-bold border ${genderBadgeClass}">
               ${product.gender}
@@ -1301,12 +1294,16 @@ function renderCategoryOptionsUI() {
   // 2. Select de Categoria no formulário do Painel do Lojista
   const adminSelect = document.getElementById("admin-prod-category");
   if (adminSelect) {
-    const currentVal = adminSelect.value || "Conjuntos";
-    adminSelect.innerHTML = categories
-      .map((c) => `<option value="${c.value}">${c.label}</option>`)
-      .join("");
-    if (categories.some((c) => c.value === currentVal)) {
-      adminSelect.value = currentVal;
+    const currentVal = adminSelect.value || "";
+    if (categories.length === 0) {
+      adminSelect.innerHTML = `<option value="">Adicione uma categoria em "+ Categoria"</option>`;
+    } else {
+      adminSelect.innerHTML = categories
+        .map((c) => `<option value="${c.value}">${c.label}</option>`)
+        .join("");
+      if (categories.some((c) => c.value === currentVal)) {
+        adminSelect.value = currentVal;
+      }
     }
   }
 
@@ -1326,7 +1323,7 @@ function renderCategoryOptionsUI() {
   if (customChipsEl) {
     const customList = Array.isArray(CloudDB.state.customCategories) ? CloudDB.state.customCategories : [];
     if (customList.length === 0) {
-      customChipsEl.innerHTML = `<span class="text-[11px] text-slate-400">Suas novas categorias aparecerão no formulário e nos filtros do site.</span>`;
+      customChipsEl.innerHTML = `<span class="text-[11px] text-slate-400">Nenhuma categoria criada ainda. Digite o nome acima e clique em <strong>Adicionar</strong>.</span>`;
     } else {
       customChipsEl.innerHTML = customList
         .map((catName) => {
@@ -2386,7 +2383,7 @@ function selectAdminSizePreset(preset) {
     else if (preset === "bebe") cb.checked = ["RN", "P", "M", "G"].includes(val);
     else if (preset === "1-3") cb.checked = ["1", "2", "3"].includes(val);
     else if (preset === "4-10") cb.checked = ["4", "6", "8", "10"].includes(val);
-    else if (preset === "12-16" || preset === "juvenil") cb.checked = ["12", "14", "16"].includes(val);
+    else if (preset === "12-18" || preset === "12-16" || preset === "juvenil") cb.checked = ["12", "14", "16", "18"].includes(val);
   });
 }
 
@@ -2518,6 +2515,12 @@ function handleAdminFormSubmit(event) {
     return;
   }
 
+  if (!category) {
+    showToast("Adicione uma categoria clicando em '+ Categoria' antes de publicar.", "warning");
+    toggleAdminNewCategoryBox(true);
+    return;
+  }
+
   if (selectedSizes.length === 0) {
     showToast("Selecione pelo menos um tamanho disponível (do RN ao 18).", "warning");
     return;
@@ -2546,7 +2549,7 @@ function handleAdminFormSubmit(event) {
         gender,
         category,
         ageGroup,
-        ageLabel: ageLabel || (ageObj ? ageObj.shortLabel : "RN ao 16"),
+        ageLabel: ageLabel || (ageObj ? ageObj.shortLabel : "RN ao 18"),
         sizes: selectedSizes,
         badge: badge || "Destaque",
         featured,

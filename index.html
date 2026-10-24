@@ -258,16 +258,16 @@
             <p class="text-xs text-slate-500 mt-0.5">Conjuntos, Camisetas & Bermudas</p>
           </div>
 
-          <!-- Card 4: Pijamas -->
-          <div onclick="navigateWithFilter({ category: 'Pijamas' })"
+          <!-- Card 4: Catálogo Completo (RN ao 18) -->
+          <div onclick="resetCatalogFilters(); navigateTo('catalog');"
             class="group relative rounded-3xl p-4 sm:p-5 bg-gradient-to-b from-amber-50 to-white border-2 border-amber-100 hover:border-amber-400 shadow-xs hover:shadow-md transition-all cursor-pointer text-center">
             <div class="w-20 h-20 sm:w-24 sm:h-24 mx-auto rounded-full overflow-hidden border-4 border-white shadow-md mb-3 bg-white">
-              <img src="assets/produtos/prod-076.jpg" alt="Pijamas Infantis"
+              <img src="assets/produtos/prod-076.jpg" alt="Catálogo Infantil"
                 class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
             </div>
-            <span class="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 mb-1">Hora do Sono</span>
-            <h3 class="font-heading font-extrabold text-slate-900 text-base group-hover:text-amber-700">Pijamas</h3>
-            <p class="text-xs text-slate-500 mt-0.5">Conforto & Diversão</p>
+            <span class="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 mb-1">Do RN ao 18</span>
+            <h3 class="font-heading font-extrabold text-slate-900 text-base group-hover:text-amber-700">Ver Tudo</h3>
+            <p class="text-xs text-slate-500 mt-0.5">Catálogo Completo</p>
           </div>
         </div>
       </div>
@@ -487,7 +487,7 @@
                 <span>🧸 1 a 3 anos</span>
               </button>
               <button onclick="setCatalogFilter('ageGroup', '4-a-10')" data-filter-age="4-a-10">
-                <span>🎈 Infantil (4 ao 16)</span>
+                <span>🎈 Infantil (4 ao 18)</span>
               </button>
             </div>
           </div>
@@ -508,24 +508,6 @@
             <div id="catalog-filter-categories-list" class="space-y-1">
               <button onclick="setCatalogFilter('category', 'todos')" data-filter-category="todos">
                 <span>Todas as Categorias</span>
-              </button>
-              <button onclick="setCatalogFilter('category', 'Conjuntos')" data-filter-category="Conjuntos">
-                <span>👕 Conjuntos</span>
-              </button>
-              <button onclick="setCatalogFilter('category', 'Vestidos')" data-filter-category="Vestidos">
-                <span>👗 Vestidos</span>
-              </button>
-              <button onclick="setCatalogFilter('category', 'Body')" data-filter-category="Body">
-                <span>👶 Body & Macacões Bebê</span>
-              </button>
-              <button onclick="setCatalogFilter('category', 'Pijamas')" data-filter-category="Pijamas">
-                <span>🌙 Pijamas</span>
-              </button>
-              <button onclick="setCatalogFilter('category', 'Blusas')" data-filter-category="Blusas">
-                <span>👚 Blusas & Camisetas</span>
-              </button>
-              <button onclick="setCatalogFilter('category', 'Calças')" data-filter-category="Calças">
-                <span>🩳 Shorts & Calças</span>
               </button>
             </div>
           </div>
@@ -929,12 +911,7 @@
                 </div>
                 <select id="admin-prod-category"
                   class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 focus:border-[#F38230] text-sm outline-none">
-                  <option value="Conjuntos">Conjuntos</option>
-                  <option value="Vestidos">Vestidos</option>
-                  <option value="Body">Body & Macacões</option>
-                  <option value="Pijamas">Pijamas</option>
-                  <option value="Blusas">Blusas</option>
-                  <option value="Calças">Shorts & Calças</option>
+                  <option value="">Adicione uma categoria em "+ Categoria"</option>
                 </select>
               </div>
             </div>
@@ -953,7 +930,7 @@
               </div>
               <div class="flex items-center gap-2">
                 <input id="admin-new-category-input" type="text"
-                  placeholder="Nome da categoria (ex: Jardineiras, Saias, Praia...)"
+                  placeholder="Nome da categoria (ex: Conjuntos, Vestidos, Jardineiras...)"
                   onkeydown="if(event.key==='Enter'){ event.preventDefault(); addCustomCategoryFromAdmin(); }"
                   class="flex-1 px-3 py-2 rounded-xl bg-white border border-slate-200 focus:border-[#2B6EB5] text-xs outline-none" />
                 <button type="button" onclick="addCustomCategoryFromAdmin()"
@@ -972,7 +949,7 @@
                   class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 focus:border-[#F38230] text-sm outline-none">
                   <option value="bebe">Bebês</option>
                   <option value="1-a-3">1 a 3 anos</option>
-                  <option value="4-a-10">Infantil (4 ao 16)</option>
+                  <option value="4-a-10">Infantil (4 ao 18)</option>
                 </select>
               </div>
               <div>
@@ -990,7 +967,7 @@
                   <button type="button" onclick="selectAdminSizePreset('bebe')" class="px-2 py-0.5 rounded bg-sky-50 text-[#2B6EB5] hover:bg-sky-100 cursor-pointer">Bebês</button>
                   <button type="button" onclick="selectAdminSizePreset('1-3')" class="px-2 py-0.5 rounded bg-orange-50 text-[#F38230] hover:bg-orange-100 cursor-pointer">1-3</button>
                   <button type="button" onclick="selectAdminSizePreset('4-10')" class="px-2 py-0.5 rounded bg-orange-50 text-[#F38230] hover:bg-orange-100 cursor-pointer">4-10</button>
-                  <button type="button" onclick="selectAdminSizePreset('12-16')" class="px-2 py-0.5 rounded bg-pink-50 text-[#E84C93] hover:bg-pink-100 cursor-pointer">12-16</button>
+                  <button type="button" onclick="selectAdminSizePreset('12-18')" class="px-2 py-0.5 rounded bg-pink-50 text-[#E84C93] hover:bg-pink-100 cursor-pointer">12-18</button>
                   <button type="button" onclick="selectAdminSizePreset('all')" class="px-2 py-0.5 rounded bg-slate-100 text-slate-700 hover:bg-slate-200 cursor-pointer">Todos</button>
                   <button type="button" onclick="selectAdminSizePreset('none')" class="px-2 py-0.5 rounded bg-rose-50 text-rose-600 cursor-pointer">Limpar</button>
                 </div>
@@ -1067,12 +1044,6 @@
               <select id="admin-filter-category"
                 class="px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs font-semibold outline-none">
                 <option value="todos">Todas Categorias</option>
-                <option value="Conjuntos">Conjuntos</option>
-                <option value="Vestidos">Vestidos</option>
-                <option value="Body">Body & Macacões</option>
-                <option value="Pijamas">Pijamas</option>
-                <option value="Blusas">Blusas</option>
-                <option value="Calças">Shorts & Calças</option>
               </select>
             </div>
           </div>
@@ -1377,6 +1348,7 @@
             <tr><td class="py-2 px-3 font-bold text-[#E84C93]">12</td><td class="py-2 px-3">11 a 12 anos</td><td class="py-2 px-3">138 a 150 cm</td><td class="py-2 px-3">35 a 42 kg</td></tr>
             <tr><td class="py-2 px-3 font-bold text-[#E84C93]">14</td><td class="py-2 px-3">13 a 14 anos</td><td class="py-2 px-3">151 a 158 cm</td><td class="py-2 px-3">43 a 50 kg</td></tr>
             <tr><td class="py-2 px-3 font-bold text-[#E84C93]">16</td><td class="py-2 px-3">15 a 16 anos</td><td class="py-2 px-3">159 a 165 cm</td><td class="py-2 px-3">50 a 56 kg</td></tr>
+            <tr><td class="py-2 px-3 font-bold text-[#E84C93]">18</td><td class="py-2 px-3">16 a 18 anos</td><td class="py-2 px-3">165 a 170 cm</td><td class="py-2 px-3">56 a 62 kg</td></tr>
           </tbody>
         </table>
       </div>
