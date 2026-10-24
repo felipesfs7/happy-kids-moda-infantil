@@ -25,6 +25,7 @@ const CloudDB = {
     productOverrides: {},  // Alterações de preço, tamanhos disponíveis, nome, destaque por ID
     customProducts: [],    // Novos produtos cadastrados pelo painel do lojista
     customCategories: [],  // Novas categorias criadas pela lojista no painel
+    customBrands: [],      // Novas marcas criadas pela lojista no painel
     heroBanners: null,     // Fotos/slides personalizados do Banner do Topo (null = usar padrão)
     deletedIds: []         // IDs excluídos permanentemente
   }
@@ -47,7 +48,9 @@ const AppState = {
     gender: "todos",
     ageGroup: "todos",
     size: "todos",
+    season: "todos",
     category: "todos",
+    brand: "todos",
     sortBy: "relevancia"
   },
 
@@ -67,9 +70,12 @@ const AppState = {
     showOnlySoldOutInQuick: false,
     editingId: null,
     searchQuery: "",
+    filterSeason: "todos",
     filterCategory: "todos",
+    filterBrand: "todos",
     filterStockStatus: "todos", // 'todos' | 'ativos' | 'vendidos'
-    uploadedImageDataUrl: ""
+    uploadedImageDataUrl: "",
+    uploadedBannerDataUrl: ""
   }
 };
 
@@ -104,6 +110,7 @@ function loadLocalCache() {
           productOverrides: parsed.productOverrides || {},
           customProducts: Array.isArray(parsed.customProducts) ? parsed.customProducts : [],
           customCategories: Array.isArray(parsed.customCategories) ? parsed.customCategories : [],
+          customBrands: Array.isArray(parsed.customBrands) ? parsed.customBrands : [],
           heroBanners: Array.isArray(parsed.heroBanners) ? parsed.heroBanners : null,
           deletedIds: Array.isArray(parsed.deletedIds) ? parsed.deletedIds : []
         };
@@ -236,6 +243,7 @@ function applyIncomingCloudState(parsed) {
     productOverrides: parsed.productOverrides || {},
     customProducts: Array.isArray(parsed.customProducts) ? parsed.customProducts : [],
     customCategories: Array.isArray(parsed.customCategories) ? parsed.customCategories : [],
+    customBrands: Array.isArray(parsed.customBrands) ? parsed.customBrands : [],
     heroBanners: Array.isArray(parsed.heroBanners) ? parsed.heroBanners : null,
     deletedIds: Array.isArray(parsed.deletedIds) ? parsed.deletedIds : []
   };
@@ -1184,8 +1192,22 @@ function createProductCardHTML(product) {
         <!-- Corpo do Card -->
         <div class="p-4 sm:p-5">
           <div class="flex items-center justify-between text-xs text-slate-500 mb-1">
-            <span class="font-medium text-[#2B6EB5]">${product.category}</span>
-            <span class="text-[11px] font-bold text-slate-500">${product.sku || ""}</span>
+            <div class="flex flex-wrap items-center gap-1.5">
+              <span class="font-medium text-[#2B6EB5]">${product.category}</span>
+              ${
+                product.brand
+                  ? `<span class="px-1.5 py-0.5 rounded bg-orange-50 text-[#F38230] font-bold text-[10px]">${product.brand}</span>`
+                  : ""
+              }
+              ${
+                product.season
+                  ? `<span class="px-1.5 py-0.5 rounded ${
+                      product.season === "Inverno" ? "bg-sky-50 text-sky-700" : "bg-amber-50 text-amber-700"
+                    } font-bold text-[10px]">${product.season === "Inverno" ? "❄️ Inverno" : "☀️ Verão"}</span>`
+                  : ""
+              }
+            </div>
+            <span class="text-[11px] font-bold text-slate-500 shrink-0">${product.sku || ""}</span>
           </div>
 
           <h3 onclick="openProductDetail('${product.id}')"
@@ -1378,8 +1400,121 @@ function renderCategoryOptionsUI() {
   }
 }
 
+function getAllBrands() {
+  const customBrands = Array.isArray(CloudDB.state.customBrands) ? CloudDB.state.customBrands : [];
+  const map = new Map();
+
+  customBrands.forEach((rawName) => {
+    const clean = String(rawName || "").trim();
+    if (!clean) return;
+    const key = clean.toLowerCase();
+    if (!map.has(key)) {
+      map.set(key, {
+        value: clean,
+        label: clean
+      });
+    }
+  });
+
+  (AppState.allProducts || []).forEach((p) => {
+    const br = String((p && p.brand) || "").trim();
+    if (!br) return;
+    const key = br.toLowerCase();
+    if (!map.has(key)) {
+      map.set(key, {
+        value: br,
+        label: br
+      });
+    }
+  });
+
+  return Array.from(map.values());
+}
+
+function renderBrandOptionsUI() {
+  const brands = getAllBrands();
+
+  // 1. Filtro lateral de Marcas no catálogo público
+  const brandListEl = document.getElementById("catalog-filter-brands-list");
+  if (brandListEl) {
+    const activeBrand = AppState.filters.brand || "todos";
+    const btnClass = (isActive) =>
+      `w-full text-left px-3 py-2 rounded-xl text-sm font-medium flex items-center justify-between transition cursor-pointer ${
+        isActive ? "bg-orange-50 text-[#F38230] font-bold border border-orange-200" : "text-slate-600 hover:bg-slate-50"
+      }`;
+
+    brandListEl.innerHTML = `
+      <button onclick="setCatalogFilter('brand', 'todos')" data-filter-brand="todos" class="${btnClass(activeBrand === "todos")}">
+        <span>Todas as Marcas</span>
+      </button>
+      ${brands
+        .map((b) => {
+          const safeVal = b.value.replace(/'/g, "\\'");
+          const isActive = activeBrand === b.value;
+          return `
+            <button onclick="setCatalogFilter('brand', '${safeVal}')" data-filter-brand="${b.value}" class="${btnClass(isActive)}">
+              <span>✨ ${b.label}</span>
+            </button>
+          `;
+        })
+        .join("")}
+    `;
+  }
+
+  // 2. Select de Marca no formulário do Painel do Lojista
+  const adminBrandSelect = document.getElementById("admin-prod-brand");
+  if (adminBrandSelect) {
+    const currentVal = adminBrandSelect.value || "";
+    if (brands.length === 0) {
+      adminBrandSelect.innerHTML = `<option value="">Adicione uma marca em "+ Marca"</option>`;
+    } else {
+      adminBrandSelect.innerHTML = brands
+        .map((b) => `<option value="${b.value}">${b.label}</option>`)
+        .join("");
+      if (brands.some((b) => b.value === currentVal)) {
+        adminBrandSelect.value = currentVal;
+      }
+    }
+  }
+
+  // 3. Select de Filtro de Marca na Tabela do Painel do Lojista
+  const adminFilterBrandSelect = document.getElementById("admin-filter-brand");
+  if (adminFilterBrandSelect) {
+    const currentFilterVal = AppState.admin.filterBrand || "todos";
+    adminFilterBrandSelect.innerHTML = `
+      <option value="todos">Todas Marcas</option>
+      ${brands.map((b) => `<option value="${b.value}">${b.label}</option>`).join("")}
+    `;
+    adminFilterBrandSelect.value = brands.some((b) => b.value === currentFilterVal) ? currentFilterVal : "todos";
+  }
+
+  // 4. Chips discretos de marcas criadas pela lojista dentro da aba "+ Marca"
+  const customBrandChipsEl = document.getElementById("admin-custom-brands-chips");
+  if (customBrandChipsEl) {
+    const customList = Array.isArray(CloudDB.state.customBrands) ? CloudDB.state.customBrands : [];
+    if (customList.length === 0) {
+      customBrandChipsEl.innerHTML = `<span class="text-[11px] text-slate-400">Nenhuma marca criada ainda. Digite o nome acima e clique em <strong>Adicionar</strong>.</span>`;
+    } else {
+      customBrandChipsEl.innerHTML = customList
+        .map((brandName) => {
+          const safeBrand = String(brandName).replace(/'/g, "\\'");
+          return `
+            <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white border border-orange-200 text-[11px] font-heading font-bold text-[#F38230] shadow-2xs">
+              <span>${brandName}</span>
+              <button type="button" onclick="removeCustomBrandFromAdmin('${safeBrand}')"
+                title="Remover marca ${brandName}"
+                class="ml-0.5 text-slate-400 hover:text-rose-500 font-extrabold cursor-pointer">×</button>
+            </span>
+          `;
+        })
+        .join("");
+    }
+  }
+}
+
 function renderCatalogFiltersUI() {
   renderCategoryOptionsUI();
+  renderBrandOptionsUI();
   const sizeFilterContainer = document.getElementById("catalog-filter-sizes");
   if (sizeFilterContainer) {
     sizeFilterContainer.innerHTML = `
@@ -1419,7 +1554,9 @@ function resetCatalogFilters() {
     gender: "todos",
     ageGroup: "todos",
     size: "todos",
+    season: "todos",
     category: "todos",
+    brand: "todos",
     sortBy: "relevancia"
   };
   const searchInput = document.getElementById("catalog-search-input");
@@ -1432,12 +1569,12 @@ function resetCatalogFilters() {
 }
 
 function getFilteredAndSortedProducts() {
-  const { search, gender, ageGroup, size, category, sortBy } = AppState.filters;
+  const { search, gender, ageGroup, size, season, category, brand, sortBy } = AppState.filters;
   const query = (search || "").trim().toLowerCase();
 
   let filtered = AppState.products.filter((p) => {
     if (query) {
-      const hay = `${p.name} ${p.category} ${p.gender} ${p.description} ${p.sku || ""} ${p.ageLabel || ""}`.toLowerCase();
+      const hay = `${p.name} ${p.category} ${p.brand || ""} ${p.season || ""} ${p.gender} ${p.description} ${p.sku || ""} ${p.ageLabel || ""}`.toLowerCase();
       if (!hay.includes(query)) return false;
     }
 
@@ -1457,8 +1594,16 @@ function getFilteredAndSortedProducts() {
       if (!p.sizes || !p.sizes.includes(size)) return false;
     }
 
+    if (season && season !== "todos") {
+      if (p.season !== season) return false;
+    }
+
     if (category !== "todos") {
       if (p.category !== category) return false;
+    }
+
+    if (brand && brand !== "todos") {
+      if (p.brand !== brand) return false;
     }
 
     return true;
@@ -1494,9 +1639,25 @@ function renderCatalogView() {
     }`;
   });
 
+  document.querySelectorAll("[data-filter-season]").forEach((el) => {
+    const val = el.getAttribute("data-filter-season");
+    const active = (AppState.filters.season || "todos") === val;
+    el.className = `w-full text-left px-3 py-2 rounded-xl text-sm font-medium flex items-center justify-between transition cursor-pointer ${
+      active ? "bg-amber-50 text-[#F38230] font-bold border border-amber-200" : "text-slate-600 hover:bg-slate-50"
+    }`;
+  });
+
   document.querySelectorAll("[data-filter-category]").forEach((el) => {
     const val = el.getAttribute("data-filter-category");
     const active = AppState.filters.category === val;
+    el.className = `w-full text-left px-3 py-2 rounded-xl text-sm font-medium flex items-center justify-between transition cursor-pointer ${
+      active ? "bg-orange-50 text-[#F38230] font-bold border border-orange-200" : "text-slate-600 hover:bg-slate-50"
+    }`;
+  });
+
+  document.querySelectorAll("[data-filter-brand]").forEach((el) => {
+    const val = el.getAttribute("data-filter-brand");
+    const active = (AppState.filters.brand || "todos") === val;
     el.className = `w-full text-left px-3 py-2 rounded-xl text-sm font-medium flex items-center justify-between transition cursor-pointer ${
       active ? "bg-orange-50 text-[#F38230] font-bold border border-orange-200" : "text-slate-600 hover:bg-slate-50"
     }`;
@@ -1521,7 +1682,9 @@ function renderCatalogView() {
     activeChips.push({ label: `Idade: ${g ? g.shortLabel : AppState.filters.ageGroup}`, key: "ageGroup", reset: "todos" });
   }
   if (AppState.filters.size !== "todos") activeChips.push({ label: `Tamanho: ${AppState.filters.size}`, key: "size", reset: "todos" });
+  if (AppState.filters.season && AppState.filters.season !== "todos") activeChips.push({ label: `Estação: ${AppState.filters.season}`, key: "season", reset: "todos" });
   if (AppState.filters.category !== "todos") activeChips.push({ label: `Categoria: ${AppState.filters.category}`, key: "category", reset: "todos" });
+  if (AppState.filters.brand && AppState.filters.brand !== "todos") activeChips.push({ label: `Marca: ${AppState.filters.brand}`, key: "brand", reset: "todos" });
 
   if (chipsContainer) {
     if (activeChips.length === 0) {
@@ -1730,8 +1893,20 @@ function renderProductDetailView() {
         <div class="lg:col-span-6 flex flex-col justify-between">
           <div>
             <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
-              <div class="flex items-center gap-2">
+              <div class="flex flex-wrap items-center gap-2">
                 <span class="px-3 py-1 rounded-full text-xs font-bold bg-blue-50 text-[#2B6EB5]">${product.category}</span>
+                ${
+                  product.brand
+                    ? `<span class="px-3 py-1 rounded-full text-xs font-bold bg-orange-50 text-[#F38230]">${product.brand}</span>`
+                    : ""
+                }
+                ${
+                  product.season
+                    ? `<span class="px-3 py-1 rounded-full text-xs font-bold ${
+                        product.season === "Inverno" ? "bg-sky-50 text-sky-700" : "bg-amber-50 text-amber-700"
+                      }">${product.season === "Inverno" ? "❄️ Inverno" : "☀️ Verão"}</span>`
+                    : ""
+                }
                 <span class="px-3 py-1 rounded-full text-xs font-bold bg-orange-50 text-[#F38230]">${product.gender}</span>
                 <span class="px-2.5 py-0.5 rounded-md bg-slate-100 text-xs font-extrabold text-slate-700">${product.sku || product.id}</span>
               </div>
@@ -2341,6 +2516,7 @@ function renderAdminView() {
   }
 
   renderCategoryOptionsUI();
+  renderBrandOptionsUI();
   renderAdminHeroBannersManager();
   renderQuickCodeManager();
   renderAdminProductsTable();
@@ -2610,6 +2786,70 @@ function removeCustomCategoryFromAdmin(catName) {
   syncCloudDatabase(`Removeu categoria ${catName}`);
 }
 
+function toggleAdminNewBrandBox(forceState) {
+  const box = document.getElementById("admin-new-brand-box");
+  if (!box) return;
+  const shouldOpen = typeof forceState === "boolean" ? forceState : box.classList.contains("hidden");
+  if (shouldOpen) {
+    box.classList.remove("hidden");
+    renderBrandOptionsUI();
+    refreshIcons();
+    const input = document.getElementById("admin-new-brand-input");
+    if (input) {
+      setTimeout(() => input.focus(), 50);
+    }
+  } else {
+    box.classList.add("hidden");
+  }
+}
+
+function addCustomBrandFromAdmin() {
+  const input = document.getElementById("admin-new-brand-input");
+  if (!input) return;
+
+  const rawName = input.value.trim();
+  if (!rawName) {
+    showToast("Digite o nome da nova marca para adicionar.", "warning");
+    input.focus();
+    return;
+  }
+
+  const cleanName = rawName.charAt(0).toUpperCase() + rawName.slice(1);
+
+  if (!Array.isArray(CloudDB.state.customBrands)) {
+    CloudDB.state.customBrands = [];
+  }
+
+  const allExisting = getAllBrands();
+  const alreadyExists = allExisting.some((b) => b.value.toLowerCase() === cleanName.toLowerCase());
+
+  if (!alreadyExists) {
+    CloudDB.state.customBrands.push(cleanName);
+  }
+
+  input.value = "";
+  renderBrandOptionsUI();
+
+  const adminBrandSelect = document.getElementById("admin-prod-brand");
+  if (adminBrandSelect) {
+    const matched = getAllBrands().find((b) => b.value.toLowerCase() === cleanName.toLowerCase());
+    adminBrandSelect.value = matched ? matched.value : cleanName;
+  }
+
+  showToast(`Marca "${cleanName}" adicionada e selecionada!`, "success");
+  syncCloudDatabase(`Adicionou marca ${cleanName}`);
+}
+
+function removeCustomBrandFromAdmin(brandName) {
+  if (!Array.isArray(CloudDB.state.customBrands)) return;
+  CloudDB.state.customBrands = CloudDB.state.customBrands.filter(
+    (b) => String(b).toLowerCase() !== String(brandName).toLowerCase()
+  );
+  renderBrandOptionsUI();
+  showToast(`Marca "${brandName}" removida.`, "info");
+  syncCloudDatabase(`Removeu marca ${brandName}`);
+}
+
 function selectAdminSizePreset(preset) {
   const checkboxes = document.querySelectorAll('input[name="admin-size-item"]');
   checkboxes.forEach((cb) => {
@@ -2735,6 +2975,10 @@ function handleAdminFormSubmit(event) {
   const oldPrice = oldPriceRaw ? parseFloat(oldPriceRaw) : null;
   const gender = document.getElementById("admin-prod-gender").value;
   const category = document.getElementById("admin-prod-category").value;
+  const brandEl = document.getElementById("admin-prod-brand");
+  const brand = brandEl ? brandEl.value.trim() : "";
+  const seasonEl = document.getElementById("admin-prod-season");
+  const season = seasonEl ? seasonEl.value : "Verão";
   const ageGroup = document.getElementById("admin-prod-age-group").value;
   const badge = document.getElementById("admin-prod-badge").value.trim();
   const featured = document.getElementById("admin-prod-featured").checked;
@@ -2754,6 +2998,12 @@ function handleAdminFormSubmit(event) {
   if (!category) {
     showToast("Adicione uma categoria clicando em '+ Categoria' antes de publicar.", "warning");
     toggleAdminNewCategoryBox(true);
+    return;
+  }
+
+  if (!brand) {
+    showToast("Adicione uma marca clicando em '+ Marca' antes de publicar.", "warning");
+    toggleAdminNewBrandBox(true);
     return;
   }
 
@@ -2784,6 +3034,8 @@ function handleAdminFormSubmit(event) {
         oldPrice,
         gender,
         category,
+        brand,
+        season,
         ageGroup,
         ageLabel: ageLabel || (ageObj ? ageObj.shortLabel : "RN ao 18"),
         sizes: selectedSizes,
@@ -2829,6 +3081,8 @@ function handleAdminFormSubmit(event) {
       oldPrice,
       gender,
       category,
+      brand,
+      season,
       ageGroup,
       ageLabel,
       sizes: selectedSizes,
@@ -2864,13 +3118,20 @@ function editProductInAdmin(productId) {
   document.getElementById("admin-submit-btn-text").textContent = "Salvar Alterações na Nuvem";
   document.getElementById("admin-cancel-edit-btn").classList.remove("hidden");
 
+  renderCategoryOptionsUI();
+  renderBrandOptionsUI();
+
   document.getElementById("admin-prod-name").value = product.name || "";
   const skuInput = document.getElementById("admin-prod-sku");
   if (skuInput) skuInput.value = (product.sku || "").replace(/^CÓD\.\s*/i, "");
   document.getElementById("admin-prod-price").value = product.price || "";
   document.getElementById("admin-prod-old-price").value = product.oldPrice || "";
   document.getElementById("admin-prod-gender").value = product.gender || "Feminino";
-  document.getElementById("admin-prod-category").value = product.category || "Conjuntos";
+  document.getElementById("admin-prod-category").value = product.category || "";
+  const brandInput = document.getElementById("admin-prod-brand");
+  if (brandInput) brandInput.value = product.brand || "";
+  const seasonInput = document.getElementById("admin-prod-season");
+  if (seasonInput) seasonInput.value = product.season || "Verão";
   document.getElementById("admin-prod-age-group").value = product.ageGroup || "4-a-10";
   document.getElementById("admin-prod-badge").value = product.badge || "";
   document.getElementById("admin-prod-featured").checked = Boolean(product.featured);
@@ -2959,15 +3220,19 @@ function renderAdminProductsTable() {
   if (!tbody) return;
 
   const q = (AppState.admin.searchQuery || "").trim().toLowerCase();
+  const seasonFilter = AppState.admin.filterSeason || "todos";
   const cat = AppState.admin.filterCategory || "todos";
+  const brandFilter = AppState.admin.filterBrand || "todos";
   const stockFilter = AppState.admin.filterStockStatus || "todos";
 
   const filtered = AppState.allProducts.filter((p) => {
+    if (seasonFilter !== "todos" && p.season !== seasonFilter) return false;
     if (cat !== "todos" && p.category !== cat) return false;
+    if (brandFilter !== "todos" && p.brand !== brandFilter) return false;
     if (stockFilter === "ativos" && p.isSoldOut) return false;
     if (stockFilter === "vendidos" && !p.isSoldOut) return false;
     if (q) {
-      const hay = `${p.name} ${p.sku || ""} ${p.category} ${p.gender}`.toLowerCase();
+      const hay = `${p.name} ${p.sku || ""} ${p.category} ${p.brand || ""} ${p.season || ""} ${p.gender}`.toLowerCase();
       if (!hay.includes(q)) return false;
     }
     return true;
@@ -3008,7 +3273,23 @@ function renderAdminProductsTable() {
             </div>
           </td>
           <td class="py-3.5 px-4">
-            <span class="px-2.5 py-1 rounded-full text-xs font-bold bg-blue-50 text-[#2B6EB5]">${p.category}</span>
+            <div class="flex flex-col items-start gap-1">
+              <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-50 text-[#2B6EB5]">${p.category}</span>
+              <div class="flex flex-wrap items-center gap-1">
+                ${
+                  p.brand
+                    ? `<span class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-orange-50 text-[#F38230]">${p.brand}</span>`
+                    : ""
+                }
+                ${
+                  p.season
+                    ? `<span class="px-2 py-0.5 rounded-md text-[10px] font-bold ${
+                        p.season === "Inverno" ? "bg-sky-50 text-sky-700" : "bg-amber-50 text-amber-700"
+                      }">${p.season === "Inverno" ? "❄️ Inverno" : "☀️ Verão"}</span>`
+                    : ""
+                }
+              </div>
+            </div>
           </td>
           <td class="py-3.5 px-4">
             <div class="flex flex-wrap gap-1 max-w-[180px]">
@@ -3163,10 +3444,26 @@ function setupGlobalListeners() {
     });
   }
 
+  const adminSeasonFilter = document.getElementById("admin-filter-season");
+  if (adminSeasonFilter) {
+    adminSeasonFilter.addEventListener("change", (e) => {
+      AppState.admin.filterSeason = e.target.value;
+      renderAdminProductsTable();
+    });
+  }
+
   const adminCatFilter = document.getElementById("admin-filter-category");
   if (adminCatFilter) {
     adminCatFilter.addEventListener("change", (e) => {
       AppState.admin.filterCategory = e.target.value;
+      renderAdminProductsTable();
+    });
+  }
+
+  const adminBrandFilter = document.getElementById("admin-filter-brand");
+  if (adminBrandFilter) {
+    adminBrandFilter.addEventListener("change", (e) => {
+      AppState.admin.filterBrand = e.target.value;
       renderAdminProductsTable();
     });
   }
