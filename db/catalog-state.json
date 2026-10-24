@@ -1,9 +1,41 @@
 {
   "version": 2,
-  "updatedAt": "2026-10-24T19:34:54.498Z",
+  "updatedAt": "2026-10-24T19:35:43.078Z",
   "soldOutIds": [],
   "productOverrides": {},
   "customProducts": [
+    {
+      "id": "hk-custom-543076",
+      "sku": "CÓD. 22328",
+      "name": "Conjunto Masculino Camiseta Meia Malha e Bermuda de Moletinho",
+      "price": 98.9,
+      "oldPrice": null,
+      "gender": "Masculino",
+      "category": "Conjuntos",
+      "brand": "Alakazoo",
+      "season": "Verão",
+      "ageGroup": "4-a-10",
+      "ageLabel": "Tam. 4 ao 10",
+      "sizes": [
+        "4",
+        "6",
+        "8",
+        "10"
+      ],
+      "badge": "Novo",
+      "featured": true,
+      "images": [
+        "https://raw.githubusercontent.com/felipesfs7/happy-kids-moda-infantil/main/assets/uploads/hk-1792870539041-152.jpg"
+      ],
+      "description": "Peça especial da coleção Happy Kids Moda Infantil, unindo conforto, liberdade de movimento e muito estilo.",
+      "fabric": "Tecido selecionado de toque macio e alta durabilidade.",
+      "washing": [
+        "Lavar com cores similares e sabão neutro",
+        "Não utilizar alvejantes com cloro",
+        "Secar à sombra"
+      ],
+      "createdAt": "2026-10-24"
+    },
     {
       "id": "hk-custom-332011",
       "sku": "CÓD. 22327",
