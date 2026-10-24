@@ -1,13 +1,14 @@
 {
   "version": 2,
-  "updatedAt": "2026-10-24T01:53:26.991Z",
+  "updatedAt": "2026-10-24T02:00:50.679Z",
   "soldOutIds": [],
   "productOverrides": {},
   "customProducts": [],
   "customCategories": [
     "Bodys",
     "Macacão",
-    "Camisetas"
+    "Camisetas",
+    "Conjuntos"
   ],
   "deletedIds": []
 }
