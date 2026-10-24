@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updatedAt": "2026-10-24T17:26:43.938Z",
+  "updatedAt": "2026-10-24T17:27:11.646Z",
   "soldOutIds": [],
   "productOverrides": {
     "hk-custom-071646": {
@@ -59,6 +59,24 @@
     "Alakazoo"
   ],
   "heroBanners": [
+    {
+      "id": "banner-1792862831571",
+      "badge": "NOVA COLEÇÃO HAPPY KIDS • MODA INFANTIL",
+      "title": "Coleções de roupas infantis cheias de estilo, conforto e alegria!",
+      "subtitle": "Confira nosso catálogo oficial atualizado com conjuntos, vestidos, blusas, pijamas e linha bebê. Enviamos de Santa Fé do Sul - SP para todo o Brasil em até 10x sem juros!",
+      "ctaPrimary": "Ver Catálogo Completo",
+      "ctaSecondary": "Chamar no WhatsApp",
+      "filterPreset": {
+        "gender": "todos",
+        "ageGroup": "todos",
+        "category": "todos"
+      },
+      "bgClass": "from-[#FFF5EC] via-[#FFF9F2] to-[#EBF4FF]",
+      "accentColor": "#F38230",
+      "image": "https://raw.githubusercontent.com/felipesfs7/happy-kids-moda-infantil/main/assets/uploads/hk-1792862827950-866.jpg",
+      "floatingTag": "Coleção Oficial Happy Kids",
+      "floatingPrice": "Parcelamento em até 10x Sem Juros"
+    },
     {
       "id": "banner-1792862803863",
       "badge": "NOVA COLEÇÃO HAPPY KIDS • MODA INFANTIL",
