@@ -1,9 +1,11 @@
 {
   "version": 2,
-  "updatedAt": "2026-10-23T22:36:00.000Z",
+  "updatedAt": "2026-10-24T01:51:35.400Z",
   "soldOutIds": [],
   "productOverrides": {},
   "customProducts": [],
-  "customCategories": [],
+  "customCategories": [
+    "Moda Praia"
+  ],
   "deletedIds": []
 }
