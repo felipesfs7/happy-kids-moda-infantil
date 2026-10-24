@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updatedAt": "2026-10-24T02:06:51.359Z",
+  "updatedAt": "2026-10-24T02:17:26.298Z",
   "soldOutIds": [],
   "productOverrides": {},
   "customProducts": [],
@@ -17,6 +17,44 @@
     "Bodys",
     "Macacão Manga Curta",
     "Macacão Manga longa"
+  ],
+  "heroBanners": [
+    {
+      "id": 2,
+      "badge": "LINHA BEBÊ • CONFORTO & DELICADEZA",
+      "title": "Roupas macias e delicadas para os pequenos",
+      "subtitle": "Conjuntinhos, bodies, macacões e peças confortáveis pensadas para o bem-estar e liberdade dos bebês.",
+      "ctaPrimary": "Explorar Linha Bebê",
+      "ctaSecondary": "Ver Bodies & Macacões",
+      "filterPreset": {
+        "gender": "todos",
+        "ageGroup": "bebe",
+        "category": "todos"
+      },
+      "bgClass": "from-[#EBF4FF] via-[#F5FAFF] to-[#FDF0F6]",
+      "accentColor": "#2B6EB5",
+      "image": "assets/produtos/prod-018.jpg",
+      "floatingTag": "Linha Bebê",
+      "floatingPrice": "Atendimento VIP via WhatsApp"
+    },
+    {
+      "id": 3,
+      "badge": "MENINAS & MENINOS • COLEÇÃO INFANTIL",
+      "title": "Conjuntos, Vestidos e Pijamas que as crianças amam vestir!",
+      "subtitle": "Looks modernos e cheios de personalidade para passear e brincar. Garanta já pelo site ou direto no WhatsApp da loja!",
+      "ctaPrimary": "Conferir Coleção Infantil",
+      "ctaSecondary": "Ver Conjuntos",
+      "filterPreset": {
+        "gender": "todos",
+        "ageGroup": "4-a-10",
+        "category": "todos"
+      },
+      "bgClass": "from-[#FDF0F6] via-[#FFF8FA] to-[#FEFBEA]",
+      "accentColor": "#E84C93",
+      "image": "assets/produtos/prod-055.jpg",
+      "floatingTag": "Moda Infantil Completa",
+      "floatingPrice": "5% OFF no PIX ou 10x s/ juros"
+    }
   ],
   "deletedIds": []
 }
