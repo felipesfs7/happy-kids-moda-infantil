@@ -1,8 +1,16 @@
 {
   "version": 2,
-  "updatedAt": "2026-10-24T12:31:11.648Z",
+  "updatedAt": "2026-10-24T12:31:43.389Z",
   "soldOutIds": [],
-  "productOverrides": {},
+  "productOverrides": {
+    "hk-custom-071646": {
+      "sizes": [
+        "6",
+        "8",
+        "10"
+      ]
+    }
+  },
   "customProducts": [
     {
       "id": "hk-custom-071646",
