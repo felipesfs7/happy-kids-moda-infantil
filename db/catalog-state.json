@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updatedAt": "2026-10-24T02:05:15.994Z",
+  "updatedAt": "2026-10-24T02:05:26.414Z",
   "soldOutIds": [],
   "productOverrides": {},
   "customProducts": [],
@@ -12,7 +12,6 @@
     "Camisetas",
     "Blusas",
     "Shorts",
-    "Bermuda",
     "Calça"
   ],
   "deletedIds": []
