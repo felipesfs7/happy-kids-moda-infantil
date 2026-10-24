@@ -1,9 +1,38 @@
 {
   "version": 2,
-  "updatedAt": "2026-10-24T19:18:49.439Z",
+  "updatedAt": "2026-10-24T19:23:09.892Z",
   "soldOutIds": [],
   "productOverrides": {},
   "customProducts": [
+    {
+      "id": "hk-custom-789891",
+      "sku": "CÓD. 22285",
+      "name": "Pijama Feminino Malha Viscose com Elastano",
+      "price": 129.9,
+      "oldPrice": null,
+      "gender": "Feminino",
+      "category": "Pijamas",
+      "brand": "Alakazoo",
+      "season": "Verão",
+      "ageGroup": "4-a-10",
+      "ageLabel": "Tam. 18",
+      "sizes": [
+        "18"
+      ],
+      "badge": "Novo",
+      "featured": true,
+      "images": [
+        "https://raw.githubusercontent.com/felipesfs7/happy-kids-moda-infantil/main/assets/uploads/hk-1792869780727-714.jpg"
+      ],
+      "description": "Peça especial da coleção Happy Kids Moda Infantil, unindo conforto, liberdade de movimento e muito estilo.",
+      "fabric": "Tecido selecionado de toque macio e alta durabilidade.",
+      "washing": [
+        "Lavar com cores similares e sabão neutro",
+        "Não utilizar alvejantes com cloro",
+        "Secar à sombra"
+      ],
+      "createdAt": "2026-10-24"
+    },
     {
       "id": "hk-custom-529438",
       "sku": "CÓD. 22329",
