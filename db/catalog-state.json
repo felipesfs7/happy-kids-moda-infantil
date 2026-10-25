@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updatedAt": "2026-10-25T14:44:00.286Z",
+  "updatedAt": "2026-10-25T17:46:26.401Z",
   "soldOutIds": [],
   "productOverrides": {},
   "customProducts": [
@@ -19,7 +19,8 @@
       "sizes": [
         "4",
         "6",
-        "8"
+        "8",
+        "10"
       ],
       "badge": "Novo",
       "featured": true,
