@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updatedAt": "2026-10-25T14:43:51.712Z",
+  "updatedAt": "2026-10-25T14:43:59.696Z",
   "soldOutIds": [],
   "productOverrides": {},
   "customProducts": [
@@ -17,7 +17,8 @@
       "ageGroup": "4-a-10",
       "ageLabel": "Tam. 4 ao 10",
       "sizes": [
-        "4"
+        "4",
+        "6"
       ],
       "badge": "Novo",
       "featured": true,
