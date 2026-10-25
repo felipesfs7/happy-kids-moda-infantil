@@ -39,13 +39,44 @@ textarea:focus-visible {
 
 html {
   scroll-behavior: smooth;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: 'Nunito', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
   background-color: var(--hk-bg-soft);
   color: #1E293B;
+  font-size: 16px;
 }
 
+body {
+  font-family: 'Nunito', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+/* Escala Tipográfica Proporcional (>= 1.25:1 — Major Third Scale) */
 h1, h2, h3, h4, h5, h6, .font-heading {
   font-family: 'Poppins', sans-serif;
+}
+
+h1 {
+  font-size: 2.625rem;
+  line-height: 1.12;
+  letter-spacing: -0.025em;
+}
+
+h2 {
+  font-size: 2rem;
+  line-height: 1.2;
+  letter-spacing: -0.018em;
+}
+
+h3 {
+  font-size: 1.5625rem;
+  line-height: 1.28;
+  letter-spacing: -0.01em;
+}
+
+h4 {
+  font-size: 1.25rem;
+  line-height: 1.35;
 }
 
 /* Padrão de fundo sutil e lúdico para seções especiais */
@@ -180,4 +211,50 @@ h1, h2, h3, h4, h5, h6, .font-heading {
 .hk-rainbow-bar {
   height: 4px;
   background: linear-gradient(90deg, #E84C93 0%, #2CB667 20%, #F38230 40%, #2B6EB5 60%, #D92344 80%, #FAD02C 100%);
+}
+
+/* Indicador de rolagem horizontal (Fade Shadow) na régua de tamanhos no mobile */
+.hk-scroll-fade {
+  position: relative;
+}
+
+@media (max-width: 1023px) {
+  .hk-scroll-fade::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 8px;
+    width: 44px;
+    pointer-events: none;
+    background: linear-gradient(90deg, rgba(250, 248, 245, 0) 0%, rgba(250, 248, 245, 0.96) 85%, #FAF8F5 100%);
+  }
+}
+
+/* Micro-interações táteis de boutique (Delight ao clicar, favoritar e adicionar à sacola) */
+@keyframes tactilePop {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.22); }
+  75% { transform: scale(0.94); }
+  100% { transform: scale(1); }
+}
+
+.hk-tactile-pop {
+  animation: tactilePop 0.36s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+button:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+/* Respeito às preferências de movimento reduzido (WCAG 2.1 AA / Impeccable Harden) */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

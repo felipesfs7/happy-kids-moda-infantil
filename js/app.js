@@ -2257,6 +2257,14 @@ function buyActiveProductViaWhatsApp() {
    10. Sacola de Compras (Carrinho) e Favoritos
    ========================================================================== */
 
+function triggerTactilePulse(selector) {
+  document.querySelectorAll(selector).forEach((el) => {
+    el.classList.remove("hk-tactile-pop");
+    void el.offsetWidth;
+    el.classList.add("hk-tactile-pop");
+  });
+}
+
 function addActiveProductToCart() {
   const product = AppState.products.find((p) => p.id === AppState.activeProduct.id);
   if (!product) return;
@@ -2281,6 +2289,7 @@ function addActiveProductToCart() {
   }
 
   saveCartToStorage();
+  triggerTactilePulse(".cart-count-badge");
   renderCartDrawer();
   openCartDrawer();
   showToast(`"${product.name}" (Tam. ${size}) adicionado à sacola!`, "success");
@@ -2458,6 +2467,7 @@ function toggleFavorite(productId) {
     showToast("Salvo na sua lista de Favoritos!", "success");
   }
   saveFavoritesToStorage();
+  triggerTactilePulse(".fav-count-badge");
   if (AppState.currentView === "home") renderHomeProducts();
   if (AppState.currentView === "catalog") renderCatalogView();
 }
