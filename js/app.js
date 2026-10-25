@@ -1207,138 +1207,121 @@ function createProductCardHTML(product) {
     ? Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100)
     : 0;
 
-  const genderBadgeClass =
-    product.gender === "Feminino"
-      ? "bg-pink-50 text-pink-700 border-pink-200"
-      : product.gender === "Masculino"
-      ? "bg-sky-50 text-sky-700 border-sky-200"
-      : "bg-amber-50 text-amber-800 border-amber-200";
-
   const sizesPreview = (product.sizes || []).slice(0, 6);
   const extraSizesCount = (product.sizes || []).length - sizesPreview.length;
 
-  return `
-    <article class="product-card bg-white rounded-3xl border border-slate-200/90 overflow-hidden flex flex-col justify-between group relative">
-      
-      <!-- Topo / Imagem do Produto -->
-      <div>
-        <div class="relative aspect-square bg-white overflow-hidden cursor-pointer" onclick="openProductDetail('${product.id}')">
-          <img src="${mainImage}" alt="${product.name}" loading="lazy"
-            class="product-img-zoom w-full h-full object-contain object-center p-1" />
-          
-          <!-- Badges Superiores Esquerda -->
-          <div class="absolute top-3 left-3 flex flex-col gap-1.5 z-10">
-            ${
-              product.badge
-                ? `<span class="px-2.5 py-1 rounded-full text-[11px] font-heading font-bold bg-white/95 backdrop-blur-xs text-[#2B6EB5] shadow-xs border border-blue-100">
-                    ${product.badge}
-                  </span>`
-                : ""
-            }
-            ${
-              hasDiscount
-                ? `<span class="px-2.5 py-0.5 rounded-full text-[11px] font-heading font-extrabold bg-[#D92344] text-white shadow-xs w-fit">
-                    -${discountPercent}% OFF
-                  </span>`
-                : ""
-            }
-          </div>
+  // Badge único inteligente (Prioridade: Desconto > Selo de Destaque)
+  let primaryBadgeHTML = "";
+  if (hasDiscount) {
+    primaryBadgeHTML = `
+      <span class="px-2.5 py-1 rounded-full text-[11px] font-heading font-bold bg-[#D92344] text-white shadow-xs tracking-wide">
+        -${discountPercent}% OFF
+      </span>`;
+  } else if (product.badge) {
+    primaryBadgeHTML = `
+      <span class="px-2.5 py-1 rounded-full text-[11px] font-heading font-semibold bg-white/95 backdrop-blur-xs text-slate-800 shadow-xs border border-slate-200/70">
+        ${product.badge}
+      </span>`;
+  }
 
-          <!-- Botão Favoritar Direita -->
+  // Linha editorial sutil (Marca + Categoria)
+  const metaLabel = [product.brand, product.category].filter(Boolean).join(" • ");
+
+  return `
+    <article class="product-card bg-white rounded-2xl border border-slate-200/80 overflow-hidden flex flex-col justify-between group relative">
+      
+      <!-- Topo / Fotografia Limpa em Destaque -->
+      <div>
+        <div class="relative aspect-square bg-[#FAF8F5]/60 overflow-hidden cursor-pointer border-b border-slate-100/80" onclick="openProductDetail('${product.id}')">
+          <img src="${mainImage}" alt="${product.name}" loading="lazy"
+            class="product-img-zoom w-full h-full object-contain object-center p-2" />
+          
+          <!-- Selo Único no Topo Esquerdo -->
+          ${
+            primaryBadgeHTML
+              ? `<div class="absolute top-3 left-3 z-10 pointer-events-none">${primaryBadgeHTML}</div>`
+              : ""
+          }
+
+          <!-- Botão Favoritar no Topo Direito -->
           <button onclick="event.stopPropagation(); toggleFavorite('${product.id}')"
             aria-label="Adicionar aos Favoritos"
-            class="absolute top-3 right-3 z-10 w-9 h-9 rounded-full ${
-              isFav ? "bg-rose-500 text-white" : "bg-white/90 hover:bg-white text-slate-600 hover:text-rose-500"
-            } shadow-md flex items-center justify-center transition cursor-pointer">
+            class="absolute top-3 right-3 z-10 w-10 h-10 rounded-full ${
+              isFav
+                ? "bg-rose-500 text-white shadow-sm"
+                : "bg-white/90 hover:bg-white text-slate-500 hover:text-rose-500 shadow-xs border border-slate-200/60"
+            } flex items-center justify-center transition cursor-pointer">
             <i data-lucide="heart" class="w-4 h-4 ${isFav ? "fill-current" : ""}"></i>
           </button>
-
-          <!-- Faixa Etária no Canto Inferior da Foto -->
-          <div class="absolute bottom-2.5 left-2.5 right-2.5 flex items-center justify-between pointer-events-none">
-            <span class="px-2.5 py-1 rounded-lg bg-slate-900/80 backdrop-blur-xs text-white text-[11px] font-semibold">
-              ${product.ageLabel || "RN ao 18"}
-            </span>
-            <span class="px-2 py-0.5 rounded-md text-[10px] font-bold border ${genderBadgeClass}">
-              ${product.gender}
-            </span>
-          </div>
         </div>
 
-        <!-- Corpo do Card -->
+        <!-- Corpo Editorial do Card -->
         <div class="p-4 sm:p-5">
-          <div class="flex items-center justify-between text-xs text-slate-500 mb-1">
-            <div class="flex flex-wrap items-center gap-1.5">
-              <span class="font-medium text-[#2B6EB5]">${product.category}</span>
-              ${
-                product.brand
-                  ? `<span class="px-1.5 py-0.5 rounded bg-orange-50 text-[#F38230] font-bold text-[10px]">${product.brand}</span>`
-                  : ""
-              }
-              ${
-                product.season
-                  ? `<span class="px-1.5 py-0.5 rounded ${
-                      product.season === "Inverno" ? "bg-sky-50 text-sky-700" : "bg-amber-50 text-amber-700"
-                    } font-bold text-[10px]">${product.season === "Inverno" ? "❄️ Inverno" : "☀️ Verão"}</span>`
-                  : ""
-              }
-            </div>
-            <span class="text-[11px] font-bold text-slate-500 shrink-0">${product.sku || ""}</span>
+          <!-- Metadados Sutis -->
+          <div class="flex items-center justify-between gap-2 text-[11px] text-slate-500 mb-1.5">
+            <span class="font-semibold uppercase tracking-wider text-[#2B6EB5] truncate">
+              ${metaLabel || "Moda Infantil"}
+            </span>
+            ${
+              product.season
+                ? `<span class="text-slate-500 font-medium shrink-0">${
+                    product.season === "Inverno" ? "❄️ Inverno" : "☀️ Verão"
+                  }</span>`
+                : product.sku
+                ? `<span class="text-slate-400 font-medium shrink-0">${product.sku}</span>`
+                : ""
+            }
           </div>
 
+          <!-- Nome da Peça -->
           <h3 onclick="openProductDetail('${product.id}')"
-            class="font-heading font-bold text-slate-800 hover:text-[#F38230] text-sm sm:text-base line-clamp-2 min-h-[42px] leading-snug transition cursor-pointer mb-2.5">
+            class="font-heading font-semibold text-slate-800 group-hover:text-[#DC5F10] text-sm sm:text-[15px] line-clamp-2 min-h-[42px] leading-snug transition cursor-pointer mb-3">
             ${product.name}
           </h3>
 
-          <!-- Preview de Tamanhos Disponíveis -->
-          <div class="flex flex-wrap items-center gap-1 mb-3">
+          <!-- Tamanhos Disponíveis (Pílulas Leves) -->
+          <div class="flex flex-wrap items-center gap-1 mb-3.5">
             ${sizesPreview
               .map(
                 (sz) =>
-                  `<span class="px-1.5 py-0.5 text-[10px] font-bold rounded bg-slate-100 text-slate-700 border border-slate-200">${sz}</span>`
+                  `<span class="px-2 py-0.5 text-[11px] font-medium rounded-md bg-slate-100/90 text-slate-700">${sz}</span>`
               )
               .join("")}
             ${
               extraSizesCount > 0
-                ? `<span class="px-1.5 py-0.5 text-[10px] font-bold rounded bg-orange-50 text-[#F38230]">+${extraSizesCount}</span>`
+                ? `<span class="px-1.5 py-0.5 text-[11px] font-semibold rounded-md bg-orange-50 text-[#DC5F10]">+${extraSizesCount}</span>`
                 : ""
             }
           </div>
 
-          <!-- Bloco de Preço e Parcelamento -->
-          <div class="pt-2 border-t border-slate-100">
+          <!-- Bloco de Preço & Condições -->
+          <div class="pt-3 border-t border-slate-100">
             ${
               hasDiscount
-                ? `<p class="text-xs text-slate-400 line-through">${formatCurrency(product.oldPrice)}</p>`
-                : `<p class="text-xs text-emerald-600 font-medium">Disponível na Loja</p>`
+                ? `<p class="text-xs text-slate-400 line-through mb-0.5">${formatCurrency(product.oldPrice)}</p>`
+                : ""
             }
-            <div class="flex items-baseline gap-1.5 mt-0.5">
-              <span class="font-heading text-lg sm:text-xl font-extrabold text-slate-900">
+            <div class="flex flex-wrap items-baseline gap-2">
+              <span class="font-heading text-lg sm:text-xl font-bold text-slate-900 tracking-tight">
                 ${formatCurrency(product.price)}
               </span>
-              <span class="text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded">
+              <span class="text-[11px] font-semibold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-md">
                 ${calculatePixPrice(product.price)} no PIX
               </span>
             </div>
-            <p class="text-[11px] text-slate-500 mt-0.5">
-              ou <strong class="text-slate-700">${calculateInstallment(product.price)}</strong>
+            <p class="text-xs text-slate-500 mt-1">
+              ou <span class="font-medium text-slate-700">${calculateInstallment(product.price)}</span>
             </p>
           </div>
         </div>
       </div>
 
-      <!-- Botões de Ação Rápida -->
-      <div class="px-4 pb-4 sm:px-5 sm:pb-5 pt-0 grid grid-cols-2 gap-2">
+      <!-- Ação Única de Conversão -->
+      <div class="px-4 pb-4 sm:px-5 sm:pb-5 pt-0">
         <button onclick="openProductDetail('${product.id}')"
-          class="py-2.5 px-3 rounded-xl border-2 border-slate-200 hover:border-[#2B6EB5] text-slate-700 hover:text-[#2B6EB5] font-heading font-bold text-xs flex items-center justify-center gap-1.5 transition cursor-pointer">
-          <i data-lucide="eye" class="w-3.5 h-3.5"></i>
-          <span>Detalhes</span>
-        </button>
-
-        <button onclick="quickBuyProduct('${product.id}')"
-          class="py-2.5 px-3 rounded-xl bg-[#F38230] hover:bg-[#DC6B19] text-white font-heading font-bold text-xs flex items-center justify-center gap-1.5 shadow-sm shadow-orange-500/20 transition cursor-pointer">
-          <i data-lucide="shopping-bag" class="w-3.5 h-3.5"></i>
-          <span>Comprar</span>
+          class="w-full min-h-[42px] py-2.5 px-4 rounded-xl bg-slate-900 group-hover:bg-[#DC5F10] text-white font-heading font-semibold text-xs sm:text-[13px] flex items-center justify-center gap-2 transition-colors duration-200 cursor-pointer">
+          <i data-lucide="shopping-bag" class="w-4 h-4"></i>
+          <span>Escolher Tamanho</span>
         </button>
       </div>
     </article>

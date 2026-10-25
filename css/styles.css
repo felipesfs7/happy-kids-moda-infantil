@@ -77,20 +77,21 @@ h1, h2, h3, h4, h5, h6, .font-heading {
 
 /* Cards de Produto com micro-interações de alta conversão */
 .product-card {
-  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.28s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.28s ease;
 }
 
 .product-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 20px 30px -10px rgba(43, 110, 181, 0.12), 0 8px 16px -6px rgba(243, 130, 48, 0.08);
+  transform: translateY(-4px);
+  border-color: #CBD5E1;
+  box-shadow: 0 16px 32px -12px rgba(15, 23, 42, 0.08), 0 4px 12px -4px rgba(15, 23, 42, 0.04);
 }
 
 .product-card .product-img-zoom {
-  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .product-card:hover .product-img-zoom {
-  transform: scale(1.06);
+  transform: scale(1.04);
 }
 
 /* Galeria de Produto com Zoom Interativo (Lupa) */
