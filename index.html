@@ -111,10 +111,12 @@
         <!-- Barra de Busca Inteligente (Desktop) -->
         <div class="hidden md:flex flex-1 max-w-md relative">
           <input id="header-search-input" type="search"
+            aria-label="Buscar roupas infantis, conjuntos, vestidos ou tamanhos"
             placeholder="Buscar vestido, conjunto, body, tamanho (ex: RN, 4, 14)..."
             class="w-full pl-11 pr-20 py-2.5 rounded-2xl bg-slate-100/90 focus:bg-white border-2 border-transparent focus:border-[#C84B00] text-sm text-slate-800 outline-none transition" />
           <i data-lucide="search" class="w-4 h-4 text-slate-500 absolute left-4 top-1/2 -translate-y-1/2"></i>
           <button onclick="navigateWithFilter({ search: document.getElementById('header-search-input').value })"
+            aria-label="Executar busca"
             class="absolute right-1.5 top-1/2 -translate-y-1/2 px-3 py-1.5 rounded-xl bg-[#C84B00] hover:bg-[#AD3F00] text-white font-heading font-bold text-xs transition cursor-pointer">
             Buscar
           </button>
@@ -424,11 +426,13 @@
 
           <!-- Busca por Palavra-Chave -->
           <div>
-            <label class="block font-heading font-bold text-xs uppercase tracking-wider text-slate-500 mb-2">
+            <label for="catalog-search-input" class="block font-heading font-bold text-xs uppercase tracking-wider text-slate-500 mb-2">
               Buscar Peça
             </label>
             <div class="relative">
-              <input id="catalog-search-input" type="search" placeholder="Ex: vestido, polo, jeans..."
+              <input id="catalog-search-input" type="search"
+                aria-label="Buscar peça no catálogo por palavra-chave"
+                placeholder="Ex: vestido, polo, jeans..."
                 class="w-full pl-9 pr-3 py-2 rounded-xl bg-slate-50 border border-slate-200 focus:border-[#C84B00] text-sm outline-none" />
               <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
             </div>
@@ -1414,11 +1418,14 @@
         <!-- Busca no Menu Mobile -->
         <div class="mb-4">
           <div class="relative">
-            <input id="mobile-search-input" type="search" placeholder="Buscar roupinha ou tamanho..."
+            <input id="mobile-search-input" type="search"
+              aria-label="Buscar roupinha ou tamanho no catálogo"
+              placeholder="Buscar roupinha ou tamanho..."
               onkeydown="if(event.key==='Enter'){ navigateWithFilter({search: this.value}); }"
               class="w-full pl-9 pr-16 py-2.5 rounded-xl bg-slate-100 text-xs outline-none" />
             <i data-lucide="search" class="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2"></i>
             <button onclick="navigateWithFilter({search: document.getElementById('mobile-search-input').value})"
+              aria-label="Buscar"
               class="absolute right-1.5 top-1/2 -translate-y-1/2 px-3 py-1.5 rounded-lg bg-[#C84B00] text-white font-bold text-xs cursor-pointer">
               Ir
             </button>

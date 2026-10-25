@@ -1025,26 +1025,28 @@ function renderHeroSlide() {
       ${
         slides.length > 1
           ? `
-      <!-- Controles do Carrossel -->
-      <div class="absolute bottom-3 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2 bg-white/80 backdrop-blur-sm px-3 py-1.5 rounded-full shadow-sm border border-slate-200/60">
+      <!-- Controles do Carrossel com Hitboxes Acessíveis de 44px (WCAG 2.1 AA) -->
+      <div class="absolute bottom-3 left-1/2 -translate-x-1/2 z-20 flex items-center bg-white/85 backdrop-blur-sm px-2 py-0.5 rounded-full shadow-sm border border-slate-200/60">
         ${slides
           .map(
             (s, idx) => `
-          <button onclick="goToHeroSlide(${idx})" aria-label="Slide ${idx + 1}"
-            class="h-2.5 rounded-full transition-all cursor-pointer ${
+          <button onclick="goToHeroSlide(${idx})" aria-label="Ir para o slide ${idx + 1}"
+            class="min-w-[44px] min-h-[44px] flex items-center justify-center p-1.5 cursor-pointer">
+            <span class="h-2.5 rounded-full transition-all block ${
               idx === AppState.heroSlideIndex ? "w-7 bg-[#C84B00]" : "w-2.5 bg-slate-300 hover:bg-slate-400"
-            }"></button>
+            }"></span>
+          </button>
         `
           )
           .join("")}
       </div>
 
       <button onclick="prevHeroSlide()" aria-label="Slide Anterior"
-        class="hidden sm:flex absolute left-3 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white/85 hover:bg-white text-slate-800 shadow-md items-center justify-center transition cursor-pointer">
+        class="hidden sm:flex absolute left-3 top-1/2 -translate-y-1/2 z-20 w-11 h-11 min-w-[44px] min-h-[44px] rounded-full bg-white/90 hover:bg-white text-slate-800 shadow-md items-center justify-center transition cursor-pointer">
         <i data-lucide="chevron-left" class="w-5 h-5"></i>
       </button>
       <button onclick="nextHeroSlide()" aria-label="Próximo Slide"
-        class="hidden sm:flex absolute right-3 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white/85 hover:bg-white text-slate-800 shadow-md items-center justify-center transition cursor-pointer">
+        class="hidden sm:flex absolute right-3 top-1/2 -translate-y-1/2 z-20 w-11 h-11 min-w-[44px] min-h-[44px] rounded-full bg-white/90 hover:bg-white text-slate-800 shadow-md items-center justify-center transition cursor-pointer">
         <i data-lucide="chevron-right" class="w-5 h-5"></i>
       </button>
       `
@@ -1258,17 +1260,17 @@ function createProductCardHTML(product) {
         <!-- Corpo Editorial do Card -->
         <div class="p-4 sm:p-5">
           <!-- Metadados Sutis -->
-          <div class="flex items-center justify-between gap-2 text-[11px] text-slate-500 mb-1.5">
-            <span class="font-semibold uppercase tracking-wider text-[#2B6EB5] truncate">
+          <div class="flex items-center justify-between gap-2 text-[11px] text-slate-600 mb-1.5">
+            <span class="font-semibold uppercase tracking-wider text-[#1E548F] truncate">
               ${metaLabel || "Moda Infantil"}
             </span>
             ${
               product.season
-                ? `<span class="text-slate-500 font-medium shrink-0">${
+                ? `<span class="text-slate-600 font-medium shrink-0">${
                     product.season === "Inverno" ? "❄️ Inverno" : "☀️ Verão"
                   }</span>`
                 : product.sku
-                ? `<span class="text-slate-400 font-medium shrink-0">${product.sku}</span>`
+                ? `<span class="text-slate-600 font-medium shrink-0">${product.sku}</span>`
                 : ""
             }
           </div>
@@ -1298,7 +1300,7 @@ function createProductCardHTML(product) {
           <div class="pt-3 border-t border-slate-100">
             ${
               hasDiscount
-                ? `<p class="text-xs text-slate-400 line-through mb-0.5">${formatCurrency(product.oldPrice)}</p>`
+                ? `<p class="text-xs text-slate-600 line-through mb-0.5">De: ${formatCurrency(product.oldPrice)}</p>`
                 : ""
             }
             <div class="flex flex-wrap items-baseline gap-2">
@@ -1309,17 +1311,17 @@ function createProductCardHTML(product) {
                 ${calculatePixPrice(product.price)} no PIX
               </span>
             </div>
-            <p class="text-xs text-slate-500 mt-1">
-              ou <span class="font-medium text-slate-700">${calculateInstallment(product.price)}</span>
+            <p class="text-xs text-slate-600 mt-1">
+              ou <span class="font-medium text-slate-800">${calculateInstallment(product.price)}</span>
             </p>
           </div>
         </div>
       </div>
 
-      <!-- Ação Única de Conversão -->
+      <!-- Ação Única de Conversão com 44px de Touch Target -->
       <div class="px-4 pb-4 sm:px-5 sm:pb-5 pt-0">
         <button onclick="openProductDetail('${product.id}')"
-          class="w-full min-h-[42px] py-2.5 px-4 rounded-xl bg-slate-900 group-hover:bg-[#C84B00] text-white font-heading font-semibold text-xs sm:text-[13px] flex items-center justify-center gap-2 transition-colors duration-200 cursor-pointer">
+          class="w-full min-h-[44px] py-2.5 px-4 rounded-xl bg-slate-900 group-hover:bg-[#C84B00] text-white font-heading font-semibold text-xs sm:text-[13px] flex items-center justify-center gap-2 transition-colors duration-200 cursor-pointer">
           <i data-lucide="shopping-bag" class="w-4 h-4"></i>
           <span>Escolher Tamanho</span>
         </button>
@@ -1385,7 +1387,7 @@ function renderCategoryOptionsUI() {
   if (catListEl) {
     const activeCat = AppState.filters.category || "todos";
     const btnClass = (isActive) =>
-      `w-full text-left px-3 py-2 rounded-xl text-sm font-medium flex items-center justify-between transition cursor-pointer ${
+      `w-full text-left min-h-[44px] px-3.5 py-2.5 rounded-xl text-sm font-medium flex items-center justify-between transition cursor-pointer ${
         isActive ? "bg-orange-50 text-[#C84B00] font-bold border border-orange-200" : "text-slate-600 hover:bg-slate-50"
       }`;
 
@@ -1497,7 +1499,7 @@ function renderBrandOptionsUI() {
   if (brandListEl) {
     const activeBrand = AppState.filters.brand || "todos";
     const btnClass = (isActive) =>
-      `w-full text-left px-3 py-2 rounded-xl text-sm font-medium flex items-center justify-between transition cursor-pointer ${
+      `w-full text-left min-h-[44px] px-3.5 py-2.5 rounded-xl text-sm font-medium flex items-center justify-between transition cursor-pointer ${
         isActive ? "bg-orange-50 text-[#C84B00] font-bold border border-orange-200" : "text-slate-600 hover:bg-slate-50"
       }`;
 
@@ -1685,7 +1687,7 @@ function renderCatalogView() {
   document.querySelectorAll("[data-filter-gender]").forEach((el) => {
     const val = el.getAttribute("data-filter-gender");
     const active = AppState.filters.gender === val;
-    el.className = `w-full text-left px-3 py-2 rounded-xl text-sm font-medium flex items-center justify-between transition cursor-pointer ${
+    el.className = `w-full text-left min-h-[44px] px-3.5 py-2.5 rounded-xl text-sm font-medium flex items-center justify-between transition cursor-pointer ${
       active ? "bg-orange-50 text-[#C84B00] font-bold border border-orange-200" : "text-slate-600 hover:bg-slate-50"
     }`;
   });
@@ -1693,7 +1695,7 @@ function renderCatalogView() {
   document.querySelectorAll("[data-filter-age]").forEach((el) => {
     const val = el.getAttribute("data-filter-age");
     const active = AppState.filters.ageGroup === val;
-    el.className = `w-full text-left px-3 py-2 rounded-xl text-sm font-medium flex items-center justify-between transition cursor-pointer ${
+    el.className = `w-full text-left min-h-[44px] px-3.5 py-2.5 rounded-xl text-sm font-medium flex items-center justify-between transition cursor-pointer ${
       active ? "bg-blue-50 text-[#2B6EB5] font-bold border border-blue-200" : "text-slate-600 hover:bg-slate-50"
     }`;
   });
@@ -1701,7 +1703,7 @@ function renderCatalogView() {
   document.querySelectorAll("[data-filter-season]").forEach((el) => {
     const val = el.getAttribute("data-filter-season");
     const active = (AppState.filters.season || "todos") === val;
-    el.className = `w-full text-left px-3 py-2 rounded-xl text-sm font-medium flex items-center justify-between transition cursor-pointer ${
+    el.className = `w-full text-left min-h-[44px] px-3.5 py-2.5 rounded-xl text-sm font-medium flex items-center justify-between transition cursor-pointer ${
       active ? "bg-amber-50 text-[#C84B00] font-bold border border-amber-200" : "text-slate-600 hover:bg-slate-50"
     }`;
   });
@@ -1709,7 +1711,7 @@ function renderCatalogView() {
   document.querySelectorAll("[data-filter-category]").forEach((el) => {
     const val = el.getAttribute("data-filter-category");
     const active = AppState.filters.category === val;
-    el.className = `w-full text-left px-3 py-2 rounded-xl text-sm font-medium flex items-center justify-between transition cursor-pointer ${
+    el.className = `w-full text-left min-h-[44px] px-3.5 py-2.5 rounded-xl text-sm font-medium flex items-center justify-between transition cursor-pointer ${
       active ? "bg-orange-50 text-[#C84B00] font-bold border border-orange-200" : "text-slate-600 hover:bg-slate-50"
     }`;
   });
@@ -1717,7 +1719,7 @@ function renderCatalogView() {
   document.querySelectorAll("[data-filter-brand]").forEach((el) => {
     const val = el.getAttribute("data-filter-brand");
     const active = (AppState.filters.brand || "todos") === val;
-    el.className = `w-full text-left px-3 py-2 rounded-xl text-sm font-medium flex items-center justify-between transition cursor-pointer ${
+    el.className = `w-full text-left min-h-[44px] px-3.5 py-2.5 rounded-xl text-sm font-medium flex items-center justify-between transition cursor-pointer ${
       active ? "bg-orange-50 text-[#C84B00] font-bold border border-orange-200" : "text-slate-600 hover:bg-slate-50"
     }`;
   });
@@ -1995,7 +1997,7 @@ function renderProductDetailView() {
             <div class="bg-[#FAF8F5] rounded-2xl p-4 sm:p-5 border border-slate-200/80 mb-6">
               ${
                 hasDiscount
-                  ? `<p class="text-xs sm:text-sm text-slate-400 line-through">De: ${formatCurrency(product.oldPrice)}</p>`
+                  ? `<p class="text-xs sm:text-sm text-slate-600 line-through">De: ${formatCurrency(product.oldPrice)}</p>`
                   : ""
               }
               <div class="flex flex-wrap items-baseline gap-3">
@@ -3602,6 +3604,25 @@ function setupGlobalListeners() {
       closeMobileFiltersDrawer();
       if (typeof closeAdminPasswordModal === "function") {
         closeAdminPasswordModal();
+      }
+    } else if (e.key === "Tab") {
+      // Focus Trap acessível para modais e gavetas ativas
+      const activeDialog = document.querySelector(
+        "#cart-drawer:not(.hidden), #favorites-drawer:not(.hidden), #mobile-menu-drawer:not(.hidden), #size-guide-modal:not(.hidden), #lightbox-modal:not(.hidden), #admin-auth-modal:not(.hidden)"
+      );
+      if (activeDialog) {
+        const focusable = activeDialog.querySelectorAll('button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])');
+        if (focusable.length > 0) {
+          const first = focusable[0];
+          const last = focusable[focusable.length - 1];
+          if (e.shiftKey && document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+          } else if (!e.shiftKey && document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+          }
+        }
       }
     }
   });
