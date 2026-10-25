@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updatedAt": "2026-10-25T14:27:42.667Z",
+  "updatedAt": "2026-10-25T14:27:50.598Z",
   "soldOutIds": [],
   "productOverrides": {},
   "customProducts": [
@@ -47,8 +47,9 @@
       "brand": "Alakazoo",
       "season": "Verão",
       "ageGroup": "1-a-3",
-      "ageLabel": "Tam. 2 ao 3",
+      "ageLabel": "Tam. 1 ao 3",
       "sizes": [
+        "1",
         "2",
         "3"
       ],
