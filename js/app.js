@@ -133,6 +133,18 @@ function saveCloudCacheLocally() {
   } catch (e) {}
 }
 
+function sortSizesInOfficialOrder(sizesArr) {
+  const unique = [...new Set(Array.isArray(sizesArr) ? sizesArr : [])];
+  return unique.sort((a, b) => {
+    const ia = ALL_SIZES.indexOf(a);
+    const ib = ALL_SIZES.indexOf(b);
+    if (ia === -1 && ib === -1) return String(a).localeCompare(String(b));
+    if (ia === -1) return 1;
+    if (ib === -1) return -1;
+    return ia - ib;
+  });
+}
+
 // Reconstrói a lista de produtos combinando o catálogo base + alterações da nuvem
 function rebuildCatalogFromState() {
   const soldOutSet = new Set(CloudDB.state.soldOutIds || []);
@@ -140,25 +152,35 @@ function rebuildCatalogFromState() {
   const overrides = CloudDB.state.productOverrides || {};
   const customList = Array.isArray(CloudDB.state.customProducts) ? CloudDB.state.customProducts : [];
 
-  const mergedBase = INITIAL_PRODUCTS.filter((p) => !deletedSet.has(p.id)).map((p) => {
+  const buildMergedProduct = (p) => {
     const ov = overrides[p.id] || {};
+    const baseRegistered =
+      Array.isArray(ov.registeredSizes) && ov.registeredSizes.length > 0
+        ? ov.registeredSizes
+        : Array.isArray(p.registeredSizes) && p.registeredSizes.length > 0
+        ? p.registeredSizes
+        : Array.isArray(p.sizes)
+        ? p.sizes
+        : [];
+    const activeSizes = Array.isArray(ov.sizes)
+      ? ov.sizes
+      : Array.isArray(p.sizes)
+      ? p.sizes
+      : [];
+    const allSizes = sortSizesInOfficialOrder([...baseRegistered, ...activeSizes]);
+
     return {
       ...p,
       ...ov,
+      sizes: sortSizesInOfficialOrder(activeSizes),
+      registeredSizes: allSizes,
+      allSizes,
       isSoldOut: soldOutSet.has(p.id)
     };
-  });
+  };
 
-  const mergedCustom = customList
-    .filter((p) => p && !deletedSet.has(p.id))
-    .map((p) => {
-      const ov = overrides[p.id] || {};
-      return {
-        ...p,
-        ...ov,
-        isSoldOut: soldOutSet.has(p.id)
-      };
-    });
+  const mergedBase = INITIAL_PRODUCTS.filter((p) => !deletedSet.has(p.id)).map(buildMergedProduct);
+  const mergedCustom = customList.filter((p) => p && !deletedSet.has(p.id)).map(buildMergedProduct);
 
   // Lista completa (para o Painel do Lojista poder ver tanto ativos quanto vendidos/retirados)
   AppState.allProducts = [...mergedCustom, ...mergedBase];
@@ -536,6 +558,22 @@ function toggleProductSoldOut(productId) {
     // Estava retirado/esgotado -> Reativar no catálogo!
     list.splice(idx, 1);
     CloudDB.state.soldOutIds = list;
+
+    // Se todos os tamanhos estavam riscados/zerados, restaura os tamanhos cadastrados da peça
+    if (!product.sizes || product.sizes.length === 0) {
+      const restoredSizes =
+        product.allSizes && product.allSizes.length > 0 ? [...product.allSizes] : ["U"];
+      const customIdx = (CloudDB.state.customProducts || []).findIndex((c) => c.id === productId);
+      if (customIdx >= 0) {
+        CloudDB.state.customProducts[customIdx].sizes = restoredSizes;
+        CloudDB.state.customProducts[customIdx].registeredSizes = restoredSizes;
+        delete CloudDB.state.productOverrides[productId];
+      } else {
+        if (!CloudDB.state.productOverrides[productId]) CloudDB.state.productOverrides[productId] = {};
+        CloudDB.state.productOverrides[productId].sizes = restoredSizes;
+      }
+    }
+
     showToast(`Peça "${product.name}" (${product.sku}) REATIVADA no catálogo!`, "success");
     syncCloudDatabase(`Reativou ${product.sku} - ${product.name}`);
   } else {
@@ -579,28 +617,65 @@ function toggleSingleSizeStock(productId, size) {
   const product = AppState.allProducts.find((p) => p.id === productId);
   if (!product) return;
 
-  const currentSizes = Array.isArray(product.sizes) ? [...product.sizes] : [];
-  const idx = currentSizes.indexOf(size);
+  const allRegistered = sortSizesInOfficialOrder(
+    product.allSizes && product.allSizes.length > 0
+      ? [...product.allSizes, size]
+      : [...(product.sizes || []), size]
+  );
 
-  if (idx >= 0) {
-    if (currentSizes.length === 1) {
-      // Se era o último tamanho disponível, pergunta ou já marca a peça inteira como esgotada
-      toggleProductSoldOut(productId);
-      return;
+  let currentSizes = Array.isArray(product.sizes) ? [...product.sizes] : [];
+
+  // Se a peça inteira estava marcada como retirada/esgotada e a lojista clicou num tamanho para reativá-lo:
+  if (product.isSoldOut) {
+    CloudDB.state.soldOutIds = (CloudDB.state.soldOutIds || []).filter((id) => id !== productId);
+    if (!currentSizes.includes(size)) {
+      currentSizes.push(size);
+    } else {
+      // Se todos os tamanhos ainda constavam no array mas o card estava "isSoldOut", ativa apenas o tamanho clicado
+      currentSizes = [size];
     }
-    currentSizes.splice(idx, 1);
   } else {
-    currentSizes.push(size);
-    // Ordena os tamanhos na ordem oficial RN -> 18
-    currentSizes.sort((a, b) => ALL_SIZES.indexOf(a) - ALL_SIZES.indexOf(b));
+    const idx = currentSizes.indexOf(size);
+    if (idx >= 0) {
+      // Risca (desativa) este tamanho
+      currentSizes.splice(idx, 1);
+      if (currentSizes.length === 0) {
+        // Se todos os tamanhos foram riscados, marca também como esgotado no catálogo público
+        if (!CloudDB.state.soldOutIds.includes(productId)) {
+          CloudDB.state.soldOutIds.push(productId);
+        }
+      }
+    } else {
+      // Tira o risco (reativa) este tamanho
+      currentSizes.push(size);
+      CloudDB.state.soldOutIds = (CloudDB.state.soldOutIds || []).filter((id) => id !== productId);
+    }
   }
 
-  if (!CloudDB.state.productOverrides[productId]) {
-    CloudDB.state.productOverrides[productId] = {};
-  }
-  CloudDB.state.productOverrides[productId].sizes = currentSizes;
+  currentSizes = sortSizesInOfficialOrder(currentSizes);
 
-  showToast(`Tamanhos de ${product.sku} atualizados (${currentSizes.join(", ")})!`, "success");
+  // Atualiza diretamente no produto customizado (mantendo registeredSizes intacto para o botão nunca sumir!)
+  const customIdx = (CloudDB.state.customProducts || []).findIndex((c) => c.id === productId);
+  if (customIdx >= 0) {
+    CloudDB.state.customProducts[customIdx] = {
+      ...CloudDB.state.customProducts[customIdx],
+      sizes: currentSizes,
+      registeredSizes: allRegistered
+    };
+    delete CloudDB.state.productOverrides[productId];
+  } else {
+    if (!CloudDB.state.productOverrides[productId]) {
+      CloudDB.state.productOverrides[productId] = {};
+    }
+    CloudDB.state.productOverrides[productId].sizes = currentSizes;
+    CloudDB.state.productOverrides[productId].registeredSizes = allRegistered;
+  }
+
+  if (currentSizes.length === 0) {
+    showToast(`Todos os tamanhos de ${product.sku} foram riscados (peça esgotada). Clique num tamanho para reativar!`, "info");
+  } else {
+    showToast(`Tamanhos disponíveis de ${product.sku}: ${currentSizes.join(", ")}`, "success");
+  }
   syncCloudDatabase(`Atualizou tamanhos de ${product.sku}`);
 }
 
@@ -683,8 +758,8 @@ function renderQuickCodeManager() {
       ${matches
         .map((p) => {
           const img = p.images && p.images[0] ? p.images[0] : "";
-          const baseProd = INITIAL_PRODUCTS.find((x) => x.id === p.id);
-          const allPossibleSizesForProd = baseProd ? baseProd.sizes : p.sizes || [];
+          const allPossibleSizesForProd =
+            p.allSizes && p.allSizes.length > 0 ? p.allSizes : p.sizes || [];
 
           return `
             <div class="rounded-2xl border-2 p-4 flex flex-col justify-between gap-3 transition ${
@@ -2600,16 +2675,24 @@ function handleAdminBannerImageUpload(event) {
   reader.readAsDataURL(file);
 }
 
-function addHeroBannerFromAdmin() {
+async function addHeroBannerFromAdmin() {
   const urlInput = document.getElementById("admin-banner-image-url");
   const badgeInput = document.getElementById("admin-banner-badge");
   const tagInput = document.getElementById("admin-banner-tag");
   const titleInput = document.getElementById("admin-banner-title");
 
-  const imageUrl = (urlInput && urlInput.value.trim()) || AppState.admin.uploadedBannerDataUrl || "";
+  let imageUrl = (urlInput && urlInput.value.trim()) || AppState.admin.uploadedBannerDataUrl || "";
   if (!imageUrl) {
     showToast("Escolha uma foto do celular/computador ou cole o link da imagem primeiro.", "warning");
     return;
+  }
+
+  if (imageUrl.startsWith("data:image/")) {
+    showToast("Finalizando envio da foto do banner para a nuvem...", "info");
+    const uploadedUrl = await uploadImageToCloudStorage(imageUrl);
+    if (uploadedUrl) {
+      imageUrl = uploadedUrl;
+    }
   }
 
   if (!Array.isArray(CloudDB.state.heroBanners)) {
@@ -2966,7 +3049,7 @@ function updateAdminImagePreview(src) {
   }
 }
 
-function handleAdminFormSubmit(event) {
+async function handleAdminFormSubmit(event) {
   event.preventDefault();
 
   const name = document.getElementById("admin-prod-name").value.trim();
@@ -2986,9 +3069,10 @@ function handleAdminFormSubmit(event) {
   const description = document.getElementById("admin-prod-description").value.trim();
   const fabric = document.getElementById("admin-prod-fabric").value.trim();
 
-  const selectedSizes = Array.from(document.querySelectorAll('input[name="admin-size-item"]:checked')).map(
+  const rawSelectedSizes = Array.from(document.querySelectorAll('input[name="admin-size-item"]:checked')).map(
     (cb) => cb.value
   );
+  const selectedSizes = sortSizesInOfficialOrder(rawSelectedSizes);
 
   if (!name || isNaN(price) || price <= 0) {
     showToast("Por favor, preencha o nome e um preço válido.", "warning");
@@ -3018,17 +3102,34 @@ function handleAdminFormSubmit(event) {
       ? `Tam. ${selectedSizes[0]}`
       : `Tam. ${selectedSizes[0]} ao ${selectedSizes[selectedSizes.length - 1]}`;
 
-  const finalImage =
+  let finalImage =
     imageUrl ||
     AppState.admin.uploadedImageDataUrl ||
     "assets/produtos/prod-001.jpg";
+
+  if (finalImage.startsWith("data:image/")) {
+    showToast("Finalizando envio da foto para a nuvem...", "info");
+    const uploadedUrl = await uploadImageToCloudStorage(finalImage);
+    if (uploadedUrl) {
+      finalImage = uploadedUrl;
+    }
+  }
 
   if (AppState.admin.editingId) {
     const prodId = AppState.admin.editingId;
     const existing = AppState.allProducts.find((p) => p.id === prodId);
     if (existing) {
+      const customCodeInput = document.getElementById("admin-prod-sku");
+      const rawCustomCode = customCodeInput ? customCodeInput.value.trim() : "";
+      const updatedSku = rawCustomCode
+        ? rawCustomCode.toUpperCase().startsWith("CÓD")
+          ? rawCustomCode
+          : `CÓD. ${rawCustomCode}`
+        : existing.sku;
+
       const updatedImages = [finalImage, ...(existing.images ? existing.images.slice(1) : [])];
       const overridePayload = {
+        sku: updatedSku,
         name,
         price,
         oldPrice,
@@ -3039,6 +3140,7 @@ function handleAdminFormSubmit(event) {
         ageGroup,
         ageLabel: ageLabel || (ageObj ? ageObj.shortLabel : "RN ao 18"),
         sizes: selectedSizes,
+        registeredSizes: selectedSizes,
         badge: badge || "Destaque",
         featured,
         images: updatedImages,
@@ -3048,20 +3150,24 @@ function handleAdminFormSubmit(event) {
         fabric: fabric || "Algodão Premium macio e respirável."
       };
 
-      // Se for produto customizado ou do catálogo base, salva no CloudDB
+      // Se a peça estava esgotada e agora recebeu tamanhos na edição, reativa automaticamente
+      CloudDB.state.soldOutIds = (CloudDB.state.soldOutIds || []).filter((id) => id !== prodId);
+
+      // Se for produto customizado, atualiza direto em customProducts e limpa qualquer override antigo de tamanhos
       const customIdx = CloudDB.state.customProducts.findIndex((c) => c.id === prodId);
       if (customIdx >= 0) {
         CloudDB.state.customProducts[customIdx] = {
           ...CloudDB.state.customProducts[customIdx],
           ...overridePayload
         };
+        delete CloudDB.state.productOverrides[prodId];
       } else {
         CloudDB.state.productOverrides[prodId] = overridePayload;
       }
 
       showToast(`Produto "${name}" atualizado na nuvem!`, "success");
       resetAdminForm();
-      syncCloudDatabase(`Editou produto ${existing.sku || prodId}`);
+      syncCloudDatabase(`Editou produto ${updatedSku || prodId}`);
     }
   } else {
     const newId = "hk-custom-" + Date.now().toString().slice(-6);
@@ -3086,6 +3192,7 @@ function handleAdminFormSubmit(event) {
       ageGroup,
       ageLabel,
       sizes: selectedSizes,
+      registeredSizes: selectedSizes,
       badge: badge || "Novo",
       featured,
       images: [finalImage],
@@ -3292,9 +3399,16 @@ function renderAdminProductsTable() {
             </div>
           </td>
           <td class="py-3.5 px-4">
-            <div class="flex flex-wrap gap-1 max-w-[180px]">
-              ${(p.sizes || [])
-                .map((s) => `<span class="px-1.5 py-0.5 text-[10px] font-bold bg-slate-100 text-slate-700 rounded">${s}</span>`)
+            <div class="flex flex-wrap gap-1 max-w-[190px]">
+              ${((p.allSizes && p.allSizes.length > 0 ? p.allSizes : p.sizes) || [])
+                .map((s) => {
+                  const hasSize = p.sizes && p.sizes.includes(s) && !p.isSoldOut;
+                  return `<button type="button" onclick="toggleSingleSizeStock('${p.id}', '${s}')" title="Clique para ativar/desativar o tamanho ${s}" class="px-1.5 py-0.5 text-[10px] font-bold rounded border transition cursor-pointer ${
+                    hasSize
+                      ? "bg-emerald-50 border-emerald-300 text-emerald-800 hover:bg-rose-50"
+                      : "bg-slate-100 border-slate-200 text-slate-400 line-through hover:bg-emerald-50"
+                  }">${s}</button>`;
+                })
                 .join("")}
             </div>
           </td>
