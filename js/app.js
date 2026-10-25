@@ -955,11 +955,12 @@ function renderHeroSlide() {
         
         <!-- Coluna de Texto e Chamada (CTA) -->
         <div class="${hasImage ? "lg:col-span-7" : "lg:col-span-12"} p-6 sm:p-10 lg:p-14 z-10 animate-fade-in">
-          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/90 border border-orange-200 text-xs sm:text-sm font-bold text-[#C84B00] shadow-sm mb-4">
+          <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-white/95 border border-amber-900/15 text-[11px] sm:text-xs font-heading font-bold uppercase tracking-wider text-[#C84B00] shadow-2xs mb-4">
+            <i data-lucide="sparkles" class="w-3.5 h-3.5 text-[#C84B00]"></i>
             <span>${slide.badge || fallbackSlide.badge}</span>
           </div>
           
-          <h1 class="font-heading text-2xl sm:text-4xl lg:text-[42px] font-extrabold text-slate-900 leading-[1.18] tracking-tight mb-4">
+          <h1 class="font-heading text-2xl sm:text-4xl lg:text-[40px] font-bold text-slate-900 leading-[1.15] tracking-tight mb-4">
             ${slide.title || fallbackSlide.title}
           </h1>
           
@@ -985,7 +986,7 @@ function renderHeroSlide() {
           <div class="mt-7 pt-5 border-t border-slate-200/70 flex flex-wrap items-center gap-4 sm:gap-6 text-xs sm:text-sm font-medium text-slate-600">
             <div class="flex items-center gap-1.5">
               <span class="w-2.5 h-2.5 rounded-full bg-[#2CB667]"></span>
-              <span>Estoque Atualizado em Tempo Real</span>
+              <span>Estoque em Tempo Real</span>
             </div>
             <div class="flex items-center gap-1.5">
               <span class="w-2.5 h-2.5 rounded-full bg-[#2B6EB5]"></span>
@@ -1001,19 +1002,19 @@ function renderHeroSlide() {
         ${
           hasImage
             ? `
-        <!-- Coluna da Imagem em Destaque -->
-        <div class="lg:col-span-5 relative h-80 sm:h-96 lg:h-[470px] w-full overflow-hidden bg-white/50 flex items-center justify-center p-4">
+        <!-- Coluna da Imagem em Destaque com Selo de Grife -->
+        <div class="lg:col-span-5 relative h-80 sm:h-96 lg:h-[470px] w-full overflow-hidden bg-white/40 flex items-center justify-center p-4">
           <img src="${slide.image}" alt="${slide.title || "Coleção Happy Kids"}"
             class="w-full h-full object-contain rounded-2xl transform hover:scale-105 transition-transform duration-700" />
           
-          <!-- Card Flutuante Lúdico -->
-          <div class="absolute bottom-4 left-4 right-4 sm:left-auto sm:right-6 sm:bottom-6 bg-white/95 backdrop-blur-md p-3.5 sm:p-4 rounded-2xl shadow-xl border border-slate-100 flex items-center gap-3 animate-float">
-            <div class="w-11 h-11 rounded-xl bg-orange-100 text-[#C84B00] flex items-center justify-center shrink-0 font-heading font-extrabold text-xs">
+          <!-- Selo Flutuante de Grife Infantil -->
+          <div class="absolute bottom-4 right-4 sm:bottom-6 sm:right-6 bg-white/95 backdrop-blur-md px-3.5 py-2.5 rounded-2xl shadow-lg border border-slate-200/80 flex items-center gap-2.5 animate-float">
+            <span class="w-8 h-8 rounded-xl bg-orange-100 text-[#C84B00] flex items-center justify-center font-heading font-bold text-xs shrink-0">
               RN-18
-            </div>
-            <div>
-              <p class="text-xs font-bold uppercase tracking-wider text-[#2B6EB5]">${slide.floatingTag || "Coleção Oficial Happy Kids"}</p>
-              <p class="text-sm font-heading font-bold text-slate-900">${slide.floatingPrice || "Parcelamento em até 10x Sem Juros"}</p>
+            </span>
+            <div class="text-left">
+              <p class="text-[10px] font-heading font-bold uppercase tracking-wider text-[#1E548F]">${slide.floatingTag || "Boutique Infantil"}</p>
+              <p class="text-xs font-heading font-bold text-slate-900">${slide.floatingPrice || "Santa Fé do Sul - SP"}</p>
             </div>
           </div>
         </div>
@@ -1212,16 +1213,16 @@ function createProductCardHTML(product) {
   const sizesPreview = (product.sizes || []).slice(0, 6);
   const extraSizesCount = (product.sizes || []).length - sizesPreview.length;
 
-  // Badge único inteligente (Prioridade: Desconto > Selo de Destaque)
+  // Badge único inteligente estilo etiqueta têxtil de boutique (Woven Patch)
   let primaryBadgeHTML = "";
   if (hasDiscount) {
     primaryBadgeHTML = `
-      <span class="px-2.5 py-1 rounded-full text-[11px] font-heading font-bold bg-[#D92344] text-white shadow-xs tracking-wide">
+      <span class="badge-woven-discount">
         -${discountPercent}% OFF
       </span>`;
   } else if (product.badge) {
     primaryBadgeHTML = `
-      <span class="px-2.5 py-1 rounded-full text-[11px] font-heading font-semibold bg-white/95 backdrop-blur-xs text-slate-800 shadow-xs border border-slate-200/70">
+      <span class="badge-woven-tag">
         ${product.badge}
       </span>`;
   }
@@ -3637,6 +3638,37 @@ function setupGlobalListeners() {
       }
     }
   });
+
+  // Inicia o Ticker Rotativo da Top Bar no mobile (Direção de Arte & Limpeza Visual)
+  startMobileTopBarTicker();
+}
+
+let mobileTickerTimer = null;
+function startMobileTopBarTicker() {
+  const tickerEl = document.getElementById("mobile-topbar-ticker");
+  if (!tickerEl) return;
+
+  const announcements = [
+    { icon: "truck", text: "Enviamos para <strong>todo o Brasil</strong>" },
+    { icon: "credit-card", text: "Até <strong>10x sem juros</strong> ou <strong>5% OFF no PIX</strong>" },
+    { icon: "sparkles", text: "Moda Infantil e Bebê do <strong>RN ao 18</strong>" },
+    { icon: "map-pin", text: "Loja Física em <strong>Santa Fé do Sul - SP</strong>" }
+  ];
+
+  let currentIdx = 0;
+  if (mobileTickerTimer) clearInterval(mobileTickerTimer);
+
+  mobileTickerTimer = setInterval(() => {
+    currentIdx = (currentIdx + 1) % announcements.length;
+    const item = announcements[currentIdx];
+    tickerEl.innerHTML = `
+      <div class="ticker-slide flex items-center gap-1.5 font-medium animate-fade-in text-white/95">
+        <i data-lucide="${item.icon}" class="w-3.5 h-3.5 text-[#FFE066] shrink-0"></i>
+        <span>${item.text}</span>
+      </div>
+    `;
+    refreshIcons();
+  }, 3800);
 }
 
 function refreshIcons() {
