@@ -35,6 +35,9 @@
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
 
+  <!-- Preload da Imagem Principal do Hero (LCP Optimization) -->
+  <link rel="preload" as="image" href="assets/produtos/prod-002.jpg" fetchpriority="high" />
+
   <!-- Estilos Customizados Happy Kids -->
   <link rel="stylesheet" href="css/styles.css" />
 </head>
@@ -105,7 +108,7 @@
           </button>
 
           <a href="#inicio" onclick="event.preventDefault(); navigateTo('home');" class="flex items-center gap-3 group">
-            <img src="assets/logo.png" alt="Happy Kids Moda Infantil"
+            <img src="assets/logo.png" alt="Happy Kids Moda Infantil" width="160" height="64"
               class="h-14 sm:h-16 w-auto object-contain rounded-xl transition-transform group-hover:scale-105" />
             <div class="hidden sm:block">
               <div class="font-heading font-bold text-lg leading-none tracking-tight">
@@ -237,7 +240,7 @@
           <div onclick="navigateWithFilter({ ageGroup: 'bebe' })"
             class="group relative rounded-2xl p-4 sm:p-5 bg-white border border-slate-200/80 hover:border-[#2B6EB5] transition-all cursor-pointer text-center">
             <div class="w-20 h-20 sm:w-24 sm:h-24 mx-auto rounded-full overflow-hidden mb-3 bg-sky-50">
-              <img src="assets/produtos/prod-018.jpg" alt="Linha Bebê" loading="lazy"
+              <img src="assets/produtos/prod-018.jpg" alt="Linha Bebê" width="96" height="96" loading="lazy" decoding="async"
                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
             </div>
             <h3 class="font-heading font-bold text-slate-900 text-base group-hover:text-[#2B6EB5] transition">Mundo Bebê</h3>
@@ -248,7 +251,7 @@
           <div onclick="navigateWithFilter({ gender: 'Feminino' })"
             class="group relative rounded-2xl p-4 sm:p-5 bg-white border border-slate-200/80 hover:border-[#E84C93] transition-all cursor-pointer text-center">
             <div class="w-20 h-20 sm:w-24 sm:h-24 mx-auto rounded-full overflow-hidden mb-3 bg-pink-50">
-              <img src="assets/produtos/prod-002.jpg" alt="Moda Meninas" loading="lazy"
+              <img src="assets/produtos/prod-002.jpg" alt="Moda Meninas" width="96" height="96" loading="lazy" decoding="async"
                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
             </div>
             <h3 class="font-heading font-bold text-slate-900 text-base group-hover:text-[#E84C93] transition">Meninas</h3>
@@ -259,7 +262,7 @@
           <div onclick="navigateWithFilter({ gender: 'Masculino' })"
             class="group relative rounded-2xl p-4 sm:p-5 bg-white border border-slate-200/80 hover:border-[#DC5F10] transition-all cursor-pointer text-center">
             <div class="w-20 h-20 sm:w-24 sm:h-24 mx-auto rounded-full overflow-hidden mb-3 bg-orange-50">
-              <img src="assets/produtos/prod-055.jpg" alt="Moda Meninos" loading="lazy"
+              <img src="assets/produtos/prod-055.jpg" alt="Moda Meninos" width="96" height="96" loading="lazy" decoding="async"
                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
             </div>
             <h3 class="font-heading font-bold text-slate-900 text-base group-hover:text-[#DC5F10] transition">Meninos</h3>
@@ -270,7 +273,7 @@
           <div onclick="resetCatalogFilters(); navigateTo('catalog');"
             class="group relative rounded-2xl p-4 sm:p-5 bg-white border border-slate-200/80 hover:border-amber-500 transition-all cursor-pointer text-center">
             <div class="w-20 h-20 sm:w-24 sm:h-24 mx-auto rounded-full overflow-hidden mb-3 bg-amber-50">
-              <img src="assets/produtos/prod-076.jpg" alt="Catálogo Infantil" loading="lazy"
+              <img src="assets/produtos/prod-076.jpg" alt="Catálogo Infantil" width="96" height="96" loading="lazy" decoding="async"
                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
             </div>
             <h3 class="font-heading font-bold text-slate-900 text-base group-hover:text-amber-700 transition">Ver Tudo (RN ao 18)</h3>
@@ -1260,7 +1263,7 @@
         <!-- Coluna 1: Marca & Propósito (4 cols) -->
         <div class="lg:col-span-4 space-y-4">
           <div class="flex items-center gap-3">
-            <img src="assets/logo.png" alt="Happy Kids Moda Infantil" class="w-16 h-16 rounded-2xl bg-white p-1.5 object-contain" />
+            <img src="assets/logo.png" alt="Happy Kids Moda Infantil" width="64" height="64" loading="lazy" class="w-16 h-16 rounded-2xl bg-white p-1.5 object-contain" />
             <div>
               <h3 class="font-heading font-bold text-xl text-white">
                 <span class="text-[#C84B00]">Happy</span> <span class="text-[#60A5FA]">Kids</span>
@@ -1414,7 +1417,7 @@
       <div>
         <div class="flex items-center justify-between border-b border-slate-100 pb-4 mb-4">
           <div class="flex items-center gap-2.5">
-            <img src="assets/logo.png" alt="Happy Kids" class="w-11 h-11 object-contain" />
+            <img src="assets/logo.png" alt="Happy Kids" width="44" height="44" loading="lazy" class="w-11 h-11 object-contain" />
             <div>
               <p class="font-heading font-bold text-base text-slate-900">Happy Kids</p>
               <p class="text-[10px] font-bold text-[#2B6EB5] uppercase">Santa Fé do Sul - SP</p>

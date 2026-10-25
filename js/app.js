@@ -1004,7 +1004,7 @@ function renderHeroSlide() {
             ? `
         <!-- Coluna da Imagem em Destaque com Selo de Grife -->
         <div class="lg:col-span-5 relative h-80 sm:h-96 lg:h-[470px] w-full overflow-hidden bg-white/40 flex items-center justify-center p-4">
-          <img src="${slide.image}" alt="${slide.title || "Coleção Happy Kids"}"
+          <img src="${slide.image}" alt="${slide.title || "Coleção Happy Kids"}" fetchpriority="high" decoding="async"
             class="w-full h-full object-contain rounded-2xl transform hover:scale-105 transition-transform duration-700" />
           
           <!-- Selo Flutuante de Grife Infantil -->
@@ -1236,7 +1236,7 @@ function createProductCardHTML(product) {
       <!-- Topo / Fotografia Limpa em Destaque -->
       <div>
         <div class="relative aspect-square bg-[#FAF8F5]/60 overflow-hidden cursor-pointer border-b border-slate-100/80" onclick="openProductDetail('${product.id}')">
-          <img src="${mainImage}" alt="${product.name}" loading="lazy"
+          <img src="${mainImage}" alt="${product.name}" width="400" height="400" loading="lazy" decoding="async"
             class="product-img-zoom w-full h-full object-contain object-center p-2" />
           
           <!-- Selo Único no Topo Esquerdo -->
@@ -1907,13 +1907,13 @@ function renderProductDetailView() {
             onmouseleave="handleImageZoomLeave(event)"
             onclick="openLightbox('${currentImg}', '${product.name.replace(/'/g, "")}')"
             class="zoom-container relative aspect-square rounded-3xl bg-white border border-slate-200/80 overflow-hidden shadow-inner group">
-            <img id="product-main-image" src="${currentImg}" alt="${product.name}"
+            <img id="product-main-image" src="${currentImg}" alt="${product.name}" width="600" height="600" fetchpriority="high" decoding="async"
               class="w-full h-full object-contain object-center" />
             
             <div class="absolute top-4 left-4 flex flex-col gap-2 pointer-events-none">
               ${
                 product.badge
-                  ? `<span class="px-3 py-1 rounded-full text-xs font-heading font-bold bg-white/95 text-[#2B6EB5] shadow-sm border border-blue-100">${product.badge}</span>`
+                  ? `<span class="badge-woven-tag">${product.badge}</span>`
                   : ""
               }
             </div>
