@@ -779,7 +779,7 @@ function renderQuickCodeManager() {
                     </span>
                   </div>
                   <h4 class="font-heading font-bold text-slate-900 text-xs sm:text-sm line-clamp-2 leading-snug">${p.name}</h4>
-                  <p class="font-heading font-extrabold text-[#F38230] text-sm mt-1">${formatCurrency(p.price)}</p>
+                  <p class="font-heading font-extrabold text-[#C84B00] text-sm mt-1">${formatCurrency(p.price)}</p>
                 </div>
               </div>
 
@@ -906,10 +906,10 @@ function updateActiveNavLinks() {
     if (target === "admin" && AppState.currentView === "admin") isActive = true;
 
     if (isActive) {
-      btn.classList.add("text-[#F38230]", "font-bold");
+      btn.classList.add("text-[#C84B00]", "font-bold");
       btn.classList.remove("text-slate-700");
     } else {
-      btn.classList.remove("text-[#F38230]", "font-bold");
+      btn.classList.remove("text-[#C84B00]", "font-bold");
       btn.classList.add("text-slate-700");
     }
   });
@@ -955,7 +955,7 @@ function renderHeroSlide() {
         
         <!-- Coluna de Texto e Chamada (CTA) -->
         <div class="${hasImage ? "lg:col-span-7" : "lg:col-span-12"} p-6 sm:p-10 lg:p-14 z-10 animate-fade-in">
-          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/90 border border-orange-200 text-xs sm:text-sm font-bold text-[#F38230] shadow-sm mb-4">
+          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/90 border border-orange-200 text-xs sm:text-sm font-bold text-[#C84B00] shadow-sm mb-4">
             <span>${slide.badge || fallbackSlide.badge}</span>
           </div>
           
@@ -969,7 +969,7 @@ function renderHeroSlide() {
           
           <div class="flex flex-wrap items-center gap-3.5">
             <button onclick='navigateWithFilter(${JSON.stringify(slide.filterPreset || fallbackSlide.filterPreset)})'
-              class="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl bg-[#F38230] hover:bg-[#DC6B19] text-white font-heading font-bold text-sm sm:text-base shadow-lg shadow-orange-500/25 transition-all transform hover:-translate-y-0.5 cursor-pointer">
+              class="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl bg-[#C84B00] hover:bg-[#AD3F00] text-white font-heading font-bold text-sm sm:text-base shadow-lg shadow-orange-500/25 transition-all transform hover:-translate-y-0.5 cursor-pointer">
               <i data-lucide="sparkles" class="w-5 h-5"></i>
               <span>${slide.ctaPrimary || "Ver Catálogo Completo"}</span>
             </button>
@@ -992,7 +992,7 @@ function renderHeroSlide() {
               <span>10x Sem Juros</span>
             </div>
             <div class="flex items-center gap-1.5">
-              <span class="w-2.5 h-2.5 rounded-full bg-[#F38230]"></span>
+              <span class="w-2.5 h-2.5 rounded-full bg-[#C84B00]"></span>
               <span>Santa Fé do Sul - SP</span>
             </div>
           </div>
@@ -1008,7 +1008,7 @@ function renderHeroSlide() {
           
           <!-- Card Flutuante Lúdico -->
           <div class="absolute bottom-4 left-4 right-4 sm:left-auto sm:right-6 sm:bottom-6 bg-white/95 backdrop-blur-md p-3.5 sm:p-4 rounded-2xl shadow-xl border border-slate-100 flex items-center gap-3 animate-float">
-            <div class="w-11 h-11 rounded-xl bg-orange-100 text-[#F38230] flex items-center justify-center shrink-0 font-heading font-extrabold text-xs">
+            <div class="w-11 h-11 rounded-xl bg-orange-100 text-[#C84B00] flex items-center justify-center shrink-0 font-heading font-extrabold text-xs">
               RN-18
             </div>
             <div>
@@ -1032,7 +1032,7 @@ function renderHeroSlide() {
             (s, idx) => `
           <button onclick="goToHeroSlide(${idx})" aria-label="Slide ${idx + 1}"
             class="h-2.5 rounded-full transition-all cursor-pointer ${
-              idx === AppState.heroSlideIndex ? "w-7 bg-[#F38230]" : "w-2.5 bg-slate-300 hover:bg-slate-400"
+              idx === AppState.heroSlideIndex ? "w-7 bg-[#C84B00]" : "w-2.5 bg-slate-300 hover:bg-slate-400"
             }"></button>
         `
           )
@@ -1100,7 +1100,7 @@ function renderSizeQuickBar() {
       ? "bg-sky-50 border-sky-200 text-sky-800 hover:bg-[#2B6EB5] hover:text-white hover:border-[#2B6EB5]"
       : isTeen
       ? "bg-pink-50 border-pink-200 text-pink-800 hover:bg-[#E84C93] hover:text-white hover:border-[#E84C93]"
-      : "bg-orange-50 border-orange-200 text-orange-800 hover:bg-[#F38230] hover:text-white hover:border-[#F38230]";
+      : "bg-orange-50 border-orange-200 text-orange-800 hover:bg-[#C84B00] hover:text-white hover:border-[#C84B00]";
 
     return `
       <button onclick="navigateWithFilter({ size: '${sz}' })"
@@ -1122,10 +1122,10 @@ function setHomeTab(tabName) {
     const t = btn.getAttribute("data-home-tab");
     if (t === tabName) {
       btn.className =
-        "px-4 py-2 rounded-full font-heading font-bold text-xs sm:text-sm bg-[#F38230] text-white shadow-sm transition cursor-pointer";
+        "px-4 py-2 rounded-full font-heading font-bold text-xs sm:text-sm bg-[#C84B00] text-white shadow-sm transition cursor-pointer";
     } else {
       btn.className =
-        "px-4 py-2 rounded-full font-heading font-semibold text-xs sm:text-sm bg-white text-slate-600 hover:bg-orange-50 hover:text-[#F38230] border border-slate-200 transition cursor-pointer";
+        "px-4 py-2 rounded-full font-heading font-semibold text-xs sm:text-sm bg-white text-slate-600 hover:bg-orange-50 hover:text-[#C84B00] border border-slate-200 transition cursor-pointer";
     }
   });
   renderHomeProducts();
@@ -1156,7 +1156,7 @@ function renderHomeProducts() {
     if (AppState.allProducts.length === 0) {
       grid.innerHTML = `
         <div class="col-span-full bg-white rounded-3xl p-10 sm:p-12 text-center border border-slate-200 shadow-xs">
-          <div class="w-16 h-16 rounded-2xl bg-orange-50 text-[#F38230] flex items-center justify-center mx-auto mb-4">
+          <div class="w-16 h-16 rounded-2xl bg-orange-50 text-[#C84B00] flex items-center justify-center mx-auto mb-4">
             <i data-lucide="sparkles" class="w-8 h-8"></i>
           </div>
           <h3 class="font-heading text-xl font-extrabold text-slate-900 mb-2">Nova Coleção sendo atualizada!</h3>
@@ -1171,7 +1171,7 @@ function renderHomeProducts() {
             </button>
             <button onclick="navigateTo('admin')"
               class="px-5 py-3 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200 font-heading font-bold text-xs sm:text-sm flex items-center gap-2 cursor-pointer">
-              <i data-lucide="sliders-horizontal" class="w-4 h-4 text-[#F38230]"></i>
+              <i data-lucide="sliders-horizontal" class="w-4 h-4 text-[#C84B00]"></i>
               <span>Cadastrar Peças (Painel Lojista)</span>
             </button>
           </div>
@@ -1181,7 +1181,7 @@ function renderHomeProducts() {
       grid.innerHTML = `
         <div class="col-span-full bg-white rounded-3xl p-10 text-center border border-slate-200">
           <p class="text-slate-600 font-medium mb-4">Nenhum produto encontrado nesta categoria no momento.</p>
-          <button onclick="setHomeTab('destaques')" class="px-5 py-2.5 rounded-xl bg-[#F38230] text-white font-bold text-sm cursor-pointer">
+          <button onclick="setHomeTab('destaques')" class="px-5 py-2.5 rounded-xl bg-[#C84B00] text-white font-bold text-sm cursor-pointer">
             Ver Todos os Destaques
           </button>
         </div>
@@ -1246,7 +1246,7 @@ function createProductCardHTML(product) {
           <!-- Botão Favoritar no Topo Direito -->
           <button onclick="event.stopPropagation(); toggleFavorite('${product.id}')"
             aria-label="Adicionar aos Favoritos"
-            class="absolute top-3 right-3 z-10 w-10 h-10 rounded-full ${
+            class="absolute top-3 right-3 z-10 w-11 h-11 min-w-[44px] min-h-[44px] rounded-full ${
               isFav
                 ? "bg-rose-500 text-white shadow-sm"
                 : "bg-white/90 hover:bg-white text-slate-500 hover:text-rose-500 shadow-xs border border-slate-200/60"
@@ -1275,7 +1275,7 @@ function createProductCardHTML(product) {
 
           <!-- Nome da Peça -->
           <h3 onclick="openProductDetail('${product.id}')"
-            class="font-heading font-semibold text-slate-800 group-hover:text-[#DC5F10] text-sm sm:text-[15px] line-clamp-2 min-h-[42px] leading-snug transition cursor-pointer mb-3">
+            class="font-heading font-semibold text-slate-800 group-hover:text-[#C84B00] text-sm sm:text-[15px] line-clamp-2 min-h-[42px] leading-snug transition cursor-pointer mb-3">
             ${product.name}
           </h3>
 
@@ -1289,7 +1289,7 @@ function createProductCardHTML(product) {
               .join("")}
             ${
               extraSizesCount > 0
-                ? `<span class="px-1.5 py-0.5 text-[11px] font-semibold rounded-md bg-orange-50 text-[#DC5F10]">+${extraSizesCount}</span>`
+                ? `<span class="px-1.5 py-0.5 text-[11px] font-semibold rounded-md bg-orange-50 text-[#C84B00]">+${extraSizesCount}</span>`
                 : ""
             }
           </div>
@@ -1319,7 +1319,7 @@ function createProductCardHTML(product) {
       <!-- Ação Única de Conversão -->
       <div class="px-4 pb-4 sm:px-5 sm:pb-5 pt-0">
         <button onclick="openProductDetail('${product.id}')"
-          class="w-full min-h-[42px] py-2.5 px-4 rounded-xl bg-slate-900 group-hover:bg-[#DC5F10] text-white font-heading font-semibold text-xs sm:text-[13px] flex items-center justify-center gap-2 transition-colors duration-200 cursor-pointer">
+          class="w-full min-h-[42px] py-2.5 px-4 rounded-xl bg-slate-900 group-hover:bg-[#C84B00] text-white font-heading font-semibold text-xs sm:text-[13px] flex items-center justify-center gap-2 transition-colors duration-200 cursor-pointer">
           <i data-lucide="shopping-bag" class="w-4 h-4"></i>
           <span>Escolher Tamanho</span>
         </button>
@@ -1386,7 +1386,7 @@ function renderCategoryOptionsUI() {
     const activeCat = AppState.filters.category || "todos";
     const btnClass = (isActive) =>
       `w-full text-left px-3 py-2 rounded-xl text-sm font-medium flex items-center justify-between transition cursor-pointer ${
-        isActive ? "bg-orange-50 text-[#F38230] font-bold border border-orange-200" : "text-slate-600 hover:bg-slate-50"
+        isActive ? "bg-orange-50 text-[#C84B00] font-bold border border-orange-200" : "text-slate-600 hover:bg-slate-50"
       }`;
 
     catListEl.innerHTML = `
@@ -1498,7 +1498,7 @@ function renderBrandOptionsUI() {
     const activeBrand = AppState.filters.brand || "todos";
     const btnClass = (isActive) =>
       `w-full text-left px-3 py-2 rounded-xl text-sm font-medium flex items-center justify-between transition cursor-pointer ${
-        isActive ? "bg-orange-50 text-[#F38230] font-bold border border-orange-200" : "text-slate-600 hover:bg-slate-50"
+        isActive ? "bg-orange-50 text-[#C84B00] font-bold border border-orange-200" : "text-slate-600 hover:bg-slate-50"
       }`;
 
     brandListEl.innerHTML = `
@@ -1557,7 +1557,7 @@ function renderBrandOptionsUI() {
         .map((brandName) => {
           const safeBrand = String(brandName).replace(/'/g, "\\'");
           return `
-            <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white border border-orange-200 text-[11px] font-heading font-bold text-[#F38230] shadow-2xs">
+            <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white border border-orange-200 text-[11px] font-heading font-bold text-[#C84B00] shadow-2xs">
               <span>${brandName}</span>
               <button type="button" onclick="removeCustomBrandFromAdmin('${safeBrand}')"
                 title="Remover marca ${brandName}"
@@ -1577,9 +1577,9 @@ function renderCatalogFiltersUI() {
   if (sizeFilterContainer) {
     sizeFilterContainer.innerHTML = `
       <button onclick="setCatalogFilter('size', 'todos')"
-        class="px-2.5 py-1.5 rounded-lg text-xs font-bold border transition cursor-pointer ${
+        class="min-w-[44px] min-h-[44px] px-3 py-2 rounded-xl text-xs font-bold border flex items-center justify-center transition cursor-pointer ${
           AppState.filters.size === "todos"
-            ? "bg-[#F38230] text-white border-[#F38230]"
+            ? "bg-[#C84B00] text-white border-[#C84B00]"
             : "bg-white text-slate-700 border-slate-200 hover:border-orange-300"
         }">
         Todos
@@ -1587,9 +1587,10 @@ function renderCatalogFiltersUI() {
       ${ALL_SIZES.map(
         (sz) => `
         <button onclick="setCatalogFilter('size', '${sz}')"
-          class="min-w-[38px] py-1.5 px-2 rounded-lg text-xs font-bold border transition cursor-pointer ${
+          aria-label="Filtrar tamanho ${sz}"
+          class="min-w-[44px] min-h-[44px] px-2.5 py-2 rounded-xl text-xs font-bold border flex items-center justify-center transition cursor-pointer ${
             AppState.filters.size === sz
-              ? "bg-[#F38230] text-white border-[#F38230] shadow-xs"
+              ? "bg-[#C84B00] text-white border-[#C84B00] shadow-xs"
               : "bg-white text-slate-700 border-slate-200 hover:border-orange-300"
           }">
           ${sz}
@@ -1685,7 +1686,7 @@ function renderCatalogView() {
     const val = el.getAttribute("data-filter-gender");
     const active = AppState.filters.gender === val;
     el.className = `w-full text-left px-3 py-2 rounded-xl text-sm font-medium flex items-center justify-between transition cursor-pointer ${
-      active ? "bg-orange-50 text-[#F38230] font-bold border border-orange-200" : "text-slate-600 hover:bg-slate-50"
+      active ? "bg-orange-50 text-[#C84B00] font-bold border border-orange-200" : "text-slate-600 hover:bg-slate-50"
     }`;
   });
 
@@ -1701,7 +1702,7 @@ function renderCatalogView() {
     const val = el.getAttribute("data-filter-season");
     const active = (AppState.filters.season || "todos") === val;
     el.className = `w-full text-left px-3 py-2 rounded-xl text-sm font-medium flex items-center justify-between transition cursor-pointer ${
-      active ? "bg-amber-50 text-[#F38230] font-bold border border-amber-200" : "text-slate-600 hover:bg-slate-50"
+      active ? "bg-amber-50 text-[#C84B00] font-bold border border-amber-200" : "text-slate-600 hover:bg-slate-50"
     }`;
   });
 
@@ -1709,7 +1710,7 @@ function renderCatalogView() {
     const val = el.getAttribute("data-filter-category");
     const active = AppState.filters.category === val;
     el.className = `w-full text-left px-3 py-2 rounded-xl text-sm font-medium flex items-center justify-between transition cursor-pointer ${
-      active ? "bg-orange-50 text-[#F38230] font-bold border border-orange-200" : "text-slate-600 hover:bg-slate-50"
+      active ? "bg-orange-50 text-[#C84B00] font-bold border border-orange-200" : "text-slate-600 hover:bg-slate-50"
     }`;
   });
 
@@ -1717,7 +1718,7 @@ function renderCatalogView() {
     const val = el.getAttribute("data-filter-brand");
     const active = (AppState.filters.brand || "todos") === val;
     el.className = `w-full text-left px-3 py-2 rounded-xl text-sm font-medium flex items-center justify-between transition cursor-pointer ${
-      active ? "bg-orange-50 text-[#F38230] font-bold border border-orange-200" : "text-slate-600 hover:bg-slate-50"
+      active ? "bg-orange-50 text-[#C84B00] font-bold border border-orange-200" : "text-slate-600 hover:bg-slate-50"
     }`;
   });
 
@@ -1753,7 +1754,7 @@ function renderCatalogView() {
           .map(
             (chip) => `
           <button onclick="setCatalogFilter('${chip.key}', '${chip.reset}')"
-            class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-orange-100/80 hover:bg-orange-200 text-[#F38230] text-xs font-bold transition cursor-pointer">
+            class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-orange-100/80 hover:bg-orange-200 text-[#C84B00] text-xs font-bold transition cursor-pointer">
             <span>${chip.label}</span>
             <i data-lucide="x" class="w-3.5 h-3.5"></i>
           </button>
@@ -1776,7 +1777,7 @@ function renderCatalogView() {
   if (results.length === 0) {
     grid.innerHTML = `
       <div class="col-span-full bg-white rounded-3xl p-10 sm:p-14 text-center border border-slate-200 shadow-xs">
-        <div class="w-16 h-16 rounded-2xl bg-orange-50 text-[#F38230] flex items-center justify-center mx-auto mb-4">
+        <div class="w-16 h-16 rounded-2xl bg-orange-50 text-[#C84B00] flex items-center justify-center mx-auto mb-4">
           <i data-lucide="search-x" class="w-8 h-8"></i>
         </div>
         <h3 class="font-heading text-xl font-bold text-slate-800 mb-2">Nenhuma roupinha encontrada com esses filtros</h3>
@@ -1785,7 +1786,7 @@ function renderCatalogView() {
         </p>
         <div class="flex flex-wrap justify-center gap-3">
           <button onclick="resetCatalogFilters()"
-            class="px-5 py-2.5 rounded-xl bg-[#F38230] text-white font-heading font-bold text-sm cursor-pointer">
+            class="px-5 py-2.5 rounded-xl bg-[#C84B00] text-white font-heading font-bold text-sm cursor-pointer">
             Limpar Filtros e Ver Tudo
           </button>
           <button onclick="openStoreWhatsApp('Olá! Estou procurando uma peça específica no site da Happy Kids e gostaria de ajuda!')"
@@ -1880,9 +1881,9 @@ function renderProductDetailView() {
     <!-- Breadcrumb -->
     <nav class="flex flex-wrap items-center justify-between gap-2 mb-6 text-xs sm:text-sm text-slate-500">
       <div class="flex items-center gap-2">
-        <button onclick="navigateTo('home')" class="hover:text-[#F38230] cursor-pointer">Início</button>
+        <button onclick="navigateTo('home')" class="hover:text-[#C84B00] cursor-pointer">Início</button>
         <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400"></i>
-        <button onclick="navigateWithFilter({ category: '${product.category}' })" class="hover:text-[#F38230] cursor-pointer">${product.category}</button>
+        <button onclick="navigateWithFilter({ category: '${product.category}' })" class="hover:text-[#C84B00] cursor-pointer">${product.category}</button>
         <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400"></i>
         <span class="text-slate-800 font-semibold line-clamp-1">${product.name}</span>
       </div>
@@ -1932,7 +1933,7 @@ function renderProductDetailView() {
                   <button onclick="selectProductImage(${idx})"
                     class="relative w-20 h-20 sm:w-24 sm:h-24 rounded-2xl overflow-hidden border-2 bg-white transition shrink-0 cursor-pointer ${
                       idx === AppState.activeProduct.selectedImageIndex
-                        ? "border-[#F38230] ring-2 ring-orange-200"
+                        ? "border-[#C84B00] ring-2 ring-orange-200"
                         : "border-slate-200 opacity-75 hover:opacity-100"
                     }">
                     <img src="${imgUrl}" alt="Foto ${idx + 1}" class="w-full h-full object-contain" />
@@ -1955,7 +1956,7 @@ function renderProductDetailView() {
                 <span class="px-3 py-1 rounded-full text-xs font-bold bg-blue-50 text-[#2B6EB5]">${product.category}</span>
                 ${
                   product.brand
-                    ? `<span class="px-3 py-1 rounded-full text-xs font-bold bg-orange-50 text-[#F38230]">${product.brand}</span>`
+                    ? `<span class="px-3 py-1 rounded-full text-xs font-bold bg-orange-50 text-[#C84B00]">${product.brand}</span>`
                     : ""
                 }
                 ${
@@ -1965,7 +1966,7 @@ function renderProductDetailView() {
                       }">${product.season === "Inverno" ? "❄️ Inverno" : "☀️ Verão"}</span>`
                     : ""
                 }
-                <span class="px-3 py-1 rounded-full text-xs font-bold bg-orange-50 text-[#F38230]">${product.gender}</span>
+                <span class="px-3 py-1 rounded-full text-xs font-bold bg-orange-50 text-[#C84B00]">${product.gender}</span>
                 <span class="px-2.5 py-0.5 rounded-md bg-slate-100 text-xs font-extrabold text-slate-700">${product.sku || product.id}</span>
               </div>
               <div class="flex items-center gap-1.5">
@@ -2016,7 +2017,7 @@ function renderProductDetailView() {
               <div class="flex items-center justify-between mb-2.5">
                 <label class="font-heading font-bold text-sm text-slate-800 flex items-center gap-2">
                   <span>Escolha o Tamanho:</span>
-                  <span class="px-2.5 py-0.5 rounded-md bg-orange-100 text-[#F38230] text-xs font-extrabold">
+                  <span class="px-2.5 py-0.5 rounded-md bg-orange-100 text-[#C84B00] text-xs font-extrabold">
                     Selecionado: ${AppState.activeProduct.selectedSize}
                   </span>
                 </label>
@@ -2055,9 +2056,9 @@ function renderProductDetailView() {
             <!-- Quantidade e Estoque -->
             <div class="flex flex-wrap items-center gap-4 mb-6">
               <div class="flex items-center border-2 border-slate-200 rounded-xl bg-white">
-                <button onclick="changeProductQuantity(-1)" class="w-10 h-10 flex items-center justify-center text-slate-600 hover:text-[#F38230] font-bold cursor-pointer">-</button>
+                <button onclick="changeProductQuantity(-1)" aria-label="Diminuir quantidade" class="w-11 h-11 min-w-[44px] min-h-[44px] flex items-center justify-center text-slate-700 hover:text-[#C84B00] font-bold text-base cursor-pointer">-</button>
                 <span class="w-10 text-center font-heading font-bold text-sm text-slate-900">${AppState.activeProduct.quantity}</span>
-                <button onclick="changeProductQuantity(1)" class="w-10 h-10 flex items-center justify-center text-slate-600 hover:text-[#F38230] font-bold cursor-pointer">+</button>
+                <button onclick="changeProductQuantity(1)" aria-label="Aumentar quantidade" class="w-11 h-11 min-w-[44px] min-h-[44px] flex items-center justify-center text-slate-700 hover:text-[#C84B00] font-bold text-base cursor-pointer">+</button>
               </div>
               <div class="text-xs text-emerald-700 font-semibold flex items-center gap-1.5">
                 <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
@@ -2068,7 +2069,7 @@ function renderProductDetailView() {
             <!-- Botões Principais de Conversão (Sacola + WhatsApp Direto Formatado) -->
             <div class="flex flex-col sm:flex-row gap-3 mb-6">
               <button onclick="addActiveProductToCart()"
-                class="flex-1 py-4 px-6 rounded-2xl bg-[#F38230] hover:bg-[#DC6B19] text-white font-heading font-bold text-sm sm:text-base shadow-lg shadow-orange-500/25 flex items-center justify-center gap-2.5 transition transform hover:-translate-y-0.5 cursor-pointer">
+                class="flex-1 py-4 px-6 rounded-2xl bg-[#C84B00] hover:bg-[#AD3F00] text-white font-heading font-bold text-sm sm:text-base shadow-lg shadow-orange-500/25 flex items-center justify-center gap-2.5 transition transform hover:-translate-y-0.5 cursor-pointer">
                 <i data-lucide="shopping-bag" class="w-5 h-5"></i>
                 <span>Adicionar à Sacola</span>
               </button>
@@ -2087,7 +2088,7 @@ function renderProductDetailView() {
                 <span>Enviamos para <strong>todo o Brasil</strong> com rastreio</span>
               </div>
               <div class="flex items-center gap-2 bg-slate-50 p-2.5 rounded-xl">
-                <i data-lucide="map-pin" class="w-4 h-4 text-[#F38230] shrink-0"></i>
+                <i data-lucide="map-pin" class="w-4 h-4 text-[#C84B00] shrink-0"></i>
                 <span>Retire Grátis: <strong>Rua 09, nº 865 - Santa Fé do Sul</strong></span>
               </div>
             </div>
@@ -2326,7 +2327,7 @@ function renderCartDrawer() {
   if (AppState.cart.length === 0) {
     listEl.innerHTML = `
       <div class="text-center py-14 px-4">
-        <div class="w-16 h-16 rounded-full bg-orange-50 text-[#F38230] flex items-center justify-center mx-auto mb-4">
+        <div class="w-16 h-16 rounded-full bg-orange-50 text-[#C84B00] flex items-center justify-center mx-auto mb-4">
           <i data-lucide="shopping-bag" class="w-8 h-8"></i>
         </div>
         <h4 class="font-heading font-bold text-slate-800 text-lg mb-1">Sua sacola está vazia</h4>
@@ -2334,7 +2335,7 @@ function renderCartDrawer() {
           Escolha looks lindos no catálogo e adicione à sua sacola!
         </p>
         <button onclick="closeCartDrawer(); navigateTo('catalog');"
-          class="px-5 py-2.5 rounded-xl bg-[#F38230] text-white font-heading font-bold text-sm cursor-pointer">
+          class="px-5 py-2.5 rounded-xl bg-[#C84B00] text-white font-heading font-bold text-sm cursor-pointer">
           Explorar Catálogo
         </button>
       </div>
@@ -2355,17 +2356,17 @@ function renderCartDrawer() {
           <div class="flex-1 min-w-0">
             <h4 class="font-heading font-bold text-slate-800 text-xs sm:text-sm line-clamp-1">${item.name}</h4>
             <p class="text-xs text-slate-500 mt-0.5">
-              Tamanho: <strong class="text-[#F38230]">${item.size}</strong> • <span class="text-slate-400">${item.sku || ""}</span>
+              Tamanho: <strong class="text-[#C84B00]">${item.size}</strong> • <span class="text-slate-400">${item.sku || ""}</span>
             </p>
             <p class="font-heading font-extrabold text-slate-900 text-sm mt-1">${formatCurrency(itemTotal)}</p>
             
             <div class="flex items-center justify-between mt-2">
-              <div class="inline-flex items-center border border-slate-200 rounded-lg bg-white">
-                <button onclick="updateCartItemQty(${idx}, -1)" class="w-7 h-7 text-xs font-bold text-slate-600 hover:text-[#F38230] cursor-pointer">-</button>
-                <span class="px-2 text-xs font-bold">${item.quantity}</span>
-                <button onclick="updateCartItemQty(${idx}, 1)" class="w-7 h-7 text-xs font-bold text-slate-600 hover:text-[#F38230] cursor-pointer">+</button>
+              <div class="inline-flex items-center border border-slate-200 rounded-xl bg-white">
+                <button onclick="updateCartItemQty(${idx}, -1)" aria-label="Diminuir quantidade" class="w-11 h-11 min-w-[44px] min-h-[44px] flex items-center justify-center text-sm font-bold text-slate-700 hover:text-[#C84B00] cursor-pointer">-</button>
+                <span class="px-2.5 text-xs font-bold text-slate-900">${item.quantity}</span>
+                <button onclick="updateCartItemQty(${idx}, 1)" aria-label="Aumentar quantidade" class="w-11 h-11 min-w-[44px] min-h-[44px] flex items-center justify-center text-sm font-bold text-slate-700 hover:text-[#C84B00] cursor-pointer">+</button>
               </div>
-              <button onclick="removeCartItem(${idx})" class="text-xs text-rose-500 hover:underline flex items-center gap-1 cursor-pointer">
+              <button onclick="removeCartItem(${idx})" aria-label="Remover item da sacola" class="min-h-[44px] px-2.5 rounded-xl text-xs text-rose-600 hover:bg-rose-50 font-medium flex items-center gap-1 transition cursor-pointer">
                 <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
                 <span>Remover</span>
               </button>
@@ -2384,11 +2385,11 @@ function renderCartDrawer() {
       <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs space-y-1.5">
         <p class="font-heading font-bold text-slate-700">Modalidade de Entrega:</p>
         <label class="flex items-center gap-2 cursor-pointer">
-          <input type="radio" name="cart-delivery-mode" value="envio" ${deliveryMode === "envio" ? "checked" : ""} class="accent-[#F38230]" />
+          <input type="radio" name="cart-delivery-mode" value="envio" ${deliveryMode === "envio" ? "checked" : ""} class="accent-[#C84B00]" />
           <span>Envio para meu endereço (Correios / Transportadora)</span>
         </label>
         <label class="flex items-center gap-2 cursor-pointer">
-          <input type="radio" name="cart-delivery-mode" value="retirada" ${deliveryMode !== "envio" ? "checked" : ""} class="accent-[#F38230]" />
+          <input type="radio" name="cart-delivery-mode" value="retirada" ${deliveryMode !== "envio" ? "checked" : ""} class="accent-[#C84B00]" />
           <span>Retirar Grátis na Loja (Santa Fé do Sul - SP)</span>
         </label>
       </div>
@@ -2501,7 +2502,7 @@ function renderFavoritesDrawer() {
         <img src="${p.images && p.images[0] ? p.images[0] : ""}" alt="${p.name}" class="w-16 h-16 rounded-xl object-contain bg-white shrink-0" />
         <div class="flex-1 min-w-0">
           <h4 class="font-heading font-bold text-slate-800 text-xs sm:text-sm line-clamp-1">${p.name}</h4>
-          <p class="text-xs text-[#F38230] font-bold mt-0.5">${formatCurrency(p.price)}</p>
+          <p class="text-xs text-[#C84B00] font-bold mt-0.5">${formatCurrency(p.price)}</p>
           <div class="flex items-center gap-2 mt-2">
             <button onclick="closeFavoritesDrawer(); openProductDetail('${p.id}');"
               class="text-xs font-bold text-[#2B6EB5] hover:underline cursor-pointer">
@@ -2565,8 +2566,8 @@ function renderAdminView() {
   if (sizesCheckContainer && sizesCheckContainer.children.length === 0) {
     sizesCheckContainer.innerHTML = ALL_SIZES.map(
       (sz) => `
-      <label class="flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl border border-slate-200 bg-white hover:border-[#F38230] cursor-pointer select-none text-xs font-heading font-bold text-slate-700 has-[:checked]:bg-orange-50 has-[:checked]:border-[#F38230] has-[:checked]:text-[#F38230]">
-        <input type="checkbox" name="admin-size-item" value="${sz}" class="accent-[#F38230] w-3.5 h-3.5" />
+      <label class="flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl border border-slate-200 bg-white hover:border-[#C84B00] cursor-pointer select-none text-xs font-heading font-bold text-slate-700 has-[:checked]:bg-orange-50 has-[:checked]:border-[#C84B00] has-[:checked]:text-[#C84B00]">
+        <input type="checkbox" name="admin-size-item" value="${sz}" class="accent-[#C84B00] w-3.5 h-3.5" />
         <span>${sz}</span>
       </label>
     `
@@ -2699,7 +2700,7 @@ async function addHeroBannerFromAdmin() {
     ctaSecondary: "Chamar no WhatsApp",
     filterPreset: { gender: "todos", ageGroup: "todos", category: "todos" },
     bgClass,
-    accentColor: "#F38230",
+    accentColor: "#C84B00",
     image: imageUrl,
     floatingTag: (tagInput && tagInput.value.trim()) || "Coleção Oficial Happy Kids",
     floatingPrice: "Parcelamento em até 10x Sem Juros"
@@ -3368,7 +3369,7 @@ function renderAdminProductsTable() {
               <div class="flex flex-wrap items-center gap-1">
                 ${
                   p.brand
-                    ? `<span class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-orange-50 text-[#F38230]">${p.brand}</span>`
+                    ? `<span class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-orange-50 text-[#C84B00]">${p.brand}</span>`
                     : ""
                 }
                 ${
@@ -3579,6 +3580,21 @@ function setupGlobalListeners() {
       updateAdminImagePreview(e.target.value);
     });
   }
+
+  // Fechar modais e gavetas abertas ao pressionar a tecla Escape (Acessibilidade A11y)
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      closeLightbox();
+      closeSizeGuideModal();
+      closeCartDrawer();
+      closeFavoritesDrawer();
+      closeMobileMenu();
+      closeMobileFiltersDrawer();
+      if (typeof closeAdminPasswordModal === "function") {
+        closeAdminPasswordModal();
+      }
+    }
+  });
 
   // Sincroniza automaticamente o estoque quando o cliente ou lojista volta para a aba do navegador
   document.addEventListener("visibilitychange", () => {

@@ -4,28 +4,37 @@
    ========================================================================== */
 
 :root {
-  /* Cores oficiais inspiradas na logo da Happy Kids */
-  --hk-orange: #F38230;
-  --hk-orange-dark: #DC6B19;
+  /* Cores oficiais inspiradas na logo da Happy Kids (Calibradas para WCAG 2.1 AA >= 4.5:1) */
+  --hk-orange: #C84B00;
+  --hk-orange-dark: #AD3F00;
   --hk-orange-light: #FFF3E8;
-  --hk-blue: #2B6EB5;
-  --hk-blue-dark: #1E548F;
+  --hk-blue: #1E548F;
+  --hk-blue-dark: #163E6C;
   --hk-blue-light: #EBF4FF;
-  --hk-pink: #E84C93;
+  --hk-pink: #C42B70;
   --hk-pink-light: #FDF0F6;
-  --hk-green: #2CB667;
+  --hk-green: #167A3C;
   --hk-green-light: #EAFBF1;
   --hk-yellow: #FAD02C;
   --hk-yellow-light: #FEFBEA;
   --hk-red: #D92344;
-  --hk-whatsapp: #25D366;
-  --hk-whatsapp-dark: #1DA851;
+  --hk-whatsapp: #167A3C;
+  --hk-whatsapp-dark: #126330;
   --hk-bg-soft: #FAF8F5;
 }
 
 * {
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--hk-orange);
+  outline-offset: 2px;
 }
 
 html {
