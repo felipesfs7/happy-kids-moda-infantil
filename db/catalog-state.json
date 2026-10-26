@@ -1,7 +1,9 @@
 {
   "version": 2,
-  "updatedAt": "2026-10-25T18:16:23.354Z",
-  "soldOutIds": [],
+  "updatedAt": "2026-10-26T20:36:08.312Z",
+  "soldOutIds": [
+    "hk-custom-843394"
+  ],
   "productOverrides": {},
   "customProducts": [
     {
@@ -90,9 +92,7 @@
       "season": "Verão",
       "ageGroup": "4-a-10",
       "ageLabel": "Tam. 18",
-      "sizes": [
-        "18"
-      ],
+      "sizes": [],
       "badge": "Novo",
       "featured": true,
       "images": [
