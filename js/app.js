@@ -51,6 +51,7 @@ const AppState = {
     season: "todos",
     category: "todos",
     brand: "todos",
+    onSale: false,
     sortBy: "relevancia"
   },
 
@@ -169,9 +170,31 @@ function rebuildCatalogFromState() {
       : [];
     const allSizes = sortSizesInOfficialOrder([...baseRegistered, ...activeSizes]);
 
+    let finalPrice = Number(ov.price !== undefined ? ov.price : p.price);
+    let finalOldPrice = ov.oldPrice !== undefined ? ov.oldPrice : p.oldPrice;
+    let onSale = Boolean(ov.onSale || p.onSale);
+
+    if (finalOldPrice !== null && finalOldPrice !== undefined && finalOldPrice !== "") {
+      const numOld = Number(finalOldPrice);
+      if (!isNaN(numOld) && numOld > 0) {
+        if (numOld < finalPrice) {
+          // Inversão humana detectada automaticamente (ex: "De" preenchido com o valor com desconto)
+          finalOldPrice = finalPrice;
+          finalPrice = numOld;
+          onSale = true;
+        } else if (numOld > finalPrice) {
+          finalOldPrice = numOld;
+          onSale = true;
+        }
+      }
+    }
+
     return {
       ...p,
       ...ov,
+      price: finalPrice,
+      oldPrice: finalOldPrice,
+      onSale,
       sizes: sortSizesInOfficialOrder(activeSizes),
       registeredSizes: allSizes,
       allSizes,
@@ -417,6 +440,27 @@ function calculateInstallment(price) {
 function calculatePixPrice(price) {
   const discounted = price * (1 - STORE_CONFIG.pixDiscountPercent / 100);
   return formatCurrency(discounted);
+}
+
+function isProductOnSale(product) {
+  if (!product) return false;
+  if (product.onSale === true) return true;
+  const p = Number(product.price);
+  const old = Number(product.oldPrice);
+  if (!isNaN(p) && !isNaN(old) && old > 0 && p > 0 && old !== p) {
+    return true;
+  }
+  return false;
+}
+
+function getProductDiscountPercent(product) {
+  if (!product) return 0;
+  const p1 = Number(product.price);
+  const p2 = Number(product.oldPrice);
+  if (isNaN(p1) || isNaN(p2) || p1 <= 0 || p2 <= 0 || p1 === p2) return 0;
+  const high = Math.max(p1, p2);
+  const low = Math.min(p1, p2);
+  return Math.round(((high - low) / high) * 100);
 }
 
 function sanitizeWhatsAppText(text) {
@@ -896,7 +940,10 @@ function navigateWithFilter(preset = {}) {
     gender: preset.gender || "todos",
     ageGroup: preset.ageGroup || "todos",
     size: preset.size || "todos",
+    season: preset.season || "todos",
     category: preset.category || "todos",
+    brand: preset.brand || "todos",
+    onSale: Boolean(preset.onSale),
     sortBy: preset.sortBy || "relevancia"
   };
   navigateTo("catalog");
@@ -908,7 +955,8 @@ function updateActiveNavLinks() {
     let isActive = false;
 
     if (target === "home" && AppState.currentView === "home") isActive = true;
-    if (target === "catalog" && AppState.currentView === "catalog" && AppState.filters.gender === "todos" && AppState.filters.ageGroup === "todos") isActive = true;
+    if (target === "catalog" && AppState.currentView === "catalog" && AppState.filters.gender === "todos" && AppState.filters.ageGroup === "todos" && !AppState.filters.onSale) isActive = true;
+    if (target === "promocoes" && AppState.currentView === "catalog" && AppState.filters.onSale) isActive = true;
     if (target === "meninas" && AppState.currentView === "catalog" && AppState.filters.gender === "Feminino") isActive = true;
     if (target === "meninos" && AppState.currentView === "catalog" && AppState.filters.gender === "Masculino") isActive = true;
     if (target === "bebes" && AppState.currentView === "catalog" && AppState.filters.ageGroup === "bebe") isActive = true;
@@ -1136,11 +1184,21 @@ function setHomeTab(tabName) {
   document.querySelectorAll("[data-home-tab]").forEach((btn) => {
     const t = btn.getAttribute("data-home-tab");
     if (t === tabName) {
-      btn.className =
-        "px-4 py-2 rounded-full font-heading font-bold text-xs sm:text-sm bg-[#C84B00] text-white shadow-sm transition cursor-pointer";
+      if (tabName === "promocoes") {
+        btn.className =
+          "px-4 py-2 rounded-full font-heading font-bold text-xs sm:text-sm bg-rose-600 text-white shadow-sm transition cursor-pointer";
+      } else {
+        btn.className =
+          "px-4 py-2 rounded-full font-heading font-bold text-xs sm:text-sm bg-[#C84B00] text-white shadow-sm transition cursor-pointer";
+      }
     } else {
-      btn.className =
-        "px-4 py-2 rounded-full font-heading font-semibold text-xs sm:text-sm bg-white text-slate-600 hover:bg-orange-50 hover:text-[#C84B00] border border-slate-200 transition cursor-pointer";
+      if (t === "promocoes") {
+        btn.className =
+          "px-4 py-2 rounded-full font-heading font-bold text-xs sm:text-sm bg-rose-50 text-rose-600 hover:bg-rose-100 border border-rose-200 transition cursor-pointer";
+      } else {
+        btn.className =
+          "px-4 py-2 rounded-full font-heading font-semibold text-xs sm:text-sm bg-white text-slate-600 hover:bg-orange-50 hover:text-[#C84B00] border border-slate-200 transition cursor-pointer";
+      }
     }
   });
   renderHomeProducts();
@@ -1313,6 +1371,8 @@ function renderHomeProducts() {
   if (AppState.homeTab === "destaques") {
     const featuredOnly = list.filter((p) => p.featured);
     list = featuredOnly.length > 0 ? featuredOnly : list;
+  } else if (AppState.homeTab === "promocoes") {
+    list = list.filter((p) => isProductOnSale(p));
   } else if (AppState.homeTab === "meninas") {
     list = list.filter((p) => p.gender === "Feminino" || p.gender === "Unissex");
   } else if (AppState.homeTab === "meninos") {
@@ -1380,10 +1440,8 @@ function createProductCardHTML(product) {
       ? product.images[0]
       : "assets/produtos/prod-001.jpg";
 
-  const hasDiscount = product.oldPrice && Number(product.oldPrice) > Number(product.price);
-  const discountPercent = hasDiscount
-    ? Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100)
-    : 0;
+  const hasDiscount = isProductOnSale(product);
+  const discountPercent = getProductDiscountPercent(product);
 
   // Grade consolidada de tamanhos de todas as variações deste modelo
   const allSizesSet = new Set();
@@ -1526,7 +1584,7 @@ function createProductCardHTML(product) {
           <div class="pt-3 border-t border-slate-100">
             ${
               hasDiscount
-                ? `<p class="text-xs text-slate-600 line-through mb-0.5">De: ${formatCurrency(product.oldPrice)}</p>`
+                ? `<p class="text-xs text-rose-600 font-medium line-through mb-0.5">De: ${formatCurrency(product.oldPrice)}</p>`
                 : ""
             }
             <div class="flex flex-wrap items-baseline gap-2">
@@ -1844,6 +1902,7 @@ function resetCatalogFilters() {
     season: "todos",
     category: "todos",
     brand: "todos",
+    onSale: false,
     sortBy: "relevancia"
   };
   const searchInput = document.getElementById("catalog-search-input");
@@ -1855,11 +1914,20 @@ function resetCatalogFilters() {
   renderCatalogView();
 }
 
+function toggleCatalogPromoFilter() {
+  AppState.filters.onSale = !AppState.filters.onSale;
+  renderCatalogFiltersUI();
+  renderCatalogView();
+  updateActiveNavLinks();
+}
+
 function getFilteredAndSortedProducts() {
-  const { search, gender, ageGroup, size, season, category, brand, sortBy } = AppState.filters;
+  const { search, gender, ageGroup, size, season, category, brand, onSale, sortBy } = AppState.filters;
   const query = (search || "").trim().toLowerCase();
 
   let filtered = AppState.products.filter((p) => {
+    if (onSale && !isProductOnSale(p)) return false;
+
     if (query) {
       const hay = `${p.name} ${p.category} ${p.brand || ""} ${p.season || ""} ${p.gender} ${p.description} ${p.sku || ""} ${p.ageLabel || ""}`.toLowerCase();
       if (!hay.includes(query)) return false;
@@ -1960,8 +2028,23 @@ function renderCatalogView() {
 
   renderCatalogFiltersUI();
 
+  const promoBtn = document.getElementById("catalog-filter-promo-btn");
+  const promoIndicator = document.getElementById("catalog-promo-indicator");
+  if (promoBtn && promoIndicator) {
+    if (AppState.filters.onSale) {
+      promoIndicator.className = "w-4 h-4 rounded-full bg-rose-600 flex items-center justify-center text-[10px] text-white font-bold";
+      promoIndicator.innerHTML = "✓";
+      promoBtn.parentElement.className = "p-3 rounded-2xl bg-rose-100 border-2 border-rose-400";
+    } else {
+      promoIndicator.className = "w-4 h-4 rounded-full border-2 border-rose-400 flex items-center justify-center text-[10px] text-white";
+      promoIndicator.innerHTML = "";
+      promoBtn.parentElement.className = "p-3 rounded-2xl bg-rose-50/80 border border-rose-200";
+    }
+  }
+
   const chipsContainer = document.getElementById("catalog-active-chips");
   const activeChips = [];
+  if (AppState.filters.onSale) activeChips.push({ label: "🔥 Promoções (% OFF)", key: "onSale", reset: false });
   if (AppState.filters.search) activeChips.push({ label: `Busca: "${AppState.filters.search}"`, key: "search", reset: "" });
   if (AppState.filters.gender !== "todos") activeChips.push({ label: `Gênero: ${AppState.filters.gender}`, key: "gender", reset: "todos" });
   if (AppState.filters.ageGroup !== "todos") {
@@ -2110,7 +2193,8 @@ function renderProductDetailView() {
 
   const currentImg = images[AppState.activeProduct.selectedImageIndex] || images[0];
   const isFav = AppState.favorites.includes(product.id);
-  const hasDiscount = product.oldPrice && Number(product.oldPrice) > Number(product.price);
+  const hasDiscount = isProductOnSale(product);
+  const discountPercent = getProductDiscountPercent(product);
 
   const related = AppState.products
     .filter(
@@ -2239,7 +2323,10 @@ function renderProductDetailView() {
             <div class="bg-[#FAF8F5] rounded-2xl p-4 sm:p-5 border border-slate-200/80 mb-6">
               ${
                 hasDiscount
-                  ? `<p class="text-xs sm:text-sm text-slate-600 line-through">De: ${formatCurrency(product.oldPrice)}</p>`
+                  ? `<div class="flex items-center gap-2 mb-1">
+                      <span class="text-xs sm:text-sm text-slate-500 line-through">De: ${formatCurrency(product.oldPrice)}</span>
+                      <span class="px-2.5 py-0.5 rounded-full bg-rose-100 text-rose-700 font-extrabold text-xs">-${discountPercent}% OFF</span>
+                    </div>`
                   : ""
               }
               <div class="flex flex-wrap items-baseline gap-3">
@@ -3375,13 +3462,102 @@ function updateAdminImagePreview(src) {
   }
 }
 
+function toggleAdminPromoBox(checked) {
+  const box = document.getElementById("admin-promo-fields-box");
+  const chk = document.getElementById("admin-prod-is-promo");
+  if (chk) chk.checked = Boolean(checked);
+  if (!box) return;
+
+  if (checked) {
+    box.classList.remove("hidden");
+    const normalPriceInput = document.getElementById("admin-prod-price");
+    const oldPriceInput = document.getElementById("admin-prod-old-price");
+    if (normalPriceInput && normalPriceInput.value && oldPriceInput && !oldPriceInput.value) {
+      oldPriceInput.value = normalPriceInput.value;
+    }
+  } else {
+    box.classList.add("hidden");
+    const badge = document.getElementById("admin-promo-calc-badge");
+    if (badge) badge.classList.add("hidden");
+  }
+  updateAdminPromoCalc();
+}
+
+function updateAdminPromoCalc() {
+  const chk = document.getElementById("admin-prod-is-promo");
+  const badge = document.getElementById("admin-promo-calc-badge");
+  const calcText = document.getElementById("admin-promo-calc-text");
+  const ecoText = document.getElementById("admin-promo-economy-text");
+  if (!badge) return;
+
+  if (!chk || !chk.checked) {
+    badge.classList.add("hidden");
+    return;
+  }
+
+  const normalPrice = parseFloat(document.getElementById("admin-prod-price").value) || 0;
+  const oldPrice = parseFloat(document.getElementById("admin-prod-old-price").value) || normalPrice;
+  const promoPrice = parseFloat(document.getElementById("admin-prod-promo-price").value) || 0;
+
+  if (oldPrice > 0 && promoPrice > 0 && oldPrice !== promoPrice) {
+    const high = Math.max(oldPrice, promoPrice);
+    const low = Math.min(oldPrice, promoPrice);
+    const pct = Math.round(((high - low) / high) * 100);
+    const economy = high - low;
+
+    badge.classList.remove("hidden");
+    if (calcText) calcText.textContent = `🔥 -${pct}% OFF (De: ${formatCurrency(high)} por ${formatCurrency(low)})`;
+    if (ecoText) ecoText.textContent = `Economia de ${formatCurrency(economy)} para o cliente`;
+  } else {
+    badge.classList.add("hidden");
+  }
+}
+
 async function handleAdminFormSubmit(event) {
   event.preventDefault();
 
   const name = document.getElementById("admin-prod-name").value.trim();
-  const price = parseFloat(document.getElementById("admin-prod-price").value);
-  const oldPriceRaw = document.getElementById("admin-prod-old-price").value;
-  const oldPrice = oldPriceRaw ? parseFloat(oldPriceRaw) : null;
+  const normalPrice = parseFloat(document.getElementById("admin-prod-price").value);
+  const isPromo = document.getElementById("admin-prod-is-promo") ? document.getElementById("admin-prod-is-promo").checked : false;
+  const oldPriceRaw = document.getElementById("admin-prod-old-price") ? document.getElementById("admin-prod-old-price").value : "";
+  const promoPriceRaw = document.getElementById("admin-prod-promo-price") ? document.getElementById("admin-prod-promo-price").value : "";
+
+  let price = normalPrice;
+  let oldPrice = null;
+  let onSale = false;
+
+  if (isPromo) {
+    const pNormal = normalPrice;
+    const pOld = oldPriceRaw ? parseFloat(oldPriceRaw) : pNormal;
+    const pPromo = promoPriceRaw ? parseFloat(promoPriceRaw) : NaN;
+
+    if (!isNaN(pPromo) && pPromo > 0) {
+      const candidates = [pNormal, pOld, pPromo].filter((n) => !isNaN(n) && n > 0);
+      const higher = Math.max(...candidates);
+      const lower = Math.min(...candidates);
+      if (higher > lower) {
+        oldPrice = higher;
+        price = lower;
+        onSale = true;
+      } else {
+        price = pPromo;
+        oldPrice = null;
+        onSale = false;
+      }
+    } else if (!isNaN(pOld) && pOld > 0 && pOld !== pNormal) {
+      oldPrice = Math.max(pNormal, pOld);
+      price = Math.min(pNormal, pOld);
+      onSale = true;
+    }
+  } else if (oldPriceRaw) {
+    const numOld = parseFloat(oldPriceRaw);
+    if (!isNaN(numOld) && numOld > 0 && numOld !== normalPrice) {
+      oldPrice = Math.max(normalPrice, numOld);
+      price = Math.min(normalPrice, numOld);
+      onSale = true;
+    }
+  }
+
   const gender = document.getElementById("admin-prod-gender").value;
   const category = document.getElementById("admin-prod-category").value;
   const brandEl = document.getElementById("admin-prod-brand");
@@ -3462,6 +3638,7 @@ async function handleAdminFormSubmit(event) {
         color: color || undefined,
         price,
         oldPrice,
+        onSale,
         gender,
         category,
         brand,
@@ -3515,6 +3692,7 @@ async function handleAdminFormSubmit(event) {
       color: color || undefined,
       price,
       oldPrice,
+      onSale,
       gender,
       category,
       brand,
@@ -3563,8 +3741,30 @@ function editProductInAdmin(productId) {
   if (skuInput) skuInput.value = (product.sku || "").replace(/^CÓD\.\s*/i, "");
   const colorInput = document.getElementById("admin-prod-color");
   if (colorInput) colorInput.value = product.color || getProductColorOrVariant(product);
-  document.getElementById("admin-prod-price").value = product.price || "";
-  document.getElementById("admin-prod-old-price").value = product.oldPrice || "";
+
+  const isOnSale = isProductOnSale(product);
+  const chkPromo = document.getElementById("admin-prod-is-promo");
+  if (chkPromo) chkPromo.checked = isOnSale;
+
+  const normalInput = document.getElementById("admin-prod-price");
+  const oldPriceInput = document.getElementById("admin-prod-old-price");
+  const promoPriceInput = document.getElementById("admin-prod-promo-price");
+
+  if (isOnSale) {
+    const high = Math.max(Number(product.oldPrice || product.price), Number(product.price));
+    const low = Math.min(Number(product.oldPrice || product.price), Number(product.price));
+    if (normalInput) normalInput.value = high;
+    if (oldPriceInput) oldPriceInput.value = high;
+    if (promoPriceInput) promoPriceInput.value = low;
+    toggleAdminPromoBox(true);
+  } else {
+    if (normalInput) normalInput.value = product.price || "";
+    if (oldPriceInput) oldPriceInput.value = "";
+    if (promoPriceInput) promoPriceInput.value = "";
+    toggleAdminPromoBox(false);
+  }
+  updateAdminPromoCalc();
+
   document.getElementById("admin-prod-gender").value = product.gender || "Feminino";
   document.getElementById("admin-prod-category").value = product.category || "";
   const brandInput = document.getElementById("admin-prod-brand");
@@ -3596,6 +3796,12 @@ function resetAdminForm() {
 
   const form = document.getElementById("admin-product-form");
   if (form) form.reset();
+
+  toggleAdminPromoBox(false);
+  const oldPriceInput = document.getElementById("admin-prod-old-price");
+  if (oldPriceInput) oldPriceInput.value = "";
+  const promoPriceInput = document.getElementById("admin-prod-promo-price");
+  if (promoPriceInput) promoPriceInput.value = "";
 
   const title = document.getElementById("admin-form-title");
   if (title) title.textContent = "Cadastrar Novo Produto no Catálogo";
