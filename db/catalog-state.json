@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updatedAt": "2026-10-27T17:31:14.861Z",
+  "updatedAt": "2026-10-27T17:33:02.157Z",
   "soldOutIds": [],
   "productOverrides": {},
   "customProducts": [
@@ -9,7 +9,7 @@
       "sku": "CÓD. 1709",
       "name": "BODY UNISSEX PRESENTINHO DE DEUS",
       "price": 34.9,
-      "oldPrice": null,
+      "oldPrice": 19.9,
       "gender": "Unissex",
       "category": "Bodys",
       "brand": "HAPPY KIDS",
