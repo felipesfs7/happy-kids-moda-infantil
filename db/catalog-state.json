@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updatedAt": "2026-10-27T19:00:26.271Z",
+  "updatedAt": "2026-10-27T19:01:25.207Z",
   "soldOutIds": [],
   "productOverrides": {},
   "customProducts": [
@@ -8,8 +8,8 @@
       "id": "hk-custom-201402",
       "sku": "CÓD. 21662",
       "name": "BLUSA MALHA TCHIBUM FEMININA",
-      "price": 35,
-      "oldPrice": 49.9,
+      "price": 49.9,
+      "oldPrice": null,
       "gender": "Feminino",
       "category": "Blusas",
       "brand": "KAMYLUS",
@@ -42,7 +42,7 @@
       ],
       "createdAt": "2026-10-27",
       "color": "PANDA",
-      "onSale": true
+      "onSale": false
     },
     {
       "id": "hk-custom-169819",
