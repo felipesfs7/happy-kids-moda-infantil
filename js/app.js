@@ -171,10 +171,12 @@ function rebuildCatalogFromState() {
     const allSizes = sortSizesInOfficialOrder([...baseRegistered, ...activeSizes]);
 
     let finalPrice = Number(ov.price !== undefined ? ov.price : p.price);
+    let onSale = ov.onSale !== undefined ? Boolean(ov.onSale) : Boolean(p.onSale);
     let finalOldPrice = ov.oldPrice !== undefined ? ov.oldPrice : p.oldPrice;
-    let onSale = Boolean(ov.onSale || p.onSale);
 
-    if (finalOldPrice !== null && finalOldPrice !== undefined && finalOldPrice !== "") {
+    if (!onSale) {
+      finalOldPrice = null;
+    } else if (finalOldPrice !== null && finalOldPrice !== undefined && finalOldPrice !== "") {
       const numOld = Number(finalOldPrice);
       if (!isNaN(numOld) && numOld > 0) {
         if (numOld < finalPrice) {
@@ -189,12 +191,17 @@ function rebuildCatalogFromState() {
       }
     }
 
+    const finalColor = ov.color !== undefined ? (ov.color ? String(ov.color).trim() : null) : (p.color ? String(p.color).trim() : null);
+    const finalSku = ov.sku !== undefined ? ov.sku : (p.sku !== undefined ? p.sku : null);
+
     return {
       ...p,
       ...ov,
       price: finalPrice,
       oldPrice: finalOldPrice,
       onSale,
+      color: finalColor,
+      sku: finalSku,
       sizes: sortSizesInOfficialOrder(activeSizes),
       registeredSizes: allSizes,
       allSizes,
@@ -210,6 +217,46 @@ function rebuildCatalogFromState() {
 
   // Lista apenas de produtos em estoque (visível para os clientes da loja)
   AppState.products = AppState.allProducts.filter((p) => !p.isSoldOut && p.sizes && p.sizes.length > 0);
+
+  // Mantém sacola sincronizada com alterações do lojista (ex: cor atualizada, preço alterado)
+  syncCartWithCatalog();
+}
+
+function syncCartWithCatalog() {
+  if (!AppState.cart || AppState.cart.length === 0 || !AppState.allProducts) return;
+  let changed = false;
+  AppState.cart = AppState.cart.map((item) => {
+    const live = AppState.allProducts.find((p) => p.id === item.productId);
+    if (!live) return item;
+    const liveColor = (live.color && String(live.color).trim()) || (typeof getProductColorOrVariant === "function" ? getProductColorOrVariant(live) : null);
+    const livePrice = Number(live.price);
+    const liveName = live.name;
+    const liveSku = live.sku || item.sku;
+    const liveImage = (live.images && live.images[0]) || item.image;
+
+    const hasNewColor = liveColor && liveColor !== "Padrão" && liveColor !== "Única" && item.color !== liveColor;
+    const hasNewPrice = !isNaN(livePrice) && livePrice > 0 && item.price !== livePrice;
+    const hasNewName = liveName && item.name !== liveName;
+    const hasNewImage = liveImage && item.image !== liveImage;
+    const hasNewSku = liveSku && item.sku !== liveSku;
+
+    if (hasNewColor || hasNewPrice || hasNewName || hasNewImage || hasNewSku) {
+      changed = true;
+      return {
+        ...item,
+        price: !isNaN(livePrice) && livePrice > 0 ? livePrice : item.price,
+        name: liveName || item.name,
+        color: (liveColor && liveColor !== "Padrão" && liveColor !== "Única") ? liveColor : item.color,
+        image: liveImage || item.image,
+        sku: liveSku || item.sku
+      };
+    }
+    return item;
+  });
+
+  if (changed && typeof saveCartToStorage === "function") {
+    saveCartToStorage();
+  }
 }
 
 // Descriptografa a chave de gravação na nuvem usando a senha do lojista (210845)
@@ -1215,13 +1262,28 @@ function normalizeSku(sku) {
   return str.replace(/c[oó]d\.?/gi, "").replace(/[^a-zA-Z0-9]/g, "").trim().toUpperCase();
 }
 
-function getProductColorOrVariant(product, allSisterVariants = []) {
+function getProductColorOrVariant(product, allSisterVariants = null) {
   if (!product) return "Padrão";
+
+  // Se a cor foi cadastrada explicitamente pelo lojista, tem prioridade absoluta
   if (product.color && String(product.color).trim()) {
-    return String(product.color).trim();
+    const c = String(product.color).trim();
+    if (c.toLowerCase() !== "padrão" && c.toLowerCase() !== "padrao" && c.toLowerCase() !== "única" && c.toLowerCase() !== "unica") {
+      return c;
+    }
   }
   if (product.colorName && String(product.colorName).trim()) {
-    return String(product.colorName).trim();
+    const c = String(product.colorName).trim();
+    if (c.toLowerCase() !== "padrão" && c.toLowerCase() !== "padrao" && c.toLowerCase() !== "única" && c.toLowerCase() !== "unica") {
+      return c;
+    }
+  }
+
+  // Auto-resolve produtos irmãos se a lista não foi passada explicitamente
+  if (!allSisterVariants || allSisterVariants.length === 0) {
+    if (typeof getProductVariants === "function" && typeof AppState !== "undefined" && (AppState.products || AppState.allProducts)) {
+      allSisterVariants = getProductVariants(product, AppState.allProducts || AppState.products);
+    }
   }
 
   const name = (product.name || "").trim();
@@ -2295,6 +2357,11 @@ function renderProductDetailView() {
                     : ""
                 }
                 <span class="px-3 py-1 rounded-full text-xs font-bold bg-orange-50 text-[#C84B00]">${product.gender}</span>
+                ${
+                  activeColorName && activeColorName !== "Padrão" && activeColorName !== "Única"
+                    ? `<span class="px-3 py-1 rounded-full text-xs font-bold bg-purple-50 text-purple-700 border border-purple-200/60">🎨 ${activeColorName}</span>`
+                    : ""
+                }
                 <span class="px-2.5 py-0.5 rounded-md bg-slate-100 text-xs font-extrabold text-slate-700 font-mono">${product.sku || product.id}</span>
               </div>
               <div class="flex items-center gap-1.5">
@@ -2363,7 +2430,7 @@ function renderProductDetailView() {
                 <div class="flex flex-wrap items-center gap-3" role="radiogroup" aria-label="Selecione a cor ou estampa">
                   ${variants
                     .map((v) => {
-                      const vColor = getProductColorOrVariant(v, variants);
+                      const vColor = (v.color && String(v.color).trim()) || getProductColorOrVariant(v, variants);
                       const isSelected = v.id === product.id;
                       const vImg = (v.images && v.images[0]) || "assets/produtos/prod-001.jpg";
                       return `
@@ -2391,6 +2458,18 @@ function renderProductDetailView() {
                     })
                     .join("")}
                 </div>
+              </div>
+            `
+                : (activeColorName && activeColorName !== "Padrão" && activeColorName !== "Única")
+                ? `
+              <div class="mb-6 bg-slate-50/90 rounded-2xl p-3.5 px-4 border border-slate-200/80 flex items-center justify-between gap-3">
+                <div class="flex items-center gap-2">
+                  <span class="font-heading font-bold text-sm text-slate-800">Cor / Estampa:</span>
+                  <span class="px-2.5 py-0.5 rounded-md bg-orange-100 text-[#C84B00] text-xs font-extrabold">
+                    ${activeColorName}
+                  </span>
+                </div>
+                <span class="text-xs text-slate-400 font-medium">Opção selecionada</span>
               </div>
             `
                 : ""
@@ -2623,14 +2702,16 @@ function buyActiveProductViaWhatsApp() {
   const size = AppState.activeProduct.selectedSize || (product.sizes && product.sizes[0]) || "Único";
   const qty = AppState.activeProduct.quantity || 1;
   const total = product.price * qty;
-  const color = getProductColorOrVariant(product);
+  const variants = getProductVariants(product);
+  const color = (product.color && String(product.color).trim()) || getProductColorOrVariant(product, variants);
+  const hasValidColor = color && color !== "Padrão" && color !== "padrao" && color !== "Única" && color !== "unica";
 
   const message =
     `Olá, *${STORE_CONFIG.name}*!\n` +
     `Quero comprar este produto que vi no site:\n\n` +
     `- *Produto:* ${product.name}\n` +
     `- *Código:* ${product.sku || product.id}\n` +
-    (color && color !== "Padrão" && color !== "Única" ? `- *Cor / Variação:* ${color}\n` : "") +
+    (hasValidColor ? `- *Cor / Estampa:* ${color}\n` : "") +
     `- *Tamanho Escolhido:* ${size}\n` +
     `- *Quantidade:* ${qty} un.\n` +
     `- *Valor Unitário:* ${formatCurrency(product.price)} (${formatCurrency(total)} no total)\n\n` +
@@ -2639,7 +2720,7 @@ function buyActiveProductViaWhatsApp() {
   trackVercelEvent("buy_now_whatsapp", {
     product: product.name,
     sku: product.sku || product.id,
-    color: color,
+    color: hasValidColor ? color : "Padrão",
     size: size,
     price: Number(product.price)
   });
@@ -2648,7 +2729,8 @@ function buyActiveProductViaWhatsApp() {
     subtotal: total
   });
   openStoreWhatsApp(message);
-  showToast(`Redirecionando para o WhatsApp da Happy Kids (Cor: ${color} - Tam: ${size})!`, "success");
+  const colorMsg = hasValidColor ? `Cor: ${color} - ` : "";
+  showToast(`Redirecionando para o WhatsApp da Happy Kids (${colorMsg}Tam: ${size})!`, "success");
 }
 
 /* ==========================================================================
@@ -2669,9 +2751,13 @@ function addActiveProductToCart() {
 
   const size = AppState.activeProduct.selectedSize || (product.sizes && product.sizes[0]) || "U";
   const qty = AppState.activeProduct.quantity || 1;
-  const color = getProductColorOrVariant(product);
+  const variants = getProductVariants(product);
+  const detectedColor = (product.color && String(product.color).trim()) || getProductColorOrVariant(product, variants);
+  const color = (detectedColor && detectedColor !== "Padrão" && detectedColor !== "padrao" && detectedColor !== "Única" && detectedColor !== "unica") ? detectedColor : "Única";
 
-  const existingIndex = AppState.cart.findIndex((item) => item.productId === product.id && item.size === size);
+  const existingIndex = AppState.cart.findIndex(
+    (item) => item.productId === product.id && item.size === size && (item.color || "Única") === color
+  );
 
   if (existingIndex >= 0) {
     AppState.cart[existingIndex].quantity += qty;
@@ -2700,7 +2786,8 @@ function addActiveProductToCart() {
   });
   renderCartDrawer();
   openCartDrawer();
-  showToast(`"${product.name}" (${color} - Tam. ${size}) adicionado à sacola!`, "success");
+  const colorBadge = color && color !== "Única" ? `${color} - ` : "";
+  showToast(`"${product.name}" (${colorBadge}Tam. ${size}) adicionado à sacola!`, "success");
 }
 
 function updateCartItemQty(index, delta) {
@@ -2765,17 +2852,27 @@ function renderCartDrawer() {
   let subtotal = 0;
   listEl.innerHTML = AppState.cart
     .map((item, idx) => {
-      const itemTotal = item.price * item.quantity;
+      const liveProduct = (AppState.allProducts && AppState.allProducts.find((p) => p.id === item.productId)) ||
+                          (AppState.products && AppState.products.find((p) => p.id === item.productId));
+      const currentPrice = liveProduct && liveProduct.price !== undefined ? Number(liveProduct.price) : Number(item.price);
+      const currentName = (liveProduct && liveProduct.name) || item.name;
+      const currentSku = (liveProduct && (liveProduct.sku || liveProduct.id)) || item.sku || "";
+      const currentColor = (liveProduct && liveProduct.color && String(liveProduct.color).trim()) || item.color;
+      const currentImage = (liveProduct && liveProduct.images && liveProduct.images[0]) || item.image || "assets/produtos/prod-001.jpg";
+
+      const itemTotal = currentPrice * item.quantity;
       subtotal += itemTotal;
+      const showColor = currentColor && currentColor !== "Padrão" && currentColor !== "padrao" && currentColor !== "Única" && currentColor !== "unica";
+
       return `
         <div class="flex gap-3.5 p-3 rounded-2xl bg-slate-50 border border-slate-200/80">
-          <img src="${item.image}" alt="${item.name}" class="w-18 h-20 rounded-xl object-contain shrink-0 bg-white p-1 border border-slate-100" />
+          <img src="${currentImage}" alt="${currentName}" class="w-18 h-20 rounded-xl object-contain shrink-0 bg-white p-1 border border-slate-100" />
           <div class="flex-1 min-w-0">
-            <h4 class="font-heading font-bold text-slate-800 text-xs sm:text-sm line-clamp-1">${item.name}</h4>
+            <h4 class="font-heading font-bold text-slate-800 text-xs sm:text-sm line-clamp-1">${currentName}</h4>
             <p class="text-xs text-slate-500 mt-0.5">
               Tamanho: <strong class="text-[#C84B00]">${item.size}</strong>
-              ${item.color && item.color !== "Padrão" && item.color !== "Única" ? ` • Cor: <strong class="text-slate-700">${item.color}</strong>` : ""}
-              ${item.sku ? ` • <span class="text-slate-400 font-mono text-[11px]">${item.sku}</span>` : ""}
+              ${showColor ? ` • Cor: <strong class="text-slate-700">${currentColor}</strong>` : ""}
+              ${currentSku ? ` • <span class="text-slate-400 font-mono text-[11px]">${currentSku}</span>` : ""}
             </p>
             <p class="font-heading font-extrabold text-slate-900 text-sm mt-1">${formatCurrency(itemTotal)}</p>
             
@@ -2848,10 +2945,18 @@ function checkoutCartViaWhatsApp() {
   let subtotal = 0;
   const itemsLines = AppState.cart
     .map((item, i) => {
-      const lineTotal = item.price * item.quantity;
+      const liveProduct = (AppState.allProducts && AppState.allProducts.find((p) => p.id === item.productId)) ||
+                          (AppState.products && AppState.products.find((p) => p.id === item.productId));
+      const currentPrice = liveProduct && liveProduct.price !== undefined ? Number(liveProduct.price) : Number(item.price);
+      const currentName = (liveProduct && liveProduct.name) || item.name;
+      const currentSku = (liveProduct && (liveProduct.sku || liveProduct.id)) || item.sku || "";
+      const currentColor = (liveProduct && liveProduct.color && String(liveProduct.color).trim()) || item.color;
+
+      const lineTotal = currentPrice * item.quantity;
       subtotal += lineTotal;
-      const colorPart = item.color && item.color !== "Padrão" && item.color !== "Única" ? ` | Cor: *${item.color}*` : "";
-      return `${i + 1}. *${item.name}* (${item.sku || ""})${colorPart} | Tam: *${item.size}* | Qtd: ${item.quantity} | ${formatCurrency(lineTotal)}`;
+      const showColor = currentColor && currentColor !== "Padrão" && currentColor !== "padrao" && currentColor !== "Única" && currentColor !== "unica";
+      const colorPart = showColor ? ` | Cor: *${currentColor}*` : "";
+      return `${i + 1}. *${currentName}* (${currentSku})${colorPart} | Tam: *${item.size}* | Qtd: ${item.quantity} | ${formatCurrency(lineTotal)}`;
     })
     .join("\n");
 
@@ -3549,13 +3654,11 @@ async function handleAdminFormSubmit(event) {
       price = Math.min(pNormal, pOld);
       onSale = true;
     }
-  } else if (oldPriceRaw) {
-    const numOld = parseFloat(oldPriceRaw);
-    if (!isNaN(numOld) && numOld > 0 && numOld !== normalPrice) {
-      oldPrice = Math.max(normalPrice, numOld);
-      price = Math.min(normalPrice, numOld);
-      onSale = true;
-    }
+  } else {
+    // Promoção desmarcada na edição
+    price = normalPrice;
+    oldPrice = null;
+    onSale = false;
   }
 
   const gender = document.getElementById("admin-prod-gender").value;
@@ -3635,9 +3738,9 @@ async function handleAdminFormSubmit(event) {
       const overridePayload = {
         sku: updatedSku,
         name,
-        color: color || undefined,
+        color: color ? color.trim() : null,
         price,
-        oldPrice,
+        oldPrice: oldPrice || null,
         onSale,
         gender,
         category,
@@ -3689,9 +3792,9 @@ async function handleAdminFormSubmit(event) {
       id: newId,
       sku: newSku,
       name,
-      color: color || undefined,
+      color: color ? color.trim() : null,
       price,
-      oldPrice,
+      oldPrice: oldPrice || null,
       onSale,
       gender,
       category,
@@ -3740,7 +3843,10 @@ function editProductInAdmin(productId) {
   const skuInput = document.getElementById("admin-prod-sku");
   if (skuInput) skuInput.value = (product.sku || "").replace(/^CÓD\.\s*/i, "");
   const colorInput = document.getElementById("admin-prod-color");
-  if (colorInput) colorInput.value = product.color || getProductColorOrVariant(product);
+  if (colorInput) {
+    const rawCol = (product.color && String(product.color).trim()) || getProductColorOrVariant(product);
+    colorInput.value = (rawCol && rawCol !== "Padrão" && rawCol !== "padrao" && rawCol !== "Única" && rawCol !== "unica") ? rawCol : "";
+  }
 
   const isOnSale = isProductOnSale(product);
   const chkPromo = document.getElementById("admin-prod-is-promo");
@@ -3766,9 +3872,29 @@ function editProductInAdmin(productId) {
   updateAdminPromoCalc();
 
   document.getElementById("admin-prod-gender").value = product.gender || "Feminino";
-  document.getElementById("admin-prod-category").value = product.category || "";
-  const brandInput = document.getElementById("admin-prod-brand");
-  if (brandInput) brandInput.value = product.brand || "";
+
+  const catSelect = document.getElementById("admin-prod-category");
+  if (catSelect) {
+    if (product.category && !Array.from(catSelect.options).some((o) => o.value === product.category)) {
+      const opt = document.createElement("option");
+      opt.value = product.category;
+      opt.textContent = product.category;
+      catSelect.appendChild(opt);
+    }
+    catSelect.value = product.category || "";
+  }
+
+  const brandSelect = document.getElementById("admin-prod-brand");
+  if (brandSelect) {
+    if (product.brand && !Array.from(brandSelect.options).some((o) => o.value === product.brand)) {
+      const opt = document.createElement("option");
+      opt.value = product.brand;
+      opt.textContent = product.brand;
+      brandSelect.appendChild(opt);
+    }
+    brandSelect.value = product.brand || "";
+  }
+
   const seasonInput = document.getElementById("admin-prod-season");
   if (seasonInput) seasonInput.value = product.season || "Verão";
   document.getElementById("admin-prod-age-group").value = product.ageGroup || "4-a-10";
@@ -3782,8 +3908,13 @@ function editProductInAdmin(productId) {
   document.getElementById("admin-prod-description").value = product.description || "";
   document.getElementById("admin-prod-fabric").value = product.fabric || "";
 
+  const availableSizes =
+    product.sizes && product.sizes.length > 0
+      ? product.sizes
+      : (product.registeredSizes || product.allSizes || []);
+
   document.querySelectorAll('input[name="admin-size-item"]').forEach((cb) => {
-    cb.checked = product.sizes && product.sizes.includes(cb.value);
+    cb.checked = availableSizes.includes(cb.value);
   });
 
   const formCard = document.getElementById("admin-form-card");
@@ -3796,6 +3927,9 @@ function resetAdminForm() {
 
   const form = document.getElementById("admin-product-form");
   if (form) form.reset();
+
+  const colorInput = document.getElementById("admin-prod-color");
+  if (colorInput) colorInput.value = "";
 
   toggleAdminPromoBox(false);
   const oldPriceInput = document.getElementById("admin-prod-old-price");
