@@ -1,9 +1,45 @@
 {
   "version": 2,
-  "updatedAt": "2026-10-27T16:49:19.103Z",
+  "updatedAt": "2026-10-27T16:50:51.751Z",
   "soldOutIds": [],
   "productOverrides": {},
   "customProducts": [
+    {
+      "id": "hk-custom-851751",
+      "sku": "CÓD. 22337",
+      "name": "CONJUNTO FEMININO BLUSA EM COTON E SHORT SAIA MOLETINHO",
+      "price": 147.9,
+      "oldPrice": null,
+      "gender": "Feminino",
+      "category": "Conjuntos",
+      "brand": "ROMITEX",
+      "season": "Verão",
+      "ageGroup": "4-a-10",
+      "ageLabel": "Tam. 10 ao 14",
+      "sizes": [
+        "10",
+        "12",
+        "14"
+      ],
+      "registeredSizes": [
+        "10",
+        "12",
+        "14"
+      ],
+      "badge": "Novo",
+      "featured": true,
+      "images": [
+        "https://raw.githubusercontent.com/felipesfs7/happy-kids-moda-infantil/main/assets/uploads/hk-1793119848113-623.jpg"
+      ],
+      "description": "Peça especial da coleção Happy Kids Moda Infantil, unindo conforto, liberdade de movimento e muito estilo.",
+      "fabric": "Tecido selecionado de toque macio e alta durabilidade.",
+      "washing": [
+        "Lavar com cores similares e sabão neutro",
+        "Não utilizar alvejantes com cloro",
+        "Secar à sombra"
+      ],
+      "createdAt": "2026-10-27"
+    },
     {
       "id": "hk-custom-759103",
       "sku": "CÓD. 22351",
