@@ -264,6 +264,19 @@ h4 {
   }
 }
 
+/* Seletor de Cores e Estampas Estilo Boutique Tip Top */
+.color-swatch-btn {
+  transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.color-swatch-btn:hover {
+  transform: scale(1.08);
+}
+
+.color-swatch-btn:active {
+  transform: scale(0.94);
+}
+
 /* Micro-interações táteis de boutique (Delight ao clicar, favoritar e adicionar à sacola) */
 @keyframes tactilePop {
   0% { transform: scale(1); }

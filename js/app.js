@@ -1146,6 +1146,164 @@ function setHomeTab(tabName) {
   renderHomeProducts();
 }
 
+/* ==========================================================================
+   Módulo de Variação de Cores e Modelos por CÓD. / SKU (Benchmark Tip Top)
+   ========================================================================== */
+
+function normalizeSku(sku) {
+  if (!sku) return "";
+  const str = String(sku).trim();
+  if (/^(s\/?n|sem\s*c[oó]d(igo)?)$/i.test(str)) return "";
+  return str.replace(/c[oó]d\.?/gi, "").replace(/[^a-zA-Z0-9]/g, "").trim().toUpperCase();
+}
+
+function getProductColorOrVariant(product, allSisterVariants = []) {
+  if (!product) return "Padrão";
+  if (product.color && String(product.color).trim()) {
+    return String(product.color).trim();
+  }
+  if (product.colorName && String(product.colorName).trim()) {
+    return String(product.colorName).trim();
+  }
+
+  const name = (product.name || "").trim();
+
+  // 1. Dicionário refinado de cores comuns em moda infantil
+  const commonColors = [
+    "Rosa Claro", "Rosa Bebê", "Rosa Pink", "Rosa Chiclete", "Rosa Seco", "Rosa",
+    "Preto Mescla", "Preto Grafite", "Preto", "Preta",
+    "Branco Off", "Off White", "Branco", "Branca",
+    "Azul Marinho", "Azul Royal", "Azul Bebê", "Azul Céu", "Azul Claro", "Azul Bic", "Azul Turquesa", "Azul",
+    "Verde Militar", "Verde Musgo", "Verde Água", "Verde Menta", "Verde Lima", "Verde Bandeira", "Verde",
+    "Amarelo Canário", "Amarelo Bebê", "Amarelo Mostarda", "Amarelo Ouro", "Amarelo",
+    "Vermelho", "Vermelha", "Bordô", "Vinho", "Marsala", "Rubi",
+    "Cinza Mescla", "Cinza Chumbo", "Cinza Claro", "Cinza",
+    "Bege", "Nude", "Creme", "Marfim", "Cru", "Areia",
+    "Lilás", "Lavanda", "Roxo", "Roxa", "Violeta",
+    "Mostarda", "Laranja", "Salmão", "Coral", "Terracota", "Caramelo", "Marrom"
+  ];
+
+  for (const c of commonColors) {
+    const regex = new RegExp(`\\b${c}\\b`, "i");
+    if (regex.test(name)) {
+      return c.split(" ").map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(" ");
+    }
+  }
+
+  // 2. Estampas e temas lúdicos
+  const commonPrints = [
+    "Cerejas", "Cereja", "Ursos", "Urso", "Ovelhas", "Ovelha", "Gatinhos", "Gatinho", "Gatos",
+    "Cachorrinhos", "Cachorro", "Dinossauros", "Dinossauro", "Dino", "Estrelas", "Estrela",
+    "Corações", "Coração", "Floral", "Flores", "Borboletas", "Borboleta", "Safari", "Selva",
+    "Listrado", "Listras", "Poá", "Bolinhas", "Frutas", "Arco-íris", "Tubarão", "Espacial"
+  ];
+
+  for (const p of commonPrints) {
+    const regex = new RegExp(`\\b${p}\\b`, "i");
+    if (regex.test(name)) {
+      return p.charAt(0).toUpperCase() + p.slice(1).toLowerCase();
+    }
+  }
+
+  // 3. Diferenciação léxica inteligente entre produtos irmãos com mesmo SKU
+  if (allSisterVariants && allSisterVariants.length > 1) {
+    const currentWords = name
+      .split(/\s+/)
+      .map((w) => w.replace(/[^\wÀ-ú]/gi, ""))
+      .filter((w) => w.length > 2);
+    const otherNames = allSisterVariants
+      .filter((p) => p.id !== product.id)
+      .map((p) => (p.name || "").toLowerCase());
+
+    const uniqueWords = currentWords.filter((w) => {
+      const lower = w.toLowerCase();
+      return !otherNames.some((on) => on.includes(lower));
+    });
+
+    if (uniqueWords.length > 0) {
+      return uniqueWords.map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(" ");
+    }
+  }
+
+  return "Padrão";
+}
+
+function getProductVariants(product, productList = AppState.products) {
+  if (!product) return [];
+  const norm = normalizeSku(product.sku);
+  if (!norm) return [product];
+
+  const pool = productList && productList.length > 0 ? productList : AppState.allProducts;
+  const variants = pool.filter((p) => normalizeSku(p.sku) === norm);
+  return variants.length > 0 ? variants : [product];
+}
+
+function groupProductsBySku(productsList) {
+  if (!Array.isArray(productsList)) return [];
+  const groups = new Map();
+  const result = [];
+
+  for (const product of productsList) {
+    const skuKey = normalizeSku(product.sku);
+    if (!skuKey) {
+      result.push({
+        ...product,
+        variants: [product]
+      });
+      continue;
+    }
+
+    if (!groups.has(skuKey)) {
+      const groupData = {
+        primary: product,
+        variants: [product]
+      };
+      groups.set(skuKey, groupData);
+      result.push(groupData);
+    } else {
+      groups.get(skuKey).variants.push(product);
+    }
+  }
+
+  return result.map((g) => {
+    if (g.primary) {
+      return {
+        ...g.primary,
+        variants: g.variants
+      };
+    }
+    return g;
+  });
+}
+
+function switchProductColorVariant(variantId) {
+  const variant =
+    AppState.products.find((p) => p.id === variantId) ||
+    AppState.allProducts.find((p) => p.id === variantId);
+  if (!variant) return;
+
+  AppState.activeProduct.id = variant.id;
+  AppState.activeProduct.selectedImageIndex = 0;
+
+  // Preserva tamanho se a nova variação também o tiver; caso contrário escolhe o primeiro disponível
+  const currentSize = AppState.activeProduct.selectedSize;
+  if (!variant.sizes || !variant.sizes.includes(currentSize)) {
+    AppState.activeProduct.selectedSize = variant.sizes && variant.sizes.length > 0 ? variant.sizes[0] : null;
+  }
+
+  renderProductDetailView();
+
+  if (window.history && window.history.replaceState) {
+    const url = new URL(window.location.href);
+    url.searchParams.set("produto", variant.id);
+    window.history.replaceState(null, "", url.toString());
+  }
+
+  if (navigator.vibrate) {
+    try { navigator.vibrate(15); } catch (e) {}
+  }
+}
+
 function renderHomeProducts() {
   const grid = document.getElementById("home-featured-grid");
   if (!grid) return;
@@ -1160,12 +1318,14 @@ function renderHomeProducts() {
   } else if (AppState.homeTab === "meninos") {
     list = list.filter((p) => p.gender === "Masculino" || p.gender === "Unissex");
   } else if (AppState.homeTab === "bebe") {
-    list = list.filter((p) => p.ageGroup === "bebe" || p.sizes.some((s) => ["RN", "P", "M", "G"].includes(s)));
+    list = list.filter((p) => p.ageGroup === "bebe" || (p.sizes && p.sizes.some((s) => ["RN", "P", "M", "G"].includes(s))));
   } else if (AppState.homeTab === "juvenil") {
-    list = list.filter((p) => p.ageGroup === "juvenil" || p.sizes.some((s) => ["10", "12", "14", "16", "18"].includes(s)));
+    list = list.filter((p) => p.ageGroup === "juvenil" || (p.sizes && p.sizes.some((s) => ["10", "12", "14", "16", "18"].includes(s))));
   }
 
-  const displayList = list.slice(0, 12);
+  // Agrupa peças com o mesmo CÓD./SKU para que fiquem consolidadas em 1 card com indicador de cores
+  const groupedList = groupProductsBySku(list);
+  const displayList = groupedList.slice(0, 12);
 
   if (displayList.length === 0) {
     if (AppState.allProducts.length === 0) {
@@ -1212,6 +1372,9 @@ function renderHomeProducts() {
 
 function createProductCardHTML(product) {
   const isFav = AppState.favorites.includes(product.id);
+  const variants = product.variants && product.variants.length > 0 ? product.variants : getProductVariants(product);
+  const hasVariants = variants.length > 1;
+
   const mainImage =
     product.images && product.images.length > 0
       ? product.images[0]
@@ -1222,8 +1385,13 @@ function createProductCardHTML(product) {
     ? Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100)
     : 0;
 
-  const sizesPreview = (product.sizes || []).slice(0, 6);
-  const extraSizesCount = (product.sizes || []).length - sizesPreview.length;
+  // Grade consolidada de tamanhos de todas as variações deste modelo
+  const allSizesSet = new Set();
+  variants.forEach((v) => (v.sizes || []).forEach((s) => allSizesSet.add(s)));
+  const combinedSizes = sortSizesInOfficialOrder(Array.from(allSizesSet));
+  const sizesPreview = (combinedSizes.length > 0 ? combinedSizes : product.sizes || []).slice(0, 6);
+  const totalSizesCount = (combinedSizes.length > 0 ? combinedSizes : product.sizes || []).length;
+  const extraSizesCount = totalSizesCount - sizesPreview.length;
 
   // Badge único inteligente estilo etiqueta têxtil de boutique (Woven Patch)
   let primaryBadgeHTML = "";
@@ -1236,6 +1404,11 @@ function createProductCardHTML(product) {
     primaryBadgeHTML = `
       <span class="badge-woven-tag">
         ${product.badge}
+      </span>`;
+  } else if (hasVariants) {
+    primaryBadgeHTML = `
+      <span class="badge-woven-tag bg-slate-900/85 text-white">
+        ${variants.length} Cores
       </span>`;
   }
 
@@ -1278,21 +1451,61 @@ function createProductCardHTML(product) {
               ${metaLabel || "Moda Infantil"}
             </span>
             ${
-              product.season
+              product.sku
+                ? `<span class="text-slate-600 font-medium shrink-0 font-mono text-[11px]">${product.sku}</span>`
+                : product.season
                 ? `<span class="text-slate-600 font-medium shrink-0">${
                     product.season === "Inverno" ? "❄️ Inverno" : "☀️ Verão"
                   }</span>`
-                : product.sku
-                ? `<span class="text-slate-600 font-medium shrink-0">${product.sku}</span>`
                 : ""
             }
           </div>
 
           <!-- Nome da Peça -->
           <h3 onclick="openProductDetail('${product.id}')"
-            class="font-heading font-semibold text-slate-800 group-hover:text-[#C84B00] text-sm sm:text-[15px] line-clamp-2 min-h-[42px] leading-snug transition cursor-pointer mb-3">
+            class="font-heading font-semibold text-slate-800 group-hover:text-[#C84B00] text-sm sm:text-[15px] line-clamp-2 min-h-[42px] leading-snug transition cursor-pointer mb-2.5">
             ${product.name}
           </h3>
+
+          <!-- Miniaturas de Cores (Benchmark Tip Top na Vitrine) -->
+          ${
+            hasVariants
+              ? `
+              <div class="flex items-center gap-2 mb-3">
+                <span class="text-[11px] font-semibold text-slate-500">Cores:</span>
+                <div class="flex items-center gap-1.5">
+                  ${variants
+                    .slice(0, 5)
+                    .map((v) => {
+                      const vImg = (v.images && v.images[0]) || "assets/produtos/prod-001.jpg";
+                      const vColor = getProductColorOrVariant(v, variants);
+                      const isSelected = v.id === product.id;
+                      return `
+                        <button
+                          type="button"
+                          onclick="event.stopPropagation(); openProductDetail('${v.id}')"
+                          title="${vColor}"
+                          aria-label="Ver cor ${vColor}"
+                          class="w-6 h-6 rounded-full p-0.5 border ${
+                            isSelected
+                              ? "border-[#C84B00] ring-1 ring-[#C84B00]"
+                              : "border-slate-200 hover:border-slate-400"
+                          } transition cursor-pointer shrink-0">
+                          <img src="${vImg}" alt="${vColor}" class="w-full h-full rounded-full object-cover" />
+                        </button>
+                      `;
+                    })
+                    .join("")}
+                  ${
+                    variants.length > 5
+                      ? `<span class="text-[10px] font-bold text-slate-500 ml-0.5">+${variants.length - 5}</span>`
+                      : ""
+                  }
+                </div>
+              </div>
+            `
+              : ""
+          }
 
           <!-- Tamanhos Disponíveis (Pílulas Leves) -->
           <div class="flex flex-wrap items-center gap-1 mb-3.5">
@@ -1335,8 +1548,8 @@ function createProductCardHTML(product) {
       <div class="px-4 pb-4 sm:px-5 sm:pb-5 pt-0">
         <button onclick="openProductDetail('${product.id}')"
           class="w-full min-h-[44px] py-2.5 px-4 rounded-xl bg-slate-900 group-hover:bg-[#C84B00] text-white font-heading font-semibold text-xs sm:text-[13px] flex items-center justify-center gap-2 transition-colors duration-200 cursor-pointer">
-          <i data-lucide="shopping-bag" class="w-4 h-4"></i>
-          <span>Escolher Tamanho</span>
+          <i data-lucide="${hasVariants ? "palette" : "shopping-bag"}" class="w-4 h-4"></i>
+          <span>${hasVariants ? "Ver Cores e Tamanhos" : "Escolher Tamanho"}</span>
         </button>
       </div>
     </article>
@@ -1781,15 +1994,16 @@ function renderCatalogView() {
   }
 
   const results = getFilteredAndSortedProducts();
+  const groupedResults = groupProductsBySku(results);
   const countEl = document.getElementById("catalog-results-count");
   if (countEl) {
-    countEl.textContent = `${results.length} ${results.length === 1 ? "produto disponível" : "produtos disponíveis"}`;
+    countEl.textContent = `${groupedResults.length} ${groupedResults.length === 1 ? "modelo disponível" : "modelos disponíveis"}`;
   }
 
   const grid = document.getElementById("catalog-products-grid");
   if (!grid) return;
 
-  if (results.length === 0) {
+  if (groupedResults.length === 0) {
     grid.innerHTML = `
       <div class="col-span-full bg-white rounded-3xl p-10 sm:p-14 text-center border border-slate-200 shadow-xs">
         <div class="w-16 h-16 rounded-2xl bg-orange-50 text-[#C84B00] flex items-center justify-center mx-auto mb-4">
@@ -1812,7 +2026,7 @@ function renderCatalogView() {
       </div>
     `;
   } else {
-    grid.innerHTML = results.map((p) => createProductCardHTML(p)).join("");
+    grid.innerHTML = groupedResults.map((p) => createProductCardHTML(p)).join("");
   }
 
   refreshIcons();
@@ -1826,9 +2040,14 @@ function openProductDetail(productId) {
   const product = AppState.products.find((p) => p.id === productId) || AppState.allProducts.find((p) => p.id === productId);
   if (!product) return;
 
+  let initialSize = product.sizes && product.sizes.length > 0 ? product.sizes[0] : "P";
+  if (AppState.filters.size && AppState.filters.size !== "todos" && product.sizes && product.sizes.includes(AppState.filters.size)) {
+    initialSize = AppState.filters.size;
+  }
+
   AppState.activeProduct = {
     id: product.id,
-    selectedSize: product.sizes && product.sizes.length > 0 ? product.sizes[0] : "P",
+    selectedSize: initialSize,
     selectedImageIndex: 0,
     quantity: 1,
     activeTab: "descricao"
@@ -1875,6 +2094,11 @@ function renderProductDetailView() {
   if (!product) return;
 
   AppState.activeProduct.id = product.id;
+
+  // Busca todas as variações/cores irmãs com o mesmo CÓD. / SKU (Benchmark Tip Top)
+  const variants = getProductVariants(product);
+  const activeColorName = getProductColorOrVariant(product, variants);
+
   if (!AppState.activeProduct.selectedSize && product.sizes && product.sizes.length > 0) {
     AppState.activeProduct.selectedSize = product.sizes[0];
   }
@@ -1889,7 +2113,12 @@ function renderProductDetailView() {
   const hasDiscount = product.oldPrice && Number(product.oldPrice) > Number(product.price);
 
   const related = AppState.products
-    .filter((p) => p.id !== product.id && (p.category === product.category || p.ageGroup === product.ageGroup))
+    .filter(
+      (p) =>
+        p.id !== product.id &&
+        normalizeSku(p.sku) !== normalizeSku(product.sku) &&
+        (p.category === product.category || p.ageGroup === product.ageGroup)
+    )
     .slice(0, 4);
 
   container.innerHTML = `
@@ -1940,7 +2169,7 @@ function renderProductDetailView() {
             images.length > 1
               ? `
             <div>
-              <p class="text-xs font-heading font-bold text-slate-500 mb-2">Fotos e variações deste mesmo modelo (${product.sku}):</p>
+              <p class="text-xs font-heading font-bold text-slate-500 mb-2">Fotos e ângulos desta peça:</p>
               <div class="flex items-center gap-3 overflow-x-auto pb-1">
                 ${images
                   .map(
@@ -1982,7 +2211,7 @@ function renderProductDetailView() {
                     : ""
                 }
                 <span class="px-3 py-1 rounded-full text-xs font-bold bg-orange-50 text-[#C84B00]">${product.gender}</span>
-                <span class="px-2.5 py-0.5 rounded-md bg-slate-100 text-xs font-extrabold text-slate-700">${product.sku || product.id}</span>
+                <span class="px-2.5 py-0.5 rounded-md bg-slate-100 text-xs font-extrabold text-slate-700 font-mono">${product.sku || product.id}</span>
               </div>
               <div class="flex items-center gap-1.5">
                 <button onclick="shareProductOnWhatsApp('${product.id}')" title="Compartilhar peça no WhatsApp"
@@ -2027,13 +2256,66 @@ function renderProductDetailView() {
               </p>
             </div>
 
+            <!-- Seletor de Cores e Estampas (Benchmark Tip Top) -->
+            ${
+              variants.length > 1
+                ? `
+              <div class="mb-6 bg-slate-50/90 rounded-2xl p-4 sm:p-5 border border-slate-200/80">
+                <div class="flex items-center justify-between gap-2 mb-3">
+                  <label class="font-heading font-bold text-sm text-slate-800 flex items-center gap-2">
+                    <span>Cor / Estampa:</span>
+                    <span class="px-2.5 py-0.5 rounded-md bg-orange-100 text-[#C84B00] text-xs font-extrabold" id="selected-variant-color-label">
+                      ${activeColorName}
+                    </span>
+                  </label>
+                  <span class="text-xs text-slate-500 font-medium">
+                    ${variants.length} opções disponíveis
+                  </span>
+                </div>
+
+                <div class="flex flex-wrap items-center gap-3" role="radiogroup" aria-label="Selecione a cor ou estampa">
+                  ${variants
+                    .map((v) => {
+                      const vColor = getProductColorOrVariant(v, variants);
+                      const isSelected = v.id === product.id;
+                      const vImg = (v.images && v.images[0]) || "assets/produtos/prod-001.jpg";
+                      return `
+                        <button
+                          type="button"
+                          onclick="switchProductColorVariant('${v.id}')"
+                          role="radio"
+                          aria-checked="${isSelected}"
+                          aria-label="Cor ${vColor}"
+                          title="Cor: ${vColor}"
+                          class="color-swatch-btn group relative w-12 h-12 min-w-[48px] min-h-[48px] rounded-full p-0.5 transition-all duration-200 cursor-pointer flex items-center justify-center ${
+                            isSelected
+                              ? "ring-2 ring-[#C84B00] ring-offset-2 border-2 border-white shadow-sm"
+                              : "border-2 border-slate-200 hover:border-slate-400 opacity-80 hover:opacity-100"
+                          }">
+                          <img src="${vImg}" alt="${vColor}" class="w-full h-full rounded-full object-cover object-center" />
+                          <span class="sr-only">${vColor}</span>
+                          ${
+                            isSelected
+                              ? `<span class="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-[#C84B00] text-white flex items-center justify-center text-[9px] shadow-xs">✓</span>`
+                              : ""
+                          }
+                        </button>
+                      `;
+                    })
+                    .join("")}
+                </div>
+              </div>
+            `
+                : ""
+            }
+
             <!-- Seletor Completo de Tamanhos (RN ao 18) -->
             <div class="mb-6">
               <div class="flex items-center justify-between mb-2.5">
                 <label class="font-heading font-bold text-sm text-slate-800 flex items-center gap-2">
                   <span>Escolha o Tamanho:</span>
                   <span class="px-2.5 py-0.5 rounded-md bg-orange-100 text-[#C84B00] text-xs font-extrabold">
-                    Selecionado: ${AppState.activeProduct.selectedSize}
+                    Selecionado: ${AppState.activeProduct.selectedSize || "Nenhum"}
                   </span>
                 </label>
                 <button onclick="openSizeGuideModal()"
@@ -2044,7 +2326,7 @@ function renderProductDetailView() {
               </div>
 
               <p class="text-xs text-slate-500 mb-3">
-                Grade disponível em estoque (${product.ageLabel}). Toque no tamanho desejado:
+                Grade disponível em estoque nesta opção (${product.ageLabel || "infantil"}). Toque no tamanho desejado:
               </p>
 
               <div class="grid grid-cols-5 sm:grid-cols-8 gap-2">
@@ -2054,12 +2336,13 @@ function renderProductDetailView() {
                   return `
                     <button
                       ${isAvailable ? `onclick="selectProductSize('${sz}')"` : "disabled"}
+                      aria-label="Tamanho ${sz} ${isAvailable ? "disponível" : "indisponível nesta cor"}"
                       class="size-pill rounded-xl border-2 font-heading font-bold text-xs sm:text-sm flex items-center justify-center cursor-pointer ${
                         isSelected
                           ? "selected"
                           : isAvailable
-                          ? "bg-white border-slate-200 text-slate-800"
-                          : "border-slate-200 text-slate-400"
+                          ? "bg-white border-slate-200 text-slate-800 hover:border-orange-300"
+                          : "border-slate-200 text-slate-300 opacity-40 cursor-not-allowed line-through"
                       }">
                       ${sz}
                     </button>
@@ -2253,12 +2536,14 @@ function buyActiveProductViaWhatsApp() {
   const size = AppState.activeProduct.selectedSize || (product.sizes && product.sizes[0]) || "Único";
   const qty = AppState.activeProduct.quantity || 1;
   const total = product.price * qty;
+  const color = getProductColorOrVariant(product);
 
   const message =
     `Olá, *${STORE_CONFIG.name}*!\n` +
     `Quero comprar este produto que vi no site:\n\n` +
     `- *Produto:* ${product.name}\n` +
     `- *Código:* ${product.sku || product.id}\n` +
+    (color && color !== "Padrão" && color !== "Única" ? `- *Cor / Variação:* ${color}\n` : "") +
     `- *Tamanho Escolhido:* ${size}\n` +
     `- *Quantidade:* ${qty} un.\n` +
     `- *Valor Unitário:* ${formatCurrency(product.price)} (${formatCurrency(total)} no total)\n\n` +
@@ -2267,15 +2552,16 @@ function buyActiveProductViaWhatsApp() {
   trackVercelEvent("buy_now_whatsapp", {
     product: product.name,
     sku: product.sku || product.id,
+    color: color,
     size: size,
     price: Number(product.price)
   });
   trackVercelEvent("checkout_whatsapp", {
     itemsCount: AppState.cart.length,
-    subtotal: subtotal
+    subtotal: total
   });
   openStoreWhatsApp(message);
-  showToast(`Redirecionando para o WhatsApp da Happy Kids (Tam: ${size})!`, "success");
+  showToast(`Redirecionando para o WhatsApp da Happy Kids (Cor: ${color} - Tam: ${size})!`, "success");
 }
 
 /* ==========================================================================
@@ -2291,11 +2577,12 @@ function triggerTactilePulse(selector) {
 }
 
 function addActiveProductToCart() {
-  const product = AppState.products.find((p) => p.id === AppState.activeProduct.id);
+  const product = AppState.products.find((p) => p.id === AppState.activeProduct.id) || AppState.allProducts.find((p) => p.id === AppState.activeProduct.id);
   if (!product) return;
 
   const size = AppState.activeProduct.selectedSize || (product.sizes && product.sizes[0]) || "U";
   const qty = AppState.activeProduct.quantity || 1;
+  const color = getProductColorOrVariant(product);
 
   const existingIndex = AppState.cart.findIndex((item) => item.productId === product.id && item.size === size);
 
@@ -2308,6 +2595,7 @@ function addActiveProductToCart() {
       price: Number(product.price),
       image: product.images && product.images[0] ? product.images[0] : "",
       size: size,
+      color: color,
       quantity: qty,
       sku: product.sku || product.id
     });
@@ -2318,12 +2606,14 @@ function addActiveProductToCart() {
   trackVercelEvent("add_to_cart", {
     product: product.name,
     sku: product.sku || product.id,
+    color: color,
     size: size,
+    quantity: qty,
     price: Number(product.price)
   });
   renderCartDrawer();
   openCartDrawer();
-  showToast(`"${product.name}" (Tam. ${size}) adicionado à sacola!`, "success");
+  showToast(`"${product.name}" (${color} - Tam. ${size}) adicionado à sacola!`, "success");
 }
 
 function updateCartItemQty(index, delta) {
@@ -2396,7 +2686,9 @@ function renderCartDrawer() {
           <div class="flex-1 min-w-0">
             <h4 class="font-heading font-bold text-slate-800 text-xs sm:text-sm line-clamp-1">${item.name}</h4>
             <p class="text-xs text-slate-500 mt-0.5">
-              Tamanho: <strong class="text-[#C84B00]">${item.size}</strong> • <span class="text-slate-400">${item.sku || ""}</span>
+              Tamanho: <strong class="text-[#C84B00]">${item.size}</strong>
+              ${item.color && item.color !== "Padrão" && item.color !== "Única" ? ` • Cor: <strong class="text-slate-700">${item.color}</strong>` : ""}
+              ${item.sku ? ` • <span class="text-slate-400 font-mono text-[11px]">${item.sku}</span>` : ""}
             </p>
             <p class="font-heading font-extrabold text-slate-900 text-sm mt-1">${formatCurrency(itemTotal)}</p>
             
@@ -2471,7 +2763,8 @@ function checkoutCartViaWhatsApp() {
     .map((item, i) => {
       const lineTotal = item.price * item.quantity;
       subtotal += lineTotal;
-      return `${i + 1}. *${item.name}* (${item.sku || ""}) | Tam: *${item.size}* | Qtd: ${item.quantity} | ${formatCurrency(lineTotal)}`;
+      const colorPart = item.color && item.color !== "Padrão" && item.color !== "Única" ? ` | Cor: *${item.color}*` : "";
+      return `${i + 1}. *${item.name}* (${item.sku || ""})${colorPart} | Tam: *${item.size}* | Qtd: ${item.quantity} | ${formatCurrency(lineTotal)}`;
     })
     .join("\n");
 
@@ -3101,6 +3394,8 @@ async function handleAdminFormSubmit(event) {
   const imageUrl = document.getElementById("admin-prod-image-url").value.trim();
   const description = document.getElementById("admin-prod-description").value.trim();
   const fabric = document.getElementById("admin-prod-fabric").value.trim();
+  const colorInput = document.getElementById("admin-prod-color");
+  const color = colorInput ? colorInput.value.trim() : "";
 
   const rawSelectedSizes = Array.from(document.querySelectorAll('input[name="admin-size-item"]:checked')).map(
     (cb) => cb.value
@@ -3164,6 +3459,7 @@ async function handleAdminFormSubmit(event) {
       const overridePayload = {
         sku: updatedSku,
         name,
+        color: color || undefined,
         price,
         oldPrice,
         gender,
@@ -3216,6 +3512,7 @@ async function handleAdminFormSubmit(event) {
       id: newId,
       sku: newSku,
       name,
+      color: color || undefined,
       price,
       oldPrice,
       gender,
@@ -3264,6 +3561,8 @@ function editProductInAdmin(productId) {
   document.getElementById("admin-prod-name").value = product.name || "";
   const skuInput = document.getElementById("admin-prod-sku");
   if (skuInput) skuInput.value = (product.sku || "").replace(/^CÓD\.\s*/i, "");
+  const colorInput = document.getElementById("admin-prod-color");
+  if (colorInput) colorInput.value = product.color || getProductColorOrVariant(product);
   document.getElementById("admin-prod-price").value = product.price || "";
   document.getElementById("admin-prod-old-price").value = product.oldPrice || "";
   document.getElementById("admin-prod-gender").value = product.gender || "Feminino";
@@ -3400,8 +3699,9 @@ function renderAdminProductsTable() {
             <div class="flex items-center gap-3">
               <img src="${img}" alt="${p.name}" class="w-12 h-12 rounded-xl object-contain border border-slate-200 shrink-0 bg-white" />
               <div class="min-w-0">
-                <div class="flex items-center gap-1.5">
-                  <span class="px-2 py-0.5 rounded bg-slate-900 text-white font-heading font-bold text-[10px]">${p.sku || p.id}</span>
+                <div class="flex flex-wrap items-center gap-1.5">
+                  <span class="px-2 py-0.5 rounded bg-slate-900 text-white font-heading font-bold text-[10px] font-mono">${p.sku || p.id}</span>
+                  <span class="px-2 py-0.5 rounded bg-orange-100 text-[#C84B00] font-heading font-bold text-[10px]">Cor: ${p.color || getProductColorOrVariant(p)}</span>
                   ${
                     p.isSoldOut
                       ? `<span class="px-2 py-0.5 rounded bg-rose-600 text-white font-heading font-bold text-[10px]">RETIRADO / VENDIDO</span>`
