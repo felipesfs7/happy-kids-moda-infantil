@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updatedAt": "2026-10-26T20:39:27.033Z",
+  "updatedAt": "2026-10-27T16:44:01.071Z",
   "soldOutIds": [],
   "productOverrides": {},
   "customProducts": [
@@ -254,7 +254,8 @@
     "Macacão Manga longa"
   ],
   "customBrands": [
-    "Alakazoo"
+    "Alakazoo",
+    "ROMITEX"
   ],
   "heroBanners": [
     {
