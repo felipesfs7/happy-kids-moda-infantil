@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updatedAt": "2026-10-27T18:07:52.898Z",
+  "updatedAt": "2026-10-27T18:08:35.148Z",
   "soldOutIds": [],
   "productOverrides": {},
   "customProducts": [
@@ -114,7 +114,8 @@
         "Não utilizar alvejantes com cloro",
         "Secar à sombra"
       ],
-      "createdAt": "2026-10-27"
+      "createdAt": "2026-10-27",
+      "color": "URSO"
     },
     {
       "id": "hk-custom-169819",
