@@ -1,9 +1,47 @@
 {
   "version": 2,
-  "updatedAt": "2026-10-27T16:47:20.256Z",
+  "updatedAt": "2026-10-27T16:48:10.352Z",
   "soldOutIds": [],
   "productOverrides": {},
   "customProducts": [
+    {
+      "id": "hk-custom-690352",
+      "sku": "CÓD. 22351",
+      "name": "BLUSA FEMININA EM COTTON",
+      "price": 42.9,
+      "oldPrice": null,
+      "gender": "Feminino",
+      "category": "Blusas",
+      "brand": "ROMITEX",
+      "season": "Verão",
+      "ageGroup": "4-a-10",
+      "ageLabel": "Tam. 10 ao 16",
+      "sizes": [
+        "10",
+        "12",
+        "14",
+        "16"
+      ],
+      "registeredSizes": [
+        "10",
+        "12",
+        "14",
+        "16"
+      ],
+      "badge": "Novo",
+      "featured": true,
+      "images": [
+        "https://raw.githubusercontent.com/felipesfs7/happy-kids-moda-infantil/main/assets/uploads/hk-1793119688484-572.jpg"
+      ],
+      "description": "Peça especial da coleção Happy Kids Moda Infantil, unindo conforto, liberdade de movimento e muito estilo.",
+      "fabric": "Tecido selecionado de toque macio e alta durabilidade.",
+      "washing": [
+        "Lavar com cores similares e sabão neutro",
+        "Não utilizar alvejantes com cloro",
+        "Secar à sombra"
+      ],
+      "createdAt": "2026-10-27"
+    },
     {
       "id": "hk-custom-640255",
       "sku": "CÓD. 22331",
