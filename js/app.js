@@ -433,7 +433,18 @@ function buildWhatsAppUrl(message) {
   return `https://wa.me/${STORE_CONFIG.whatsappNumber}?text=${encoded}`;
 }
 
+function trackVercelEvent(name, data = {}) {
+  try {
+    if (typeof window !== "undefined" && typeof window.va === "function") {
+      window.va("event", { name, data });
+    }
+  } catch (err) {
+    // Fail silently sem interferir na experiência do usuário
+  }
+}
+
 function openStoreWhatsApp(customText) {
+  trackVercelEvent("whatsapp_click", { source: customText ? "contextual" : "direct" });
   const defaultMsg =
     customText ||
     `Olá, equipe da *${STORE_CONFIG.name}*!\nEstou visitando o site da loja e gostaria de atendimento para escolher looks infantis.`;
@@ -846,6 +857,7 @@ function navigateTo(viewName, options = {}) {
   }
 
   AppState.currentView = viewName;
+  trackVercelEvent("view_changed", { view: viewName });
 
   const views = ["home", "catalog", "product", "about", "contact", "admin"];
   views.forEach((v) => {
@@ -2252,6 +2264,16 @@ function buyActiveProductViaWhatsApp() {
     `- *Valor Unitário:* ${formatCurrency(product.price)} (${formatCurrency(total)} no total)\n\n` +
     `Podem me confirmar a disponibilidade para envio/retirada?`;
 
+  trackVercelEvent("buy_now_whatsapp", {
+    product: product.name,
+    sku: product.sku || product.id,
+    size: size,
+    price: Number(product.price)
+  });
+  trackVercelEvent("checkout_whatsapp", {
+    itemsCount: AppState.cart.length,
+    subtotal: subtotal
+  });
   openStoreWhatsApp(message);
   showToast(`Redirecionando para o WhatsApp da Happy Kids (Tam: ${size})!`, "success");
 }
@@ -2293,6 +2315,12 @@ function addActiveProductToCart() {
 
   saveCartToStorage();
   triggerTactilePulse(".cart-count-badge");
+  trackVercelEvent("add_to_cart", {
+    product: product.name,
+    sku: product.sku || product.id,
+    size: size,
+    price: Number(product.price)
+  });
   renderCartDrawer();
   openCartDrawer();
   showToast(`"${product.name}" (Tam. ${size}) adicionado à sacola!`, "success");
@@ -2457,6 +2485,10 @@ function checkoutCartViaWhatsApp() {
     `- *Entrega:* ${deliveryText}\n\n` +
     `Aguardo retorno para combinarmos o pagamento!`;
 
+  trackVercelEvent("checkout_whatsapp", {
+    itemsCount: AppState.cart.length,
+    subtotal: subtotal
+  });
   openStoreWhatsApp(message);
 }
 
@@ -2471,6 +2503,10 @@ function toggleFavorite(productId) {
   }
   saveFavoritesToStorage();
   triggerTactilePulse(".fav-count-badge");
+  trackVercelEvent("toggle_favorite", {
+    productId: productId,
+    action: idx >= 0 ? "removed" : "added"
+  });
   if (AppState.currentView === "home") renderHomeProducts();
   if (AppState.currentView === "catalog") renderCatalogView();
 }
