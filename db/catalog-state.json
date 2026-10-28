@@ -1,9 +1,47 @@
 {
   "version": 2,
-  "updatedAt": "2026-10-28T11:53:02.979Z",
+  "updatedAt": "2026-10-28T11:54:10.833Z",
   "soldOutIds": [],
   "productOverrides": {},
   "customProducts": [
+    {
+      "id": "hk-custom-450832",
+      "sku": "CÓD. 22343",
+      "name": "CONJUNTO MASCULINO POLO MALHA TRABALHADA E BERMUDA MOLETINHO",
+      "color": null,
+      "price": 112.9,
+      "oldPrice": null,
+      "onSale": false,
+      "gender": "Masculino",
+      "category": "Conjuntos",
+      "brand": "ROMITEX",
+      "season": "Verão",
+      "ageGroup": "1-a-3",
+      "ageLabel": "Tam. 1 ao 3",
+      "sizes": [
+        "1",
+        "2",
+        "3"
+      ],
+      "registeredSizes": [
+        "1",
+        "2",
+        "3"
+      ],
+      "badge": "Novo",
+      "featured": true,
+      "images": [
+        "https://raw.githubusercontent.com/felipesfs7/happy-kids-moda-infantil/main/assets/uploads/hk-1793188449395-817.jpg"
+      ],
+      "description": "Peça especial da coleção Happy Kids Moda Infantil, unindo conforto, liberdade de movimento e muito estilo.",
+      "fabric": "Tecido selecionado de toque macio e alta durabilidade.",
+      "washing": [
+        "Lavar com cores similares e sabão neutro",
+        "Não utilizar alvejantes com cloro",
+        "Secar à sombra"
+      ],
+      "createdAt": "2026-10-28"
+    },
     {
       "id": "hk-custom-360739",
       "sku": "CÓD. 22342",
