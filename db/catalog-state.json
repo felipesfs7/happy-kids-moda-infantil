@@ -1,9 +1,47 @@
 {
   "version": 2,
-  "updatedAt": "2026-10-29T17:26:17.990Z",
+  "updatedAt": "2026-10-29T17:27:47.166Z",
   "soldOutIds": [],
   "productOverrides": {},
   "customProducts": [
+    {
+      "id": "hk-custom-867163",
+      "sku": "CÓD. 22261",
+      "name": "CONJUNTO EM MALHA COM SHORT DE MOLETINHO",
+      "color": null,
+      "price": 169.9,
+      "oldPrice": null,
+      "onSale": false,
+      "gender": "Feminino",
+      "category": "Conjuntos",
+      "brand": "FANIKITUS",
+      "season": "Verão",
+      "ageGroup": "1-a-3",
+      "ageLabel": "Tam. 1 ao 3",
+      "sizes": [
+        "1",
+        "2",
+        "3"
+      ],
+      "registeredSizes": [
+        "1",
+        "2",
+        "3"
+      ],
+      "badge": "Novo",
+      "featured": true,
+      "images": [
+        "https://raw.githubusercontent.com/felipesfs7/happy-kids-moda-infantil/main/assets/uploads/hk-1793294797483-994.jpg"
+      ],
+      "description": "Peça especial da coleção Happy Kids Moda Infantil, unindo conforto, liberdade de movimento e muito estilo.",
+      "fabric": "Tecido selecionado de toque macio e alta durabilidade.",
+      "washing": [
+        "Lavar com cores similares e sabão neutro",
+        "Não utilizar alvejantes com cloro",
+        "Secar à sombra"
+      ],
+      "createdAt": "2026-10-29"
+    },
     {
       "id": "hk-custom-777987",
       "sku": "CÓD. 22260",
