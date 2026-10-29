@@ -1,9 +1,47 @@
 {
   "version": 2,
-  "updatedAt": "2026-10-29T17:28:39.013Z",
+  "updatedAt": "2026-10-29T17:30:06.700Z",
   "soldOutIds": [],
   "productOverrides": {},
   "customProducts": [
+    {
+      "id": "hk-custom-006700",
+      "sku": "CÓD. 22263",
+      "name": "VESTIDO EM MALHA COM TULE",
+      "color": null,
+      "price": 114.9,
+      "oldPrice": null,
+      "onSale": false,
+      "gender": "Feminino",
+      "category": "Vestidos",
+      "brand": "FANIKITUS",
+      "season": "Verão",
+      "ageGroup": "1-a-3",
+      "ageLabel": "Tam. 1 ao 3",
+      "sizes": [
+        "1",
+        "2",
+        "3"
+      ],
+      "registeredSizes": [
+        "1",
+        "2",
+        "3"
+      ],
+      "badge": "Novo",
+      "featured": true,
+      "images": [
+        "https://raw.githubusercontent.com/felipesfs7/happy-kids-moda-infantil/main/assets/uploads/hk-1793294956508-770.jpg"
+      ],
+      "description": "Peça especial da coleção Happy Kids Moda Infantil, unindo conforto, liberdade de movimento e muito estilo.",
+      "fabric": "Tecido selecionado de toque macio e alta durabilidade.",
+      "washing": [
+        "Lavar com cores similares e sabão neutro",
+        "Não utilizar alvejantes com cloro",
+        "Secar à sombra"
+      ],
+      "createdAt": "2026-10-29"
+    },
     {
       "id": "hk-custom-919012",
       "sku": "CÓD. 22262",
