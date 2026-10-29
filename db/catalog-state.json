@@ -1,9 +1,43 @@
 {
   "version": 2,
-  "updatedAt": "2026-10-29T16:48:01.918Z",
+  "updatedAt": "2026-10-29T16:49:51.710Z",
   "soldOutIds": [],
   "productOverrides": {},
   "customProducts": [
+    {
+      "id": "hk-custom-591710",
+      "sku": "CÓD. 21666",
+      "name": "MACACÃO COM PROTEÇÃO SOLAR UV50+",
+      "color": null,
+      "price": 99.9,
+      "oldPrice": null,
+      "onSale": false,
+      "gender": "Masculino",
+      "category": "Moda Praia",
+      "brand": "KAMYLUS",
+      "season": "Verão",
+      "ageGroup": "bebe",
+      "ageLabel": "Tam. M",
+      "sizes": [
+        "M"
+      ],
+      "registeredSizes": [
+        "M"
+      ],
+      "badge": "Novo",
+      "featured": true,
+      "images": [
+        "https://raw.githubusercontent.com/felipesfs7/happy-kids-moda-infantil/main/assets/uploads/hk-1793292588406-575.jpg"
+      ],
+      "description": "Peça especial da coleção Happy Kids Moda Infantil, unindo conforto, liberdade de movimento e muito estilo.",
+      "fabric": "Tecido selecionado de toque macio e alta durabilidade.",
+      "washing": [
+        "Lavar com cores similares e sabão neutro",
+        "Não utilizar alvejantes com cloro",
+        "Secar à sombra"
+      ],
+      "createdAt": "2026-10-29"
+    },
     {
       "id": "hk-custom-481918",
       "sku": "CÓD. 21648",
