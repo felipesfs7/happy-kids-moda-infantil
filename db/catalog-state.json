@@ -1,9 +1,47 @@
 {
   "version": 2,
-  "updatedAt": "2026-10-29T18:14:03.441Z",
+  "updatedAt": "2026-10-29T18:15:03.708Z",
   "soldOutIds": [],
   "productOverrides": {},
   "customProducts": [
+    {
+      "id": "hk-custom-703708",
+      "sku": "CÓD. 22222",
+      "name": "CONJUNTO EM MALHA ESTAMPADA",
+      "color": null,
+      "price": 129.9,
+      "oldPrice": null,
+      "onSale": false,
+      "gender": "Feminino",
+      "category": "Conjuntos",
+      "brand": "ELIAN",
+      "season": "Verão",
+      "ageGroup": "1-a-3",
+      "ageLabel": "Tam. 1 ao 3",
+      "sizes": [
+        "1",
+        "2",
+        "3"
+      ],
+      "registeredSizes": [
+        "1",
+        "2",
+        "3"
+      ],
+      "badge": "Novo",
+      "featured": true,
+      "images": [
+        "https://raw.githubusercontent.com/felipesfs7/happy-kids-moda-infantil/main/assets/uploads/hk-1793297663984-655.jpg"
+      ],
+      "description": "Peça especial da coleção Happy Kids Moda Infantil, unindo conforto, liberdade de movimento e muito estilo.",
+      "fabric": "Tecido selecionado de toque macio e alta durabilidade.",
+      "washing": [
+        "Lavar com cores similares e sabão neutro",
+        "Não utilizar alvejantes com cloro",
+        "Secar à sombra"
+      ],
+      "createdAt": "2026-10-29"
+    },
     {
       "id": "hk-custom-643440",
       "sku": "CÓD. 22205",
