@@ -1,9 +1,45 @@
 {
   "version": 2,
-  "updatedAt": "2026-10-29T16:32:23.281Z",
+  "updatedAt": "2026-10-29T16:33:23.969Z",
   "soldOutIds": [],
   "productOverrides": {},
   "customProducts": [
+    {
+      "id": "hk-custom-603967",
+      "sku": "CÓD. 21650",
+      "name": "MAIÔ MANGA LONGA COM PROTECÇÃO SOLAR UV50+",
+      "color": null,
+      "price": 89.9,
+      "oldPrice": null,
+      "onSale": false,
+      "gender": "Feminino",
+      "category": "Moda Praia",
+      "brand": "KAMYLUS",
+      "season": "Verão",
+      "ageGroup": "bebe",
+      "ageLabel": "Tam. M ao G",
+      "sizes": [
+        "M",
+        "G"
+      ],
+      "registeredSizes": [
+        "M",
+        "G"
+      ],
+      "badge": "Novo",
+      "featured": true,
+      "images": [
+        "https://raw.githubusercontent.com/felipesfs7/happy-kids-moda-infantil/main/assets/uploads/hk-1793291561968-948.jpg"
+      ],
+      "description": "Peça especial da coleção Happy Kids Moda Infantil, unindo conforto, liberdade de movimento e muito estilo.",
+      "fabric": "Tecido selecionado de toque macio e alta durabilidade.",
+      "washing": [
+        "Lavar com cores similares e sabão neutro",
+        "Não utilizar alvejantes com cloro",
+        "Secar à sombra"
+      ],
+      "createdAt": "2026-10-29"
+    },
     {
       "id": "hk-custom-543279",
       "sku": "CÓD. 21667",
