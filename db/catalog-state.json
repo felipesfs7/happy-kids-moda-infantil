@@ -1,9 +1,45 @@
 {
   "version": 2,
-  "updatedAt": "2026-10-29T18:00:48.393Z",
+  "updatedAt": "2026-10-29T18:14:03.441Z",
   "soldOutIds": [],
   "productOverrides": {},
   "customProducts": [
+    {
+      "id": "hk-custom-643440",
+      "sku": "CÓD. 22205",
+      "name": "CONJUNTO CAMISETA MEIA MALHA E BERMUDA DE MOLETINHO",
+      "color": null,
+      "price": 59.9,
+      "oldPrice": null,
+      "onSale": false,
+      "gender": "Masculino",
+      "category": "Conjuntos",
+      "brand": "ELIAN",
+      "season": "Verão",
+      "ageGroup": "bebe",
+      "ageLabel": "Tam. P ao M",
+      "sizes": [
+        "P",
+        "M"
+      ],
+      "registeredSizes": [
+        "P",
+        "M"
+      ],
+      "badge": "Novo",
+      "featured": true,
+      "images": [
+        "https://raw.githubusercontent.com/felipesfs7/happy-kids-moda-infantil/main/assets/uploads/hk-1793297638483-926.jpg"
+      ],
+      "description": "Peça especial da coleção Happy Kids Moda Infantil, unindo conforto, liberdade de movimento e muito estilo.",
+      "fabric": "Tecido selecionado de toque macio e alta durabilidade.",
+      "washing": [
+        "Lavar com cores similares e sabão neutro",
+        "Não utilizar alvejantes com cloro",
+        "Secar à sombra"
+      ],
+      "createdAt": "2026-10-29"
+    },
     {
       "id": "hk-custom-848393",
       "sku": "CÓD. 22218",
