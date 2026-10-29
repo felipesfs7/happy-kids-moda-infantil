@@ -1,9 +1,47 @@
 {
   "version": 2,
-  "updatedAt": "2026-10-29T16:55:52.870Z",
+  "updatedAt": "2026-10-29T16:58:44.686Z",
   "soldOutIds": [],
   "productOverrides": {},
   "customProducts": [
+    {
+      "id": "hk-custom-124685",
+      "sku": "CÓD. 22288",
+      "name": "JARDINEIRA JEANS",
+      "color": null,
+      "price": 129.9,
+      "oldPrice": null,
+      "onSale": false,
+      "gender": "Masculino",
+      "category": "JARDINEIRA",
+      "brand": "PEPTUCHY",
+      "season": "Verão",
+      "ageGroup": "bebe",
+      "ageLabel": "Tam. P ao G",
+      "sizes": [
+        "P",
+        "M",
+        "G"
+      ],
+      "registeredSizes": [
+        "P",
+        "M",
+        "G"
+      ],
+      "badge": "Novo",
+      "featured": true,
+      "images": [
+        "https://raw.githubusercontent.com/felipesfs7/happy-kids-moda-infantil/main/assets/uploads/hk-1793293081154-609.jpg"
+      ],
+      "description": "Peça especial da coleção Happy Kids Moda Infantil, unindo conforto, liberdade de movimento e muito estilo.",
+      "fabric": "Tecido selecionado de toque macio e alta durabilidade.",
+      "washing": [
+        "Lavar com cores similares e sabão neutro",
+        "Não utilizar alvejantes com cloro",
+        "Secar à sombra"
+      ],
+      "createdAt": "2026-10-29"
+    },
     {
       "id": "hk-custom-952870",
       "sku": "CÓD. 20860",
