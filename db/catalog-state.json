@@ -1,9 +1,45 @@
 {
   "version": 2,
-  "updatedAt": "2026-10-29T16:24:24.215Z",
+  "updatedAt": "2026-10-29T16:24:45.634Z",
   "soldOutIds": [],
   "productOverrides": {},
   "customProducts": [
+    {
+      "id": "hk-custom-085633",
+      "sku": "CÓD. 22326",
+      "name": "SHORT SARJA FEMININO",
+      "color": null,
+      "price": 127.88,
+      "oldPrice": null,
+      "onSale": false,
+      "gender": "Feminino",
+      "category": "Shorts",
+      "brand": "PEPTUCHY",
+      "season": "Verão",
+      "ageGroup": "4-a-10",
+      "ageLabel": "Tam. 4 ao 6",
+      "sizes": [
+        "4",
+        "6"
+      ],
+      "registeredSizes": [
+        "4",
+        "6"
+      ],
+      "badge": "Novo",
+      "featured": true,
+      "images": [
+        "https://raw.githubusercontent.com/felipesfs7/happy-kids-moda-infantil/main/assets/uploads/hk-1793291020730-889.jpg"
+      ],
+      "description": "Peça especial da coleção Happy Kids Moda Infantil, unindo conforto, liberdade de movimento e muito estilo.",
+      "fabric": "Tecido selecionado de toque macio e alta durabilidade.",
+      "washing": [
+        "Lavar com cores similares e sabão neutro",
+        "Não utilizar alvejantes com cloro",
+        "Secar à sombra"
+      ],
+      "createdAt": "2026-10-29"
+    },
     {
       "id": "hk-custom-450832",
       "sku": "CÓD. 22343",
