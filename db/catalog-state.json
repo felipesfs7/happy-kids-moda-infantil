@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updatedAt": "2026-10-29T16:46:08.798Z",
+  "updatedAt": "2026-10-29T16:46:25.327Z",
   "soldOutIds": [],
   "productOverrides": {},
   "customProducts": [
@@ -323,7 +323,7 @@
       "sku": "CÓD. 22326",
       "name": "SHORT SARJA FEMININO",
       "color": null,
-      "price": 127.88,
+      "price": 127.9,
       "oldPrice": null,
       "onSale": false,
       "gender": "Feminino",
