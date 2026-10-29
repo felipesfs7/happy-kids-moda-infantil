@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updatedAt": "2026-10-29T16:46:25.327Z",
+  "updatedAt": "2026-10-29T16:46:48.294Z",
   "soldOutIds": [],
   "productOverrides": {},
   "customProducts": [
@@ -397,7 +397,7 @@
       "sku": "CÓD. 22342",
       "name": "VESTIDO EM COTTON",
       "color": null,
-      "price": 112.86,
+      "price": 112.9,
       "oldPrice": null,
       "onSale": false,
       "gender": "Feminino",
