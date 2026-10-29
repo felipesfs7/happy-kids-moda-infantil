@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updatedAt": "2026-10-29T16:45:38.290Z",
+  "updatedAt": "2026-10-29T16:46:08.798Z",
   "soldOutIds": [],
   "productOverrides": {},
   "customProducts": [
@@ -77,7 +77,7 @@
       "sku": "CÓD. 22238",
       "name": "MACACÃO RIBANA CANELADA",
       "color": null,
-      "price": 84.87,
+      "price": 84.9,
       "oldPrice": null,
       "onSale": false,
       "gender": "Feminino",
