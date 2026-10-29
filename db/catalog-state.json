@@ -1,9 +1,45 @@
 {
   "version": 2,
-  "updatedAt": "2026-10-29T17:22:16.980Z",
+  "updatedAt": "2026-10-29T17:23:12.725Z",
   "soldOutIds": [],
   "productOverrides": {},
   "customProducts": [
+    {
+      "id": "hk-custom-592724",
+      "sku": "CÓD. 22257",
+      "name": "VESTIDO EM MALHA TRABALHADA",
+      "color": null,
+      "price": 149.9,
+      "oldPrice": null,
+      "onSale": false,
+      "gender": "Feminino",
+      "category": "Vestidos",
+      "brand": "FANIKITUS",
+      "season": "Verão",
+      "ageGroup": "4-a-10",
+      "ageLabel": "Tam. 4 ao 6",
+      "sizes": [
+        "4",
+        "6"
+      ],
+      "registeredSizes": [
+        "4",
+        "6"
+      ],
+      "badge": "Novo",
+      "featured": true,
+      "images": [
+        "https://raw.githubusercontent.com/felipesfs7/happy-kids-moda-infantil/main/assets/uploads/hk-1793294588993-850.jpg"
+      ],
+      "description": "Peça especial da coleção Happy Kids Moda Infantil, unindo conforto, liberdade de movimento e muito estilo.",
+      "fabric": "Tecido selecionado de toque macio e alta durabilidade.",
+      "washing": [
+        "Lavar com cores similares e sabão neutro",
+        "Não utilizar alvejantes com cloro",
+        "Secar à sombra"
+      ],
+      "createdAt": "2026-10-29"
+    },
     {
       "id": "hk-custom-536980",
       "sku": "CÓD. 22256",
