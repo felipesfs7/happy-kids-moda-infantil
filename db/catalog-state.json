@@ -1,9 +1,45 @@
 {
   "version": 2,
-  "updatedAt": "2026-10-29T16:38:39.517Z",
+  "updatedAt": "2026-10-29T16:38:52.103Z",
   "soldOutIds": [],
   "productOverrides": {},
   "customProducts": [
+    {
+      "id": "hk-custom-932103",
+      "sku": "CÓD. 22238",
+      "name": "MACACÃO RIBANA CANELADA",
+      "color": null,
+      "price": 84.87,
+      "oldPrice": null,
+      "onSale": false,
+      "gender": "Feminino",
+      "category": "Macacão Manga Curta",
+      "brand": "QUIMBY",
+      "season": "Verão",
+      "ageGroup": "bebe",
+      "ageLabel": "Tam. P ao M",
+      "sizes": [
+        "P",
+        "M"
+      ],
+      "registeredSizes": [
+        "P",
+        "M"
+      ],
+      "badge": "Novo",
+      "featured": true,
+      "images": [
+        "https://raw.githubusercontent.com/felipesfs7/happy-kids-moda-infantil/main/assets/uploads/hk-1793291881059-753.jpg"
+      ],
+      "description": "Peça especial da coleção Happy Kids Moda Infantil, unindo conforto, liberdade de movimento e muito estilo.",
+      "fabric": "Tecido selecionado de toque macio e alta durabilidade.",
+      "washing": [
+        "Lavar com cores similares e sabão neutro",
+        "Não utilizar alvejantes com cloro",
+        "Secar à sombra"
+      ],
+      "createdAt": "2026-10-29"
+    },
     {
       "id": "hk-custom-747831",
       "sku": "CÓD. 20503",
