@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updatedAt": "2026-10-30T23:42:37.988Z",
+  "updatedAt": "2026-10-30T23:43:29.454Z",
   "soldOutIds": [],
   "productOverrides": {},
   "customProducts": [
@@ -772,7 +772,7 @@
       "id": "hk-custom-lote2-021",
       "sku": "CÓD. 22197",
       "name": "BLUSA FEMININA MALHA CANELADA (4 AO 10)",
-      "color": "PRETA (4 AO 10)",
+      "color": "PRETA",
       "price": 49.9,
       "oldPrice": null,
       "onSale": false,
