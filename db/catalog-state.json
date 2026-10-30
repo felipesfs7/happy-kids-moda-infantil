@@ -1,9 +1,45 @@
 {
   "version": 2,
-  "updatedAt": "2026-10-30T19:07:20.765Z",
+  "updatedAt": "2026-10-30T19:08:09.875Z",
   "soldOutIds": [],
   "productOverrides": {},
   "customProducts": [
+    {
+      "id": "hk-custom-289874",
+      "sku": "CÓD. 22211",
+      "name": "VESTIDO EM MALHA DEVORÊ",
+      "color": null,
+      "price": 122.9,
+      "oldPrice": null,
+      "onSale": false,
+      "gender": "Feminino",
+      "category": "Vestidos",
+      "brand": "ELIAN",
+      "season": "Verão",
+      "ageGroup": "4-a-10",
+      "ageLabel": "Tam. 4 ao 8",
+      "sizes": [
+        "4",
+        "8"
+      ],
+      "registeredSizes": [
+        "4",
+        "8"
+      ],
+      "badge": "Novo",
+      "featured": true,
+      "images": [
+        "https://raw.githubusercontent.com/felipesfs7/happy-kids-moda-infantil/main/assets/uploads/hk-1793387250222-836.jpg"
+      ],
+      "description": "Peça especial da coleção Happy Kids Moda Infantil, unindo conforto, liberdade de movimento e muito estilo.",
+      "fabric": "Tecido selecionado de toque macio e alta durabilidade.",
+      "washing": [
+        "Lavar com cores similares e sabão neutro",
+        "Não utilizar alvejantes com cloro",
+        "Secar à sombra"
+      ],
+      "createdAt": "2026-10-30"
+    },
     {
       "id": "hk-custom-240764",
       "sku": "CÓD. 22209",
