@@ -95,6 +95,48 @@ function initApp() {
   fetchCloudDatabaseState();
 }
 
+function fixMojibake(val) {
+  if (!val) return val;
+  if (Array.isArray(val)) return val.map(fixMojibake);
+  if (typeof val !== "string") return val;
+  if (!val.includes("Ã") && !val.includes("Â") && !val.includes("â€") && !val.includes("\u00C3")) return val;
+  return val
+    .replace(/\u00C3\u00A7/g, "ç")
+    .replace(/\u00C3\u0087/g, "Ç")
+    .replace(/\u00C3\u00A3/g, "ã")
+    .replace(/\u00C3\u0083/g, "Ã")
+    .replace(/\u00C3\u00A1/g, "á")
+    .replace(/\u00C3\u0081/g, "Á")
+    .replace(/\u00C3\u00A9/g, "é")
+    .replace(/\u00C3\u0089/g, "É")
+    .replace(/\u00C3\u00AD/g, "í")
+    .replace(/\u00C3\u008D/g, "Í")
+    .replace(/\u00C3\u00B3/g, "ó")
+    .replace(/\u00C3\u0093/g, "Ó")
+    .replace(/\u00C3\u00B5/g, "õ")
+    .replace(/\u00C3\u0095/g, "Õ")
+    .replace(/\u00C3\u00BA/g, "ú")
+    .replace(/\u00C3\u009A/g, "Ú")
+    .replace(/\u00C3\u00AA/g, "ê")
+    .replace(/\u00C3\u008A/g, "Ê")
+    .replace(/\u00C3\u00A2/g, "â")
+    .replace(/\u00C3\u0082/g, "Â")
+    .replace(/\u00C3\u00B4/g, "ô")
+    .replace(/\u00C3\u0094/g, "Ô")
+    .replace(/\u00C3\u00A0/g, "à")
+    .replace(/\u00C3 /g, "à")
+    .replace(/\u00C3\u0080/g, "À")
+    .replace(/\u00C2\u00BA/g, "º")
+    .replace(/\u00C2\u00AA/g, "ª")
+    .replace(/\u00C2\u00B0/g, "°")
+    .replace(/â€“/g, "–")
+    .replace(/â€”/g, "—")
+    .replace(/â€œ/g, "“")
+    .replace(/â€/g, "”")
+    .replace(/â€˜/g, "‘")
+    .replace(/â€™/g, "’");
+}
+
 function loadLocalCache() {
   try {
     localStorage.removeItem("happykids_products_v1");
@@ -110,8 +152,8 @@ function loadLocalCache() {
           soldOutIds: Array.isArray(parsed.soldOutIds) ? parsed.soldOutIds : [],
           productOverrides: parsed.productOverrides || {},
           customProducts: Array.isArray(parsed.customProducts) ? parsed.customProducts : [],
-          customCategories: Array.isArray(parsed.customCategories) ? parsed.customCategories : [],
-          customBrands: Array.isArray(parsed.customBrands) ? parsed.customBrands : [],
+          customCategories: Array.isArray(parsed.customCategories) ? parsed.customCategories.map(fixMojibake) : [],
+          customBrands: Array.isArray(parsed.customBrands) ? parsed.customBrands.map(fixMojibake) : [],
           heroBanners: Array.isArray(parsed.heroBanners) ? parsed.heroBanners : null,
           deletedIds: Array.isArray(parsed.deletedIds) ? parsed.deletedIds : []
         };
@@ -197,10 +239,16 @@ function rebuildCatalogFromState() {
     return {
       ...p,
       ...ov,
+      name: fixMojibake(ov.name !== undefined ? ov.name : p.name),
+      category: fixMojibake(ov.category !== undefined ? ov.category : p.category),
+      brand: fixMojibake(ov.brand !== undefined ? ov.brand : p.brand),
+      description: fixMojibake(ov.description !== undefined ? ov.description : p.description),
+      fabric: fixMojibake(ov.fabric !== undefined ? ov.fabric : p.fabric),
+      washing: fixMojibake(ov.washing !== undefined ? ov.washing : p.washing),
       price: finalPrice,
       oldPrice: finalOldPrice,
       onSale,
-      color: finalColor,
+      color: fixMojibake(finalColor),
       sku: finalSku,
       sizes: sortSizesInOfficialOrder(activeSizes),
       registeredSizes: allSizes,
@@ -334,8 +382,8 @@ function applyIncomingCloudState(parsed) {
     soldOutIds: Array.isArray(parsed.soldOutIds) ? parsed.soldOutIds : [],
     productOverrides: parsed.productOverrides || {},
     customProducts: Array.isArray(parsed.customProducts) ? parsed.customProducts : [],
-    customCategories: Array.isArray(parsed.customCategories) ? parsed.customCategories : [],
-    customBrands: Array.isArray(parsed.customBrands) ? parsed.customBrands : [],
+    customCategories: Array.isArray(parsed.customCategories) ? parsed.customCategories.map(fixMojibake) : [],
+    customBrands: Array.isArray(parsed.customBrands) ? parsed.customBrands.map(fixMojibake) : [],
     heroBanners: Array.isArray(parsed.heroBanners) ? parsed.heroBanners : null,
     deletedIds: Array.isArray(parsed.deletedIds) ? parsed.deletedIds : []
   };
