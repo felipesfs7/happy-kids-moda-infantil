@@ -1,13 +1,13 @@
 {
   "version": 2,
-  "updatedAt": "2026-11-03T23:57:02.552Z",
+  "updatedAt": "2026-11-03T23:57:51.956Z",
   "soldOutIds": [],
   "productOverrides": {},
   "customProducts": [
     {
       "id": "hk-custom-222551",
       "sku": "CÓD. C4",
-      "name": "SAPATILHA DOURADA FLOR COM STRASS",
+      "name": "SAPATILHA FLOR COM STRASS",
       "color": "DOURADA",
       "price": 59.9,
       "oldPrice": null,
