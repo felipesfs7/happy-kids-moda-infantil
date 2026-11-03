@@ -1310,15 +1310,7 @@ function renderSizeQuickBar() {
     })
     .join("");
 
-  const shoesQuickButtonHTML = `
-    <button onclick="navigateWithFilter({ category: 'Calçados' })"
-      class="group flex flex-col items-center justify-center px-3.5 min-w-[96px] sm:min-w-[108px] h-[58px] sm:h-[64px] rounded-2xl border-2 bg-amber-50 border-amber-300 text-amber-900 hover:bg-[#C84B00] hover:text-white hover:border-[#C84B00] font-heading transition-all transform hover:-translate-y-1 shadow-xs cursor-pointer shrink-0">
-      <span class="text-[10px] uppercase tracking-wider opacity-85 font-semibold">👟 Calçados</span>
-      <span class="text-sm sm:text-base font-extrabold leading-none mt-0.5">13 ao 18</span>
-    </button>
-  `;
-
-  container.innerHTML = rulerButtonsHTML + shoesQuickButtonHTML;
+  container.innerHTML = rulerButtonsHTML;
 }
 
 /* ==========================================================================
