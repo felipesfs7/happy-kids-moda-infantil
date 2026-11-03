@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updatedAt": "2026-11-03T23:20:59.548Z",
+  "updatedAt": "2026-11-03T23:50:09.760Z",
   "soldOutIds": [],
   "productOverrides": {},
   "customProducts": [
@@ -139,7 +139,7 @@
     {
       "id": "hk-custom-577630",
       "sku": "CÓD. C2",
-      "name": "SANDÁLIA LAÇO DUPLO ROSA",
+      "name": "SANDÁLIA LAÇO DUPLO",
       "color": "ROSA VERNIZ",
       "price": 59.9,
       "oldPrice": null,
