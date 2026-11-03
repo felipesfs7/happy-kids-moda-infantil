@@ -9,8 +9,45 @@ const STORAGE_KEYS = {
   FAVORITES: "happykids_favorites_v3_clean"
 };
 
-// Categorias de Roupa (Iniciam vazias para a lojista criar suas próprias categorias no botão "+ Categoria")
-const DEFAULT_CATEGORIES = [];
+// Categorias padrão + suporte nativo à categoria Calçados (13 ao 18)
+const DEFAULT_CATEGORIES = [
+  { value: "Calçados", label: "Calçados", icon: "👟" }
+];
+
+function isFootwearCategory(catName) {
+  if (!catName) return false;
+  const norm = String(catName)
+    .trim()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+  return (
+    norm === "calcados" ||
+    norm === "calcado" ||
+    norm.includes("calcado") ||
+    norm.includes("sapatinho") ||
+    norm.includes("sapato") ||
+    norm.includes("tenis") ||
+    norm.includes("sandalia")
+  );
+}
+
+function isFootwearProduct(product) {
+  if (!product) return false;
+  return isFootwearCategory(product.category);
+}
+
+function getShoeSizesList() {
+  return typeof SHOE_SIZES !== "undefined" && Array.isArray(SHOE_SIZES)
+    ? SHOE_SIZES
+    : ["13", "14", "15", "16", "17", "18"];
+}
+
+function getClothingSizesList() {
+  return typeof CLOTHING_SIZES !== "undefined" && Array.isArray(CLOTHING_SIZES)
+    ? CLOTHING_SIZES
+    : ["RN", "P", "M", "G", "1", "2", "3", "4", "6", "8", "10", "12", "14", "16", "18"];
+}
 
 // Estado do Banco de Dados em Nuvem (Sincronizado para Todos os Clientes)
 const CloudDB = {
@@ -1050,10 +1087,11 @@ function updateActiveNavLinks() {
     let isActive = false;
 
     if (target === "home" && AppState.currentView === "home") isActive = true;
-    if (target === "catalog" && AppState.currentView === "catalog" && AppState.filters.gender === "todos" && AppState.filters.ageGroup === "todos" && !AppState.filters.onSale) isActive = true;
+    if (target === "catalog" && AppState.currentView === "catalog" && AppState.filters.gender === "todos" && AppState.filters.ageGroup === "todos" && AppState.filters.category === "todos" && !AppState.filters.onSale) isActive = true;
     if (target === "promocoes" && AppState.currentView === "catalog" && AppState.filters.onSale) isActive = true;
-    if (target === "meninas" && AppState.currentView === "catalog" && AppState.filters.gender === "Feminino") isActive = true;
-    if (target === "meninos" && AppState.currentView === "catalog" && AppState.filters.gender === "Masculino") isActive = true;
+    if (target === "calcados" && AppState.currentView === "catalog" && isFootwearCategory(AppState.filters.category)) isActive = true;
+    if (target === "meninas" && AppState.currentView === "catalog" && AppState.filters.gender === "Feminino" && !isFootwearCategory(AppState.filters.category)) isActive = true;
+    if (target === "meninos" && AppState.currentView === "catalog" && AppState.filters.gender === "Masculino" && !isFootwearCategory(AppState.filters.category)) isActive = true;
     if (target === "bebes" && AppState.currentView === "catalog" && AppState.filters.ageGroup === "bebe") isActive = true;
     if (target === "juvenil" && AppState.currentView === "catalog" && AppState.filters.ageGroup === "juvenil") isActive = true;
     if (target === "about" && AppState.currentView === "about") isActive = true;
@@ -1251,23 +1289,36 @@ function renderSizeQuickBar() {
   const container = document.getElementById("home-size-ruler");
   if (!container) return;
 
-  container.innerHTML = ALL_SIZES.map((sz) => {
-    const isBaby = ["RN", "P", "M", "G"].includes(sz);
-    const isTeen = ["12", "14", "16", "18"].includes(sz);
-    const colorClasses = isBaby
-      ? "bg-sky-50 border-sky-200 text-sky-800 hover:bg-[#2B6EB5] hover:text-white hover:border-[#2B6EB5]"
-      : isTeen
-      ? "bg-pink-50 border-pink-200 text-pink-800 hover:bg-[#E84C93] hover:text-white hover:border-[#E84C93]"
-      : "bg-orange-50 border-orange-200 text-orange-800 hover:bg-[#C84B00] hover:text-white hover:border-[#C84B00]";
+  const clothingRuler = getClothingSizesList();
+  const rulerButtonsHTML = clothingRuler
+    .map((sz) => {
+      const isBaby = ["RN", "P", "M", "G"].includes(sz);
+      const isTeen = ["12", "14", "16", "18"].includes(sz);
+      const colorClasses = isBaby
+        ? "bg-sky-50 border-sky-200 text-sky-800 hover:bg-[#2B6EB5] hover:text-white hover:border-[#2B6EB5]"
+        : isTeen
+        ? "bg-pink-50 border-pink-200 text-pink-800 hover:bg-[#E84C93] hover:text-white hover:border-[#E84C93]"
+        : "bg-orange-50 border-orange-200 text-orange-800 hover:bg-[#C84B00] hover:text-white hover:border-[#C84B00]";
 
-    return `
-      <button onclick="navigateWithFilter({ size: '${sz}' })"
-        class="group flex flex-col items-center justify-center min-w-[54px] sm:min-w-[62px] h-[58px] sm:h-[64px] rounded-2xl border-2 ${colorClasses} font-heading transition-all transform hover:-translate-y-1 shadow-xs cursor-pointer">
-        <span class="text-[10px] uppercase tracking-wider opacity-75 font-semibold">${isBaby ? "Bebê" : "Tam."}</span>
-        <span class="text-base sm:text-lg font-extrabold leading-none mt-0.5">${sz}</span>
-      </button>
-    `;
-  }).join("");
+      return `
+        <button onclick="navigateWithFilter({ size: '${sz}' })"
+          class="group flex flex-col items-center justify-center min-w-[54px] sm:min-w-[62px] h-[58px] sm:h-[64px] rounded-2xl border-2 ${colorClasses} font-heading transition-all transform hover:-translate-y-1 shadow-xs cursor-pointer">
+          <span class="text-[10px] uppercase tracking-wider opacity-75 font-semibold">${isBaby ? "Bebê" : "Tam."}</span>
+          <span class="text-base sm:text-lg font-extrabold leading-none mt-0.5">${sz}</span>
+        </button>
+      `;
+    })
+    .join("");
+
+  const shoesQuickButtonHTML = `
+    <button onclick="navigateWithFilter({ category: 'Calçados' })"
+      class="group flex flex-col items-center justify-center px-3.5 min-w-[96px] sm:min-w-[108px] h-[58px] sm:h-[64px] rounded-2xl border-2 bg-amber-50 border-amber-300 text-amber-900 hover:bg-[#C84B00] hover:text-white hover:border-[#C84B00] font-heading transition-all transform hover:-translate-y-1 shadow-xs cursor-pointer shrink-0">
+      <span class="text-[10px] uppercase tracking-wider opacity-85 font-semibold">👟 Calçados</span>
+      <span class="text-sm sm:text-base font-extrabold leading-none mt-0.5">13 ao 18</span>
+    </button>
+  `;
+
+  container.innerHTML = rulerButtonsHTML + shoesQuickButtonHTML;
 }
 
 /* ==========================================================================
@@ -1348,7 +1399,9 @@ function getProductColorOrVariant(product, allSisterVariants = null) {
     "Cinza Mescla", "Cinza Chumbo", "Cinza Claro", "Cinza",
     "Bege", "Nude", "Creme", "Marfim", "Cru", "Areia",
     "Lilás", "Lavanda", "Roxo", "Roxa", "Violeta",
-    "Mostarda", "Laranja", "Salmão", "Coral", "Terracota", "Caramelo", "Marrom"
+    "Mostarda", "Laranja", "Salmão", "Coral", "Terracota", "Caramelo", "Marrom",
+    "Dourado", "Dourada", "Prata", "Prateado", "Prateada", "Bronze", "Metalizado", "Metalizada",
+    "Perolado", "Perolada", "Verniz", "Jeans", "Camurça", "Marinho"
   ];
 
   for (const c of commonColors) {
@@ -1489,8 +1542,10 @@ function renderHomeProducts() {
     list = list.filter((p) => p.gender === "Masculino" || p.gender === "Unissex");
   } else if (AppState.homeTab === "bebe") {
     list = list.filter((p) => p.ageGroup === "bebe" || (p.sizes && p.sizes.some((s) => ["RN", "P", "M", "G"].includes(s))));
+  } else if (AppState.homeTab === "calcados") {
+    list = list.filter((p) => isFootwearProduct(p));
   } else if (AppState.homeTab === "juvenil") {
-    list = list.filter((p) => p.ageGroup === "juvenil" || (p.sizes && p.sizes.some((s) => ["10", "12", "14", "16", "18"].includes(s))));
+    list = list.filter((p) => p.ageGroup === "juvenil" || (!isFootwearProduct(p) && p.sizes && p.sizes.some((s) => ["10", "12", "14", "16", "18"].includes(s))));
   }
 
   // Agrupa peças com o mesmo CÓD./SKU para que fiquem consolidadas em 1 card com indicador de cores
@@ -1736,7 +1791,7 @@ function getAllCategories() {
     map.set(c.value.toLowerCase(), {
       value: c.value,
       label: c.label,
-      icon: c.icon || "🏷️",
+      icon: c.icon || (isFootwearCategory(c.value) ? "👟" : "🏷️"),
       isCustom: false
     });
   });
@@ -1749,9 +1804,11 @@ function getAllCategories() {
       map.set(key, {
         value: clean,
         label: clean,
-        icon: "🏷️",
+        icon: isFootwearCategory(clean) ? "👟" : "🏷️",
         isCustom: true
       });
+    } else if (isFootwearCategory(clean)) {
+      map.get(key).icon = "👟";
     }
   });
 
@@ -1764,7 +1821,7 @@ function getAllCategories() {
       map.set(key, {
         value: cat,
         label: cat,
-        icon: "🏷️",
+        icon: isFootwearCategory(cat) ? "👟" : "🏷️",
         isCustom: true
       });
     }
@@ -1792,7 +1849,7 @@ function renderCategoryOptionsUI() {
       ${categories
         .map((c) => {
           const safeVal = c.value.replace(/'/g, "\\'");
-          const isActive = activeCat === c.value;
+          const isActive = activeCat === c.value || (isFootwearCategory(activeCat) && isFootwearCategory(c.value));
           return `
             <button onclick="setCatalogFilter('category', '${safeVal}')" data-filter-category="${c.value}" class="${btnClass(isActive)}">
               <span>${c.icon} ${c.label}</span>
@@ -1842,7 +1899,7 @@ function renderCategoryOptionsUI() {
           const safeCat = String(catName).replace(/'/g, "\\'");
           return `
             <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white border border-blue-200 text-[11px] font-heading font-bold text-[#2B6EB5] shadow-2xs">
-              <span>${catName}</span>
+              <span>${isFootwearCategory(catName) ? "👟 " : ""}${catName}</span>
               <button type="button" onclick="removeCustomCategoryFromAdmin('${safeCat}')"
                 title="Remover categoria ${catName}"
                 class="ml-0.5 text-slate-400 hover:text-rose-500 font-extrabold cursor-pointer">×</button>
@@ -1971,6 +2028,13 @@ function renderCatalogFiltersUI() {
   renderBrandOptionsUI();
   const sizeFilterContainer = document.getElementById("catalog-filter-sizes");
   if (sizeFilterContainer) {
+    const activeCategory = AppState.filters.category || "todos";
+    const sizesToShow = isFootwearCategory(activeCategory)
+      ? getShoeSizesList()
+      : activeCategory !== "todos"
+      ? getClothingSizesList()
+      : ALL_SIZES;
+
     sizeFilterContainer.innerHTML = `
       <button onclick="setCatalogFilter('size', 'todos')"
         class="min-w-[44px] min-h-[44px] px-3 py-2 rounded-xl text-xs font-bold border flex items-center justify-center transition cursor-pointer ${
@@ -1980,7 +2044,7 @@ function renderCatalogFiltersUI() {
         }">
         Todos
       </button>
-      ${ALL_SIZES.map(
+      ${sizesToShow.map(
         (sz) => `
         <button onclick="setCatalogFilter('size', '${sz}')"
           aria-label="Filtrar tamanho ${sz}"
@@ -2001,6 +2065,7 @@ function setCatalogFilter(key, value) {
   AppState.filters[key] = value;
   renderCatalogFiltersUI();
   renderCatalogView();
+  updateActiveNavLinks();
 }
 
 function resetCatalogFilters() {
@@ -2022,6 +2087,7 @@ function resetCatalogFilters() {
 
   renderCatalogFiltersUI();
   renderCatalogView();
+  updateActiveNavLinks();
 }
 
 function toggleCatalogPromoFilter() {
@@ -2039,7 +2105,7 @@ function getFilteredAndSortedProducts() {
     if (onSale && !isProductOnSale(p)) return false;
 
     if (query) {
-      const hay = `${p.name} ${p.category} ${p.brand || ""} ${p.season || ""} ${p.gender} ${p.description} ${p.sku || ""} ${p.ageLabel || ""}`.toLowerCase();
+      const hay = `${p.name} ${p.category} ${p.brand || ""} ${p.season || ""} ${p.gender} ${p.description} ${p.sku || ""} ${p.ageLabel || ""} ${p.color || ""}`.toLowerCase();
       if (!hay.includes(query)) return false;
     }
 
@@ -2050,9 +2116,14 @@ function getFilteredAndSortedProducts() {
     }
 
     if (ageGroup !== "todos") {
-      const groupObj = AGE_GROUPS.find((g) => g.id === ageGroup);
-      const matchesGroup = p.ageGroup === ageGroup || (groupObj && p.sizes.some((s) => groupObj.sizes.includes(s)));
-      if (!matchesGroup) return false;
+      if (isFootwearProduct(p)) {
+        // Sapatinhos infantis (13 ao 18) não devem cair por engano em 4-a-10 anos por causa dos números 14, 16 e 18
+        if (p.ageGroup !== ageGroup) return false;
+      } else {
+        const groupObj = AGE_GROUPS.find((g) => g.id === ageGroup);
+        const matchesGroup = p.ageGroup === ageGroup || (groupObj && p.sizes.some((s) => groupObj.sizes.includes(s)));
+        if (!matchesGroup) return false;
+      }
     }
 
     if (size !== "todos") {
@@ -2064,7 +2135,11 @@ function getFilteredAndSortedProducts() {
     }
 
     if (category !== "todos") {
-      if (p.category !== category) return false;
+      if (isFootwearCategory(category)) {
+        if (!isFootwearProduct(p)) return false;
+      } else if (String(p.category || "").toLowerCase() !== String(category || "").toLowerCase()) {
+        return false;
+      }
     }
 
     if (brand && brand !== "todos") {
@@ -2114,7 +2189,7 @@ function renderCatalogView() {
 
   document.querySelectorAll("[data-filter-category]").forEach((el) => {
     const val = el.getAttribute("data-filter-category");
-    const active = AppState.filters.category === val;
+    const active = AppState.filters.category === val || (isFootwearCategory(AppState.filters.category) && isFootwearCategory(val));
     el.className = `w-full text-left min-h-[44px] px-3.5 py-2.5 rounded-xl text-sm font-medium flex items-center justify-between transition cursor-pointer ${
       active ? "bg-orange-50 text-[#C84B00] font-bold border border-orange-200" : "text-slate-600 hover:bg-slate-50"
     }`;
@@ -2137,6 +2212,79 @@ function renderCatalogView() {
   }
 
   renderCatalogFiltersUI();
+
+  // Sub-barra dedicada para Calçados (Feminino / Masculino / Numeração 13 ao 18)
+  const footwearSubbar = document.getElementById("catalog-footwear-subbar");
+  const isFootwearActive = isFootwearCategory(AppState.filters.category);
+  if (footwearSubbar) {
+    if (isFootwearActive) {
+      const curGender = AppState.filters.gender || "todos";
+      const curSize = AppState.filters.size || "todos";
+      const shoeSizes = getShoeSizesList();
+      footwearSubbar.classList.remove("hidden");
+      footwearSubbar.innerHTML = `
+        <div class="bg-gradient-to-r from-[#FFF5EC] via-white to-[#EBF4FF] rounded-2xl border border-orange-200/80 p-3.5 sm:p-4 shadow-2xs flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+          <div class="flex flex-wrap items-center gap-2">
+            <span class="inline-flex items-center gap-1.5 text-xs font-heading font-extrabold text-slate-800 mr-1">
+              <span>👟 Calçados Infantis:</span>
+            </span>
+            <button onclick="setCatalogFilter('gender', 'todos')"
+              class="px-3 py-1.5 rounded-xl text-xs font-heading font-bold border transition cursor-pointer ${
+                curGender === "todos"
+                  ? "bg-[#C84B00] text-white border-[#C84B00] shadow-2xs"
+                  : "bg-white text-slate-700 border-slate-200 hover:border-orange-300"
+              }">
+              Todos
+            </button>
+            <button onclick="setCatalogFilter('gender', 'Feminino')"
+              class="px-3 py-1.5 rounded-xl text-xs font-heading font-bold border transition cursor-pointer ${
+                curGender === "Feminino"
+                  ? "bg-pink-600 text-white border-pink-600 shadow-2xs"
+                  : "bg-white text-slate-700 border-slate-200 hover:border-pink-300"
+              }">
+              👧 Feminino (Meninas)
+            </button>
+            <button onclick="setCatalogFilter('gender', 'Masculino')"
+              class="px-3 py-1.5 rounded-xl text-xs font-heading font-bold border transition cursor-pointer ${
+                curGender === "Masculino"
+                  ? "bg-[#2B6EB5] text-white border-[#2B6EB5] shadow-2xs"
+                  : "bg-white text-slate-700 border-slate-200 hover:border-blue-300"
+              }">
+              👦 Masculino (Meninos)
+            </button>
+          </div>
+          <div class="flex flex-wrap items-center gap-1.5">
+            <span class="text-[11px] font-heading font-bold text-slate-500 mr-1">Numeração (13 ao 18):</span>
+            <button onclick="setCatalogFilter('size', 'todos')"
+              class="px-2.5 py-1 rounded-lg text-xs font-heading font-bold border transition cursor-pointer ${
+                curSize === "todos"
+                  ? "bg-slate-800 text-white border-slate-800"
+                  : "bg-white text-slate-600 border-slate-200 hover:border-orange-300"
+              }">
+              Todas
+            </button>
+            ${shoeSizes
+              .map(
+                (sz) => `
+              <button onclick="setCatalogFilter('size', '${sz}')"
+                class="min-w-[34px] px-2.5 py-1 rounded-lg text-xs font-heading font-bold border transition cursor-pointer ${
+                  curSize === sz
+                    ? "bg-[#C84B00] text-white border-[#C84B00] shadow-2xs"
+                    : "bg-white text-slate-700 border-slate-200 hover:border-orange-300"
+                }">
+                ${sz}
+              </button>
+            `
+              )
+              .join("")}
+          </div>
+        </div>
+      `;
+    } else {
+      footwearSubbar.classList.add("hidden");
+      footwearSubbar.innerHTML = "";
+    }
+  }
 
   const promoBtn = document.getElementById("catalog-filter-promo-btn");
   const promoIndicator = document.getElementById("catalog-promo-indicator");
@@ -2202,16 +2350,22 @@ function renderCatalogView() {
         <div class="w-16 h-16 rounded-2xl bg-orange-50 text-[#C84B00] flex items-center justify-center mx-auto mb-4">
           <i data-lucide="search-x" class="w-8 h-8"></i>
         </div>
-        <h3 class="font-heading text-xl font-bold text-slate-800 mb-2">Nenhuma roupinha encontrada com esses filtros</h3>
+        <h3 class="font-heading text-xl font-bold text-slate-800 mb-2">${
+          isFootwearActive ? "Nenhum calçado infantil encontrado com esses filtros" : "Nenhuma roupinha encontrada com esses filtros"
+        }</h3>
         <p class="text-slate-500 text-sm max-w-md mx-auto mb-6">
-          Experimente limpar algum filtro ou chame nossa equipe no WhatsApp — recebemos novidades toda semana na loja em Santa Fé do Sul!
+          ${
+            isFootwearActive
+              ? "Experimente alternar entre Feminino e Masculino, escolher outra numeração (13 ao 18) ou chamar nossa equipe no WhatsApp!"
+              : "Experimente limpar algum filtro ou chame nossa equipe no WhatsApp — recebemos novidades toda semana na loja em Santa Fé do Sul!"
+          }
         </p>
         <div class="flex flex-wrap justify-center gap-3">
           <button onclick="resetCatalogFilters()"
             class="px-5 py-2.5 rounded-xl bg-[#C84B00] text-white font-heading font-bold text-sm cursor-pointer">
             Limpar Filtros e Ver Tudo
           </button>
-          <button onclick="openStoreWhatsApp('Olá! Estou procurando uma peça específica no site da Happy Kids e gostaria de ajuda!')"
+          <button onclick="openStoreWhatsApp('Olá! Estou procurando ${isFootwearActive ? "um sapatinho infantil (13 ao 18)" : "uma peça específica"} no site da Happy Kids e gostaria de ajuda!')"
             class="px-5 py-2.5 rounded-xl bg-emerald-50 text-emerald-700 border border-emerald-200 font-heading font-bold text-sm cursor-pointer">
             Consultar Estoque no WhatsApp
           </button>
@@ -2523,11 +2677,11 @@ function renderProductDetailView() {
                 : ""
             }
 
-            <!-- Seletor Completo de Tamanhos (RN ao 18) -->
+            <!-- Seletor Completo de Tamanhos (Roupas RN ao 18 / Calçados 13 ao 18) -->
             <div class="mb-6">
               <div class="flex items-center justify-between mb-2.5">
                 <label class="font-heading font-bold text-sm text-slate-800 flex items-center gap-2">
-                  <span>Escolha o Tamanho:</span>
+                  <span>${isFootwearProduct(product) ? "Escolha a Numeração (13 ao 18):" : "Escolha o Tamanho:"}</span>
                   <span class="px-2.5 py-0.5 rounded-md bg-orange-100 text-[#C84B00] text-xs font-extrabold">
                     Selecionado: ${AppState.activeProduct.selectedSize || "Nenhum"}
                   </span>
@@ -2535,33 +2689,47 @@ function renderProductDetailView() {
                 <button onclick="openSizeGuideModal()"
                   class="inline-flex items-center gap-1 text-xs font-bold text-[#2B6EB5] hover:underline cursor-pointer">
                   <i data-lucide="ruler" class="w-3.5 h-3.5"></i>
-                  <span>Guia de Medidas (RN ao 18)</span>
+                  <span>${isFootwearProduct(product) ? "Tabela de Calçados (13 ao 18)" : "Guia de Medidas (RN ao 18)"}</span>
                 </button>
               </div>
 
               <p class="text-xs text-slate-500 mb-3">
-                Grade disponível em estoque nesta opção (${product.ageLabel || "infantil"}). Toque no tamanho desejado:
+                ${
+                  isFootwearProduct(product)
+                    ? `Numeração infantil disponível em estoque (${product.ageLabel || "Tam. 13 ao 18"}). Toque no número desejado:`
+                    : `Grade disponível em estoque nesta opção (${product.ageLabel || "infantil"}). Toque no tamanho desejado:`
+                }
               </p>
 
-              <div class="grid grid-cols-5 sm:grid-cols-8 gap-2">
-                ${ALL_SIZES.map((sz) => {
-                  const isAvailable = product.sizes && product.sizes.includes(sz);
-                  const isSelected = AppState.activeProduct.selectedSize === sz;
-                  return `
-                    <button
-                      ${isAvailable ? `onclick="selectProductSize('${sz}')"` : "disabled"}
-                      aria-label="Tamanho ${sz} ${isAvailable ? "disponível" : "indisponível nesta cor"}"
-                      class="size-pill rounded-xl border-2 font-heading font-bold text-xs sm:text-sm flex items-center justify-center cursor-pointer ${
-                        isSelected
-                          ? "selected"
-                          : isAvailable
-                          ? "bg-white border-slate-200 text-slate-800 hover:border-orange-300"
-                          : "border-slate-200 text-slate-300 opacity-40 cursor-not-allowed line-through"
-                      }">
-                      ${sz}
-                    </button>
-                  `;
-                }).join("")}
+              <div class="grid ${isFootwearProduct(product) ? "grid-cols-6 sm:grid-cols-6" : "grid-cols-5 sm:grid-cols-8"} gap-2">
+                ${(() => {
+                  const baseGrid = isFootwearProduct(product) ? getShoeSizesList() : getClothingSizesList();
+                  const extraSizes = [
+                    ...(Array.isArray(product.sizes) ? product.sizes : []),
+                    ...(Array.isArray(product.allSizes) ? product.allSizes : [])
+                  ];
+                  const mergedGrid = sortSizesInOfficialOrder([...new Set([...baseGrid, ...extraSizes])]);
+                  return mergedGrid
+                    .map((sz) => {
+                      const isAvailable = product.sizes && product.sizes.includes(sz);
+                      const isSelected = AppState.activeProduct.selectedSize === sz;
+                      return `
+                        <button
+                          ${isAvailable ? `onclick="selectProductSize('${sz}')"` : "disabled"}
+                          aria-label="Tamanho ${sz} ${isAvailable ? "disponível" : "indisponível nesta cor"}"
+                          class="size-pill rounded-xl border-2 font-heading font-bold text-xs sm:text-sm flex items-center justify-center cursor-pointer ${
+                            isSelected
+                              ? "selected"
+                              : isAvailable
+                              ? "bg-white border-slate-200 text-slate-800 hover:border-orange-300"
+                              : "border-slate-200 text-slate-300 opacity-40 cursor-not-allowed line-through"
+                          }">
+                          ${sz}
+                        </button>
+                      `;
+                    })
+                    .join("");
+                })()}
               </div>
             </div>
 
@@ -3144,23 +3312,75 @@ function renderAdminView() {
   if (kpiFeatured) kpiFeatured.textContent = featuredCount;
   if (kpiAvg) kpiAvg.textContent = formatCurrency(avgPrice);
 
-  const sizesCheckContainer = document.getElementById("admin-sizes-checkboxes");
-  if (sizesCheckContainer && sizesCheckContainer.children.length === 0) {
-    sizesCheckContainer.innerHTML = ALL_SIZES.map(
-      (sz) => `
-      <label class="flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl border border-slate-200 bg-white hover:border-[#C84B00] cursor-pointer select-none text-xs font-heading font-bold text-slate-700 has-[:checked]:bg-orange-50 has-[:checked]:border-[#C84B00] has-[:checked]:text-[#C84B00]">
-        <input type="checkbox" name="admin-size-item" value="${sz}" class="accent-[#C84B00] w-3.5 h-3.5" />
-        <span>${sz}</span>
-      </label>
-    `
-    ).join("");
-  }
-
   renderCategoryOptionsUI();
   renderBrandOptionsUI();
+
+  const adminCatSelect = document.getElementById("admin-prod-category");
+  const currentlyChecked = Array.from(document.querySelectorAll('input[name="admin-size-item"]:checked')).map((cb) => cb.value);
+  renderAdminSizesCheckboxes(adminCatSelect ? adminCatSelect.value : "", currentlyChecked);
+
   renderAdminHeroBannersManager();
   renderQuickCodeManager();
   renderAdminProductsTable();
+}
+
+function renderAdminSizesCheckboxes(categoryVal, selectedSizesArr) {
+  const sizesCheckContainer = document.getElementById("admin-sizes-checkboxes");
+  if (!sizesCheckContainer) return;
+
+  const isShoe = isFootwearCategory(categoryVal);
+  const baseSizes = isShoe ? getShoeSizesList() : getClothingSizesList();
+  const selected = Array.isArray(selectedSizesArr)
+    ? selectedSizesArr.map(String)
+    : Array.from(document.querySelectorAll('input[name="admin-size-item"]:checked')).map((cb) => String(cb.value));
+
+  const mergedSizes = sortSizesInOfficialOrder([...new Set([...baseSizes, ...selected.filter((s) => baseSizes.includes(s) || ALL_SIZES.includes(s))])]);
+  // Se estiver na categoria Calçados e não houver tamanhos extras fora de 13..18 explicitamente passados na edição, mostra apenas 13..18 (ou roupas RN..18)
+  const finalGrid = Array.isArray(selectedSizesArr) && selectedSizesArr.length > 0
+    ? sortSizesInOfficialOrder([...new Set([...baseSizes, ...selectedSizesArr.map(String)])])
+    : baseSizes;
+
+  sizesCheckContainer.className = isShoe
+    ? "grid grid-cols-6 sm:grid-cols-6 gap-2"
+    : "grid grid-cols-5 sm:grid-cols-8 gap-2";
+
+  sizesCheckContainer.innerHTML = finalGrid
+    .map((sz) => {
+      const isChecked = selected.includes(String(sz));
+      return `
+        <label class="flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl border border-slate-200 bg-white hover:border-[#C84B00] cursor-pointer select-none text-xs font-heading font-bold text-slate-700 has-[:checked]:bg-orange-50 has-[:checked]:border-[#C84B00] has-[:checked]:text-[#C84B00]">
+          <input type="checkbox" name="admin-size-item" value="${sz}" ${isChecked ? "checked" : ""} class="accent-[#C84B00] w-3.5 h-3.5" />
+          <span>${sz}</span>
+        </label>
+      `;
+    })
+    .join("");
+
+  const hintEl = document.getElementById("admin-sizes-mode-hint");
+  if (hintEl) {
+    if (isShoe) {
+      hintEl.className = "text-[11px] text-[#C84B00] mb-2 font-bold";
+      hintEl.textContent = "👟 Grade de Calçados Infantis ativa: selecione as numerações disponíveis (13 ao 18).";
+    } else {
+      hintEl.className = "text-[11px] text-slate-500 mb-2 font-medium";
+      hintEl.textContent = "👕 Grade de Roupas ativa: selecione os tamanhos disponíveis (RN ao 18).";
+    }
+  }
+}
+
+function handleAdminCategoryChange(categoryVal) {
+  const currentlyChecked = Array.from(document.querySelectorAll('input[name="admin-size-item"]:checked')).map((cb) => cb.value);
+  const isShoe = isFootwearCategory(categoryVal);
+  const validBase = isShoe ? getShoeSizesList() : getClothingSizesList();
+  const filteredChecked = currentlyChecked.filter((sz) => validBase.includes(sz));
+  renderAdminSizesCheckboxes(categoryVal, filteredChecked);
+
+  if (isShoe && !AppState.admin.editingId) {
+    const ageSelect = document.getElementById("admin-prod-age-group");
+    if (ageSelect && ageSelect.value === "4-a-10") {
+      ageSelect.value = "bebe";
+    }
+  }
 }
 
 function toggleAdminHeroBannerBox(forceState) {
@@ -3419,6 +3639,7 @@ function addCustomCategoryFromAdmin() {
   if (adminSelect) {
     const matched = getAllCategories().find((c) => c.value.toLowerCase() === cleanName.toLowerCase());
     adminSelect.value = matched ? matched.value : cleanName;
+    handleAdminCategoryChange(adminSelect.value);
   }
 
   showToast(`Categoria "${cleanName}" adicionada e selecionada!`, "success");
@@ -3500,6 +3721,31 @@ function removeCustomBrandFromAdmin(brandName) {
 }
 
 function selectAdminSizePreset(preset) {
+  const catSelect = document.getElementById("admin-prod-category");
+  if (preset === "calcados") {
+    if (catSelect && !isFootwearCategory(catSelect.value)) {
+      const shoeOpt = Array.from(catSelect.options).find((o) => isFootwearCategory(o.value));
+      if (shoeOpt) {
+        catSelect.value = shoeOpt.value;
+      }
+    }
+    const shoeSizes = getShoeSizesList();
+    renderAdminSizesCheckboxes(catSelect ? catSelect.value : "Calçados", shoeSizes);
+    const ageSelect = document.getElementById("admin-prod-age-group");
+    if (ageSelect && !AppState.admin.editingId && ageSelect.value === "4-a-10") {
+      ageSelect.value = "bebe";
+    }
+    return;
+  }
+
+  if (["bebe", "1-3", "4-10", "12-18", "12-16", "juvenil"].includes(preset) && catSelect && isFootwearCategory(catSelect.value)) {
+    const nonShoeOpt = Array.from(catSelect.options).find((o) => !isFootwearCategory(o.value) && o.value !== "");
+    if (nonShoeOpt) {
+      catSelect.value = nonShoeOpt.value;
+    }
+    renderAdminSizesCheckboxes(catSelect ? catSelect.value : "", []);
+  }
+
   const checkboxes = document.querySelectorAll('input[name="admin-size-item"]');
   checkboxes.forEach((cb) => {
     const val = cb.value;
@@ -3961,9 +4207,7 @@ function editProductInAdmin(productId) {
       ? product.sizes
       : (product.registeredSizes || product.allSizes || []);
 
-  document.querySelectorAll('input[name="admin-size-item"]').forEach((cb) => {
-    cb.checked = availableSizes.includes(cb.value);
-  });
+  renderAdminSizesCheckboxes(product.category, availableSizes);
 
   const formCard = document.getElementById("admin-form-card");
   if (formCard) formCard.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -3993,6 +4237,9 @@ function resetAdminForm() {
 
   const cancelBtn = document.getElementById("admin-cancel-edit-btn");
   if (cancelBtn) cancelBtn.classList.add("hidden");
+
+  const catSelect = document.getElementById("admin-prod-category");
+  renderAdminSizesCheckboxes(catSelect ? catSelect.value : "", []);
 
   updateAdminImagePreview("");
 }

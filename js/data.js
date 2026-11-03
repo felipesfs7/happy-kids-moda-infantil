@@ -26,12 +26,25 @@ const STORE_CONFIG = {
   encryptedCloudKey: "55595f675c596d091735061c0c2e02246c26241e17417452735751183b071b1c0f285b3120351f25"
 };
 
-// Régua completa de tamanhos infantis (do RN ao 18)
-const ALL_SIZES = [
+// Régua de tamanhos de roupas infantis (do RN ao 18)
+const CLOTHING_SIZES = [
   "RN", "P", "M", "G",
   "1", "2", "3",
   "4", "6", "8", "10",
   "12", "14", "16", "18"
+];
+
+// Régua de numeração de calçados infantis (do 13 ao 18)
+const SHOE_SIZES = [
+  "13", "14", "15", "16", "17", "18"
+];
+
+// Régua completa ordenada (união de roupas + calçados)
+const ALL_SIZES = [
+  "RN", "P", "M", "G",
+  "1", "2", "3",
+  "4", "6", "8", "10",
+  "12", "13", "14", "15", "16", "17", "18"
 ];
 
 // Mapeamento de Faixas Etárias (Sem "RN ao G" em Bebês e até o 18)
