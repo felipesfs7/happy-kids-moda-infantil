@@ -1,9 +1,49 @@
 {
   "version": 2,
-  "updatedAt": "2026-11-04T00:22:30.624Z",
+  "updatedAt": "2026-11-04T00:23:19.880Z",
   "soldOutIds": [],
   "productOverrides": {},
   "customProducts": [
+    {
+      "id": "hk-custom-799878",
+      "sku": "CÓD. C11",
+      "name": "TÊNIS DE BRILHO COM LAÇO",
+      "color": "DOURADO",
+      "price": 59.9,
+      "oldPrice": null,
+      "onSale": false,
+      "gender": "Feminino",
+      "category": "Calçados",
+      "brand": "Bizusinho",
+      "season": "Verão",
+      "ageGroup": "bebe",
+      "ageLabel": "Tam. 13 ao 16",
+      "sizes": [
+        "13",
+        "14",
+        "15",
+        "16"
+      ],
+      "registeredSizes": [
+        "13",
+        "14",
+        "15",
+        "16"
+      ],
+      "badge": "Novo",
+      "featured": true,
+      "images": [
+        "https://raw.githubusercontent.com/felipesfs7/happy-kids-moda-infantil/main/assets/uploads/hk-1793751793729-618.jpg"
+      ],
+      "description": "Peça especial da coleção Happy Kids Moda Infantil, unindo conforto, liberdade de movimento e muito estilo.",
+      "fabric": "Tecido selecionado de toque macio e alta durabilidade.",
+      "washing": [
+        "Lavar com cores similares e sabão neutro",
+        "Não utilizar alvejantes com cloro",
+        "Secar à sombra"
+      ],
+      "createdAt": "2026-11-04"
+    },
     {
       "id": "hk-custom-750622",
       "sku": "CÓD. C11",
