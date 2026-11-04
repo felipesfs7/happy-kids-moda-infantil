@@ -1,9 +1,47 @@
 {
   "version": 2,
-  "updatedAt": "2026-11-03T23:57:51.956Z",
+  "updatedAt": "2026-11-04T00:01:34.197Z",
   "soldOutIds": [],
   "productOverrides": {},
   "customProducts": [
+    {
+      "id": "hk-custom-494194",
+      "sku": "CÓD. C5",
+      "name": "SAPATILHA COM LAÇO",
+      "color": "PRETA",
+      "price": 59.9,
+      "oldPrice": null,
+      "onSale": false,
+      "gender": "Feminino",
+      "category": "Calçados",
+      "brand": "Bizusinho",
+      "season": "Verão",
+      "ageGroup": "bebe",
+      "ageLabel": "Tam. 14 ao 18",
+      "sizes": [
+        "14",
+        "16",
+        "18"
+      ],
+      "registeredSizes": [
+        "14",
+        "16",
+        "18"
+      ],
+      "badge": "Novo",
+      "featured": true,
+      "images": [
+        "https://raw.githubusercontent.com/felipesfs7/happy-kids-moda-infantil/main/assets/uploads/hk-1793750491183-776.jpg"
+      ],
+      "description": "Peça especial da coleção Happy Kids Moda Infantil, unindo conforto, liberdade de movimento e muito estilo.",
+      "fabric": "Tecido selecionado de toque macio e alta durabilidade.",
+      "washing": [
+        "Lavar com cores similares e sabão neutro",
+        "Não utilizar alvejantes com cloro",
+        "Secar à sombra"
+      ],
+      "createdAt": "2026-11-04"
+    },
     {
       "id": "hk-custom-222551",
       "sku": "CÓD. C4",
