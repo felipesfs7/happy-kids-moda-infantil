@@ -1,9 +1,47 @@
 {
   "version": 2,
-  "updatedAt": "2026-11-04T16:50:44.357Z",
+  "updatedAt": "2026-11-04T16:51:29.105Z",
   "soldOutIds": [],
   "productOverrides": {},
   "customProducts": [
+    {
+      "id": "hk-custom-089104",
+      "sku": "CÓD. 2",
+      "name": "VESTIDO EM MALHA",
+      "color": "VERDE",
+      "price": 139.86,
+      "oldPrice": null,
+      "onSale": false,
+      "gender": "Feminino",
+      "category": "Vestidos",
+      "brand": "KAIANI",
+      "season": "Verão",
+      "ageGroup": "4-a-10",
+      "ageLabel": "Tam. 4 ao 8",
+      "sizes": [
+        "4",
+        "6",
+        "8"
+      ],
+      "registeredSizes": [
+        "4",
+        "6",
+        "8"
+      ],
+      "badge": "Novo",
+      "featured": true,
+      "images": [
+        "https://raw.githubusercontent.com/felipesfs7/happy-kids-moda-infantil/main/assets/uploads/hk-1793811085977-209.jpg"
+      ],
+      "description": "Peça especial da coleção Happy Kids Moda Infantil, unindo conforto, liberdade de movimento e muito estilo.",
+      "fabric": "Tecido selecionado de toque macio e alta durabilidade.",
+      "washing": [
+        "Lavar com cores similares e sabão neutro",
+        "Não utilizar alvejantes com cloro",
+        "Secar à sombra"
+      ],
+      "createdAt": "2026-11-04"
+    },
     {
       "id": "hk-custom-044356",
       "sku": "CÓD. 2",
