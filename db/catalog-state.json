@@ -1,9 +1,45 @@
 {
   "version": 2,
-  "updatedAt": "2026-11-04T22:54:48.304Z",
+  "updatedAt": "2026-11-04T22:55:36.029Z",
   "soldOutIds": [],
   "productOverrides": {},
   "customProducts": [
+    {
+      "id": "hk-custom-936025",
+      "sku": "CÓD. M2",
+      "name": "MOCACIM MASCULINO",
+      "color": "MARINHO COM BRANCO",
+      "price": 59.9,
+      "oldPrice": null,
+      "onSale": false,
+      "gender": "Masculino",
+      "category": "Calçados",
+      "brand": "Bizusinho",
+      "season": "Verão",
+      "ageGroup": "bebe",
+      "ageLabel": "Tam. 17 ao 18",
+      "sizes": [
+        "17",
+        "18"
+      ],
+      "registeredSizes": [
+        "17",
+        "18"
+      ],
+      "badge": "Novo",
+      "featured": true,
+      "images": [
+        "https://raw.githubusercontent.com/felipesfs7/happy-kids-moda-infantil/main/assets/uploads/hk-1793832899260-874.jpg"
+      ],
+      "description": "Peça especial da coleção Happy Kids Moda Infantil, unindo conforto, liberdade de movimento e muito estilo.",
+      "fabric": "Tecido selecionado de toque macio e alta durabilidade.",
+      "washing": [
+        "Lavar com cores similares e sabão neutro",
+        "Não utilizar alvejantes com cloro",
+        "Secar à sombra"
+      ],
+      "createdAt": "2026-11-04"
+    },
     {
       "id": "hk-custom-888303",
       "sku": "CÓD. M2",
