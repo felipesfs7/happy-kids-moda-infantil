@@ -1,9 +1,45 @@
 {
   "version": 2,
-  "updatedAt": "2026-11-04T16:49:10.680Z",
+  "updatedAt": "2026-11-04T16:49:42.261Z",
   "soldOutIds": [],
   "productOverrides": {},
   "customProducts": [
+    {
+      "id": "hk-custom-982259",
+      "sku": "CÓD. 1",
+      "name": "CONJUNTO BLUSA EM COTTOM E SHORT EM MOLETINHO",
+      "color": "ROSA",
+      "price": 96.9,
+      "oldPrice": null,
+      "onSale": false,
+      "gender": "Feminino",
+      "category": "Conjuntos",
+      "brand": "KAIANI",
+      "season": "Verão",
+      "ageGroup": "1-a-3",
+      "ageLabel": "Tam. 2 ao 3",
+      "sizes": [
+        "2",
+        "3"
+      ],
+      "registeredSizes": [
+        "2",
+        "3"
+      ],
+      "badge": "Novo",
+      "featured": true,
+      "images": [
+        "https://raw.githubusercontent.com/felipesfs7/happy-kids-moda-infantil/main/assets/uploads/hk-1793810813190-408.jpg"
+      ],
+      "description": "Peça especial da coleção Happy Kids Moda Infantil, unindo conforto, liberdade de movimento e muito estilo.",
+      "fabric": "Tecido selecionado de toque macio e alta durabilidade.",
+      "washing": [
+        "Lavar com cores similares e sabão neutro",
+        "Não utilizar alvejantes com cloro",
+        "Secar à sombra"
+      ],
+      "createdAt": "2026-11-04"
+    },
     {
       "id": "hk-custom-960661",
       "sku": "CÓD. C18",
