@@ -1,9 +1,43 @@
 {
   "version": 2,
-  "updatedAt": "2026-11-04T22:58:31.782Z",
+  "updatedAt": "2026-11-04T22:59:45.956Z",
   "soldOutIds": [],
   "productOverrides": {},
   "customProducts": [
+    {
+      "id": "hk-custom-185955",
+      "sku": "CÓD. M5",
+      "name": "TÊNIS ALL STAR MASCULINO",
+      "color": "BRANCO",
+      "price": 59.9,
+      "oldPrice": null,
+      "onSale": false,
+      "gender": "Masculino",
+      "category": "Calçados",
+      "brand": "Bizusinho",
+      "season": "Verão",
+      "ageGroup": "bebe",
+      "ageLabel": "Tam. 15",
+      "sizes": [
+        "15"
+      ],
+      "registeredSizes": [
+        "15"
+      ],
+      "badge": "Novo",
+      "featured": true,
+      "images": [
+        "https://raw.githubusercontent.com/felipesfs7/happy-kids-moda-infantil/main/assets/uploads/hk-1793833130844-705.jpg"
+      ],
+      "description": "Peça especial da coleção Happy Kids Moda Infantil, unindo conforto, liberdade de movimento e muito estilo.",
+      "fabric": "Tecido selecionado de toque macio e alta durabilidade.",
+      "washing": [
+        "Lavar com cores similares e sabão neutro",
+        "Não utilizar alvejantes com cloro",
+        "Secar à sombra"
+      ],
+      "createdAt": "2026-11-04"
+    },
     {
       "id": "hk-custom-111781",
       "sku": "CÓD. M5",
