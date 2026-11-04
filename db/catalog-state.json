@@ -1,9 +1,45 @@
 {
   "version": 2,
-  "updatedAt": "2026-11-04T22:59:45.956Z",
+  "updatedAt": "2026-11-04T23:01:05.411Z",
   "soldOutIds": [],
   "productOverrides": {},
   "customProducts": [
+    {
+      "id": "hk-custom-265410",
+      "sku": "CÓD. M5",
+      "name": "TÊNIS ALL STAR MASCULINO EM CAMURÇA",
+      "color": "MARROM CAMURÇA",
+      "price": 59.9,
+      "oldPrice": null,
+      "onSale": false,
+      "gender": "Masculino",
+      "category": "Calçados",
+      "brand": "Bizusinho",
+      "season": "Verão",
+      "ageGroup": "bebe",
+      "ageLabel": "Tam. 16 ao 17",
+      "sizes": [
+        "16",
+        "17"
+      ],
+      "registeredSizes": [
+        "16",
+        "17"
+      ],
+      "badge": "Novo",
+      "featured": true,
+      "images": [
+        "https://raw.githubusercontent.com/felipesfs7/happy-kids-moda-infantil/main/assets/uploads/hk-1793833215540-314.jpg"
+      ],
+      "description": "Peça especial da coleção Happy Kids Moda Infantil, unindo conforto, liberdade de movimento e muito estilo.",
+      "fabric": "Tecido selecionado de toque macio e alta durabilidade.",
+      "washing": [
+        "Lavar com cores similares e sabão neutro",
+        "Não utilizar alvejantes com cloro",
+        "Secar à sombra"
+      ],
+      "createdAt": "2026-11-04"
+    },
     {
       "id": "hk-custom-185955",
       "sku": "CÓD. M5",
