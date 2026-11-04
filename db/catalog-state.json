@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updatedAt": "2026-11-04T00:42:40.662Z",
+  "updatedAt": "2026-11-04T00:43:54.162Z",
   "soldOutIds": [],
   "productOverrides": {},
   "customProducts": [
@@ -87,7 +87,7 @@
     {
       "id": "hk-custom-847990",
       "sku": "CÓD. C16",
-      "name": "SAPATILHA DOURADA COM FLOR",
+      "name": "SAPATILHA COM FLOR",
       "color": "DOURADA",
       "price": 59.9,
       "oldPrice": null,
