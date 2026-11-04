@@ -1,9 +1,53 @@
 {
   "version": 2,
-  "updatedAt": "2026-11-04T00:38:24.877Z",
+  "updatedAt": "2026-11-04T00:38:57.385Z",
   "soldOutIds": [],
   "productOverrides": {},
   "customProducts": [
+    {
+      "id": "hk-custom-737384",
+      "sku": "CÓD. C15",
+      "name": "SANDÁLIA COM LAÇO",
+      "color": "ROSA COM BRANCO",
+      "price": 59.9,
+      "oldPrice": null,
+      "onSale": false,
+      "gender": "Feminino",
+      "category": "Calçados",
+      "brand": "Bizusinho",
+      "season": "Verão",
+      "ageGroup": "bebe",
+      "ageLabel": "Tam. 13 ao 18",
+      "sizes": [
+        "13",
+        "14",
+        "15",
+        "16",
+        "17",
+        "18"
+      ],
+      "registeredSizes": [
+        "13",
+        "14",
+        "15",
+        "16",
+        "17",
+        "18"
+      ],
+      "badge": "Novo",
+      "featured": true,
+      "images": [
+        "https://raw.githubusercontent.com/felipesfs7/happy-kids-moda-infantil/main/assets/uploads/hk-1793752709917-222.jpg"
+      ],
+      "description": "Peça especial da coleção Happy Kids Moda Infantil, unindo conforto, liberdade de movimento e muito estilo.",
+      "fabric": "Tecido selecionado de toque macio e alta durabilidade.",
+      "washing": [
+        "Lavar com cores similares e sabão neutro",
+        "Não utilizar alvejantes com cloro",
+        "Secar à sombra"
+      ],
+      "createdAt": "2026-11-04"
+    },
     {
       "id": "hk-custom-704876",
       "sku": "CÓD. C15",
