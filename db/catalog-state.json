@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updatedAt": "2026-11-04T22:47:12.608Z",
+  "updatedAt": "2026-11-04T22:47:51.588Z",
   "soldOutIds": [],
   "productOverrides": {},
   "customProducts": [
@@ -81,8 +81,8 @@
     {
       "id": "hk-custom-021365",
       "sku": "CÓD. M1",
-      "name": "SANDÁLIA BDE DEDINHO AVIÃO",
-      "color": "Verde",
+      "name": "SANDÁLIA DE DEDINHO AVIÃO",
+      "color": "VERDE",
       "price": 59.9,
       "oldPrice": null,
       "onSale": false,
