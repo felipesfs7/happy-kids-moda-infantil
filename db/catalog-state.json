@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updatedAt": "2026-11-04T00:11:42.219Z",
+  "updatedAt": "2026-11-04T00:13:13.537Z",
   "soldOutIds": [],
   "productOverrides": {},
   "customProducts": [
@@ -407,8 +407,8 @@
     {
       "id": "hk-custom-660309",
       "sku": "CÓD. C8",
-      "name": "SAPATILHA BRANCA PEROLADA",
-      "color": "BRANCA PEROLADA",
+      "name": "SAPATILHA PEROLADA",
+      "color": "BRANCA",
       "price": 59.9,
       "oldPrice": null,
       "onSale": false,
