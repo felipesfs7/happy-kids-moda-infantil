@@ -1,9 +1,49 @@
 {
   "version": 2,
-  "updatedAt": "2026-11-05T17:21:37.970Z",
+  "updatedAt": "2026-11-05T17:23:07.062Z",
   "soldOutIds": [],
   "productOverrides": {},
   "customProducts": [
+    {
+      "id": "hk-custom-387061",
+      "sku": "CÓD. 10",
+      "name": "CONJUNTO BLUSA E CALÇA PANTALONA MEIA MALHA",
+      "color": "MARROM",
+      "price": 102.9,
+      "oldPrice": null,
+      "onSale": false,
+      "gender": "Feminino",
+      "category": "Conjuntos",
+      "brand": "Alakazoo",
+      "season": "Verão",
+      "ageGroup": "4-a-10",
+      "ageLabel": "Tam. 4 ao 10",
+      "sizes": [
+        "4",
+        "6",
+        "8",
+        "10"
+      ],
+      "registeredSizes": [
+        "4",
+        "6",
+        "8",
+        "10"
+      ],
+      "badge": "Novo",
+      "featured": true,
+      "images": [
+        "https://raw.githubusercontent.com/felipesfs7/happy-kids-moda-infantil/main/assets/uploads/hk-1793899380144-176.jpg"
+      ],
+      "description": "Peça especial da coleção Happy Kids Moda Infantil, unindo conforto, liberdade de movimento e muito estilo.",
+      "fabric": "Tecido selecionado de toque macio e alta durabilidade.",
+      "washing": [
+        "Lavar com cores similares e sabão neutro",
+        "Não utilizar alvejantes com cloro",
+        "Secar à sombra"
+      ],
+      "createdAt": "2026-11-05"
+    },
     {
       "id": "hk-custom-282760",
       "sku": "CÓD. 10",
