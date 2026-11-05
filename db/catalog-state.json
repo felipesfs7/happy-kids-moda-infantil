@@ -1,9 +1,49 @@
 {
   "version": 2,
-  "updatedAt": "2026-11-05T17:18:15.655Z",
+  "updatedAt": "2026-11-05T17:18:54.766Z",
   "soldOutIds": [],
   "productOverrides": {},
   "customProducts": [
+    {
+      "id": "hk-custom-134765",
+      "sku": "CÓD. 9",
+      "name": "VESTIDO MEIA MALHA",
+      "color": "ROSA",
+      "price": 64.9,
+      "oldPrice": null,
+      "onSale": false,
+      "gender": "Feminino",
+      "category": "Vestidos",
+      "brand": "Alakazoo",
+      "season": "Verão",
+      "ageGroup": "4-a-10",
+      "ageLabel": "Tam. 4 ao 10",
+      "sizes": [
+        "4",
+        "6",
+        "8",
+        "10"
+      ],
+      "registeredSizes": [
+        "4",
+        "6",
+        "8",
+        "10"
+      ],
+      "badge": "Novo",
+      "featured": true,
+      "images": [
+        "https://raw.githubusercontent.com/felipesfs7/happy-kids-moda-infantil/main/assets/uploads/hk-1793899133159-777.jpg"
+      ],
+      "description": "Peça especial da coleção Happy Kids Moda Infantil, unindo conforto, liberdade de movimento e muito estilo.",
+      "fabric": "Tecido selecionado de toque macio e alta durabilidade.",
+      "washing": [
+        "Lavar com cores similares e sabão neutro",
+        "Não utilizar alvejantes com cloro",
+        "Secar à sombra"
+      ],
+      "createdAt": "2026-11-05"
+    },
     {
       "id": "hk-custom-095654",
       "sku": "CÓD. 9",
