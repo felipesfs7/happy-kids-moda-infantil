@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updatedAt": "2026-11-05T17:37:27.022Z",
+  "updatedAt": "2026-11-05T17:58:43.138Z",
   "soldOutIds": [],
   "productOverrides": {},
   "customProducts": [
@@ -82,7 +82,7 @@
       "price": 112.9,
       "oldPrice": null,
       "onSale": false,
-      "gender": "Feminino",
+      "gender": "Masculino",
       "category": "Conjuntos",
       "brand": "Alakazoo",
       "season": "Verão",
