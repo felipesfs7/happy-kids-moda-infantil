@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updatedAt": "2026-11-05T17:16:58.502Z",
+  "updatedAt": "2026-11-05T17:17:20.686Z",
   "soldOutIds": [],
   "productOverrides": {},
   "customProducts": [
@@ -47,9 +47,9 @@
     {
       "id": "hk-custom-903522",
       "sku": "CÓD. 9",
-      "name": "VESTIDO EM MEIA MALHA",
+      "name": "VESTIDO MEIA MALHA",
       "color": "MARINHO",
-      "price": 64.9,
+      "price": 54.9,
       "oldPrice": null,
       "onSale": false,
       "gender": "Feminino",
