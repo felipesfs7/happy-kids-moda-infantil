@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updatedAt": "2026-11-05T13:38:59.022Z",
+  "updatedAt": "2026-11-05T13:39:01.292Z",
   "soldOutIds": [
     "hk-custom-704409"
   ],
@@ -4703,8 +4703,7 @@
       "sizes": [
         "4",
         "6",
-        "8",
-        "10"
+        "8"
       ],
       "registeredSizes": [
         "4",
@@ -4742,6 +4741,7 @@
       "ageLabel": "Tam. 4 ao 10",
       "sizes": [
         "4",
+        "6",
         "8",
         "10"
       ],
