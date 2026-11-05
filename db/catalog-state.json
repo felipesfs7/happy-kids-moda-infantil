@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updatedAt": "2026-11-05T13:39:04.982Z",
+  "updatedAt": "2026-11-05T16:21:52.030Z",
   "soldOutIds": [
     "hk-custom-704409"
   ],
@@ -4703,7 +4703,8 @@
       "sizes": [
         "4",
         "6",
-        "8"
+        "8",
+        "10"
       ],
       "registeredSizes": [
         "4",
