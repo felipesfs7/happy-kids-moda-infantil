@@ -1,9 +1,47 @@
 {
   "version": 2,
-  "updatedAt": "2026-11-05T17:00:10.190Z",
+  "updatedAt": "2026-11-05T17:01:17.983Z",
   "soldOutIds": [],
   "productOverrides": {},
   "customProducts": [
+    {
+      "id": "hk-custom-077982",
+      "sku": "CÓD. 7",
+      "name": "CONJ EM MALHA TRABALHADA COM RENSA DE CORAÇÃO",
+      "color": "ROSA",
+      "price": 214.9,
+      "oldPrice": null,
+      "onSale": false,
+      "gender": "Feminino",
+      "category": "Conjuntos",
+      "brand": "KAIANI",
+      "season": "Verão",
+      "ageGroup": "4-a-10",
+      "ageLabel": "Tam. 4 ao 8",
+      "sizes": [
+        "4",
+        "6",
+        "8"
+      ],
+      "registeredSizes": [
+        "4",
+        "6",
+        "8"
+      ],
+      "badge": "Novo",
+      "featured": true,
+      "images": [
+        "https://raw.githubusercontent.com/felipesfs7/happy-kids-moda-infantil/main/assets/uploads/hk-1793898070959-285.jpg"
+      ],
+      "description": "Peça especial da coleção Happy Kids Moda Infantil, unindo conforto, liberdade de movimento e muito estilo.",
+      "fabric": "Tecido selecionado de toque macio e alta durabilidade.",
+      "washing": [
+        "Lavar com cores similares e sabão neutro",
+        "Não utilizar alvejantes com cloro",
+        "Secar à sombra"
+      ],
+      "createdAt": "2026-11-05"
+    },
     {
       "id": "hk-custom-010190",
       "sku": "CÓD. 7",
