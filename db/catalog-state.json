@@ -1,9 +1,53 @@
 {
   "version": 2,
-  "updatedAt": "2026-11-06T18:55:51.452Z",
+  "updatedAt": "2026-11-06T18:56:23.907Z",
   "soldOutIds": [],
   "productOverrides": {},
   "customProducts": [
+    {
+      "id": "hk-custom-383905",
+      "sku": "CÓD. M6",
+      "name": "SANDALIA DE DEDINHO LEME",
+      "color": "MARINHO",
+      "price": 59.9,
+      "oldPrice": null,
+      "onSale": false,
+      "gender": "Masculino",
+      "category": "Calçados",
+      "brand": "Bizusinho",
+      "season": "Verão",
+      "ageGroup": "bebe",
+      "ageLabel": "Tam. 13 ao 18",
+      "sizes": [
+        "13",
+        "14",
+        "15",
+        "16",
+        "17",
+        "18"
+      ],
+      "registeredSizes": [
+        "13",
+        "14",
+        "15",
+        "16",
+        "17",
+        "18"
+      ],
+      "badge": "Novo",
+      "featured": true,
+      "images": [
+        "https://raw.githubusercontent.com/felipesfs7/happy-kids-moda-infantil/main/assets/uploads/hk-1793991382177-215.jpg"
+      ],
+      "description": "Peça especial da coleção Happy Kids Moda Infantil, unindo conforto, liberdade de movimento e muito estilo.",
+      "fabric": "Tecido selecionado de toque macio e alta durabilidade.",
+      "washing": [
+        "Lavar com cores similares e sabão neutro",
+        "Não utilizar alvejantes com cloro",
+        "Secar à sombra"
+      ],
+      "createdAt": "2026-11-06"
+    },
     {
       "id": "hk-custom-351451",
       "sku": "CÓD. M6",
