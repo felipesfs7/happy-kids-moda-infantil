@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updatedAt": "2026-11-09T13:45:00.322Z",
+  "updatedAt": "2026-11-09T13:45:13.314Z",
   "soldOutIds": [],
   "productOverrides": {},
   "customProducts": [
@@ -1695,6 +1695,7 @@
       "sizes": [
         "13",
         "14",
+        "15",
         "16",
         "17",
         "18"
