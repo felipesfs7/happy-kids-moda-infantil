@@ -1,9 +1,43 @@
 {
   "version": 2,
-  "updatedAt": "2026-11-09T16:52:45.583Z",
+  "updatedAt": "2026-11-09T16:53:44.096Z",
   "soldOutIds": [],
   "productOverrides": {},
   "customProducts": [
+    {
+      "id": "hk-custom-224095",
+      "sku": "CÓD. 32",
+      "name": "CONJUNTO BLUSA E SHORT EM MALHA NIKO",
+      "color": "ROSA",
+      "price": 129.9,
+      "oldPrice": null,
+      "onSale": false,
+      "gender": "Feminino",
+      "category": "Conjuntos",
+      "brand": "Alakazoo",
+      "season": "Verão",
+      "ageGroup": "4-a-10",
+      "ageLabel": "Tam. 8",
+      "sizes": [
+        "8"
+      ],
+      "registeredSizes": [
+        "8"
+      ],
+      "badge": "Novo",
+      "featured": true,
+      "images": [
+        "https://raw.githubusercontent.com/felipesfs7/happy-kids-moda-infantil/main/assets/uploads/hk-1794243219995-916.jpg"
+      ],
+      "description": "Peça especial da coleção Happy Kids Moda Infantil, unindo conforto, liberdade de movimento e muito estilo.",
+      "fabric": "Tecido selecionado de toque macio e alta durabilidade.",
+      "washing": [
+        "Lavar com cores similares e sabão neutro",
+        "Não utilizar alvejantes com cloro",
+        "Secar à sombra"
+      ],
+      "createdAt": "2026-11-09"
+    },
     {
       "id": "hk-custom-165582",
       "sku": "CÓD. 31",
