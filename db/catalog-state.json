@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updatedAt": "2026-11-09T17:10:49.036Z",
+  "updatedAt": "2026-11-09T18:27:41.156Z",
   "soldOutIds": [],
   "productOverrides": {},
   "customProducts": [
@@ -4962,8 +4962,7 @@
       "ageLabel": "Tam. 1 ao 3",
       "sizes": [
         "1",
-        "2",
-        "3"
+        "2"
       ],
       "registeredSizes": [
         "1",
