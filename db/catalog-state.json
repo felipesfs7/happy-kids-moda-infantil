@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updatedAt": "2026-11-06T18:56:23.907Z",
+  "updatedAt": "2026-11-09T13:36:07.849Z",
   "soldOutIds": [],
   "productOverrides": {},
   "customProducts": [
@@ -2443,7 +2443,6 @@
       "ageGroup": "bebe",
       "ageLabel": "Tam. 13 ao 18",
       "sizes": [
-        "13",
         "14",
         "15",
         "16",
