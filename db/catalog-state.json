@@ -1,9 +1,43 @@
 {
   "version": 2,
-  "updatedAt": "2026-11-09T13:49:16.795Z",
+  "updatedAt": "2026-11-09T16:40:27.924Z",
   "soldOutIds": [],
   "productOverrides": {},
   "customProducts": [
+    {
+      "id": "hk-custom-427919",
+      "sku": "CÓD. 21",
+      "name": "CONJUNTO BLUSA E CALÇA EM MALHA NIKO",
+      "color": null,
+      "price": 159.9,
+      "oldPrice": null,
+      "onSale": false,
+      "gender": "Feminino",
+      "category": "Conjuntos",
+      "brand": "Alakazoo",
+      "season": "Verão",
+      "ageGroup": "4-a-10",
+      "ageLabel": "Tam. 4",
+      "sizes": [
+        "4"
+      ],
+      "registeredSizes": [
+        "4"
+      ],
+      "badge": "Novo",
+      "featured": true,
+      "images": [
+        "https://raw.githubusercontent.com/felipesfs7/happy-kids-moda-infantil/main/assets/uploads/hk-1794242350026-455.jpg"
+      ],
+      "description": "Peça especial da coleção Happy Kids Moda Infantil, unindo conforto, liberdade de movimento e muito estilo.",
+      "fabric": "Tecido selecionado de toque macio e alta durabilidade.",
+      "washing": [
+        "Lavar com cores similares e sabão neutro",
+        "Não utilizar alvejantes com cloro",
+        "Secar à sombra"
+      ],
+      "createdAt": "2026-11-09"
+    },
     {
       "id": "hk-custom-383905",
       "sku": "CÓD. M6",
