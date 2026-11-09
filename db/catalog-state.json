@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updatedAt": "2026-11-09T13:45:52.886Z",
+  "updatedAt": "2026-11-09T13:47:27.644Z",
   "soldOutIds": [],
   "productOverrides": {},
   "customProducts": [
@@ -20,7 +20,6 @@
       "ageLabel": "Tam. 13 ao 18",
       "sizes": [
         "13",
-        "14",
         "15",
         "16",
         "17",
