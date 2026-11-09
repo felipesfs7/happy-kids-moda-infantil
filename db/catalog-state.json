@@ -1,9 +1,43 @@
 {
   "version": 2,
-  "updatedAt": "2026-11-09T16:43:00.619Z",
+  "updatedAt": "2026-11-09T16:44:00.035Z",
   "soldOutIds": [],
   "productOverrides": {},
   "customProducts": [
+    {
+      "id": "hk-custom-640034",
+      "sku": "CÓD. 24",
+      "name": "CONJUNTO BLUSA E SHORT SAIA EM MALHA",
+      "color": null,
+      "price": 99.9,
+      "oldPrice": null,
+      "onSale": false,
+      "gender": "Feminino",
+      "category": "Conjuntos",
+      "brand": "Alakazoo",
+      "season": "Verão",
+      "ageGroup": "1-a-3",
+      "ageLabel": "Tam. 3",
+      "sizes": [
+        "3"
+      ],
+      "registeredSizes": [
+        "3"
+      ],
+      "badge": "Novo",
+      "featured": true,
+      "images": [
+        "https://raw.githubusercontent.com/felipesfs7/happy-kids-moda-infantil/main/assets/uploads/hk-1794242590924-904.jpg"
+      ],
+      "description": "Peça especial da coleção Happy Kids Moda Infantil, unindo conforto, liberdade de movimento e muito estilo.",
+      "fabric": "Tecido selecionado de toque macio e alta durabilidade.",
+      "washing": [
+        "Lavar com cores similares e sabão neutro",
+        "Não utilizar alvejantes com cloro",
+        "Secar à sombra"
+      ],
+      "createdAt": "2026-11-09"
+    },
     {
       "id": "hk-custom-580618",
       "sku": "CÓD. 23",
