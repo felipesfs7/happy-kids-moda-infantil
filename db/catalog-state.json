@@ -1,9 +1,47 @@
 {
   "version": 2,
-  "updatedAt": "2026-11-11T17:20:17.353Z",
+  "updatedAt": "2026-11-11T17:21:49.247Z",
   "soldOutIds": [],
   "productOverrides": {},
   "customProducts": [
+    {
+      "id": "hk-custom-709246",
+      "sku": "CÓD. 43",
+      "name": "COMJUNTO POLO PIQUET COM ELASTANO E SHORT VISCOLINHO",
+      "color": null,
+      "price": 149.9,
+      "oldPrice": null,
+      "onSale": false,
+      "gender": "Masculino",
+      "category": "Conjuntos",
+      "brand": "QUIMBY",
+      "season": "Verão",
+      "ageGroup": "1-a-3",
+      "ageLabel": "Tam. 1 ao 3",
+      "sizes": [
+        "1",
+        "2",
+        "3"
+      ],
+      "registeredSizes": [
+        "1",
+        "2",
+        "3"
+      ],
+      "badge": "Novo",
+      "featured": true,
+      "images": [
+        "https://raw.githubusercontent.com/felipesfs7/happy-kids-moda-infantil/main/assets/uploads/hk-1794417634702-504.jpg"
+      ],
+      "description": "Peça especial da coleção Happy Kids Moda Infantil, unindo conforto, liberdade de movimento e muito estilo.",
+      "fabric": "Tecido selecionado de toque macio e alta durabilidade.",
+      "washing": [
+        "Lavar com cores similares e sabão neutro",
+        "Não utilizar alvejantes com cloro",
+        "Secar à sombra"
+      ],
+      "createdAt": "2026-11-11"
+    },
     {
       "id": "hk-custom-617352",
       "sku": "CÓD. 42",
