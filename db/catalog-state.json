@@ -1,9 +1,47 @@
 {
   "version": 2,
-  "updatedAt": "2026-11-11T17:14:52.790Z",
+  "updatedAt": "2026-11-11T17:16:44.232Z",
   "soldOutIds": [],
   "productOverrides": {},
   "customProducts": [
+    {
+      "id": "hk-custom-404228",
+      "sku": "CÓD. 41",
+      "name": "CONJUNTO BLUSA EM COTTON E SHORT EM RIBANA CANELADA",
+      "color": null,
+      "price": 129.9,
+      "oldPrice": null,
+      "onSale": false,
+      "gender": "Feminino",
+      "category": "Conjuntos",
+      "brand": "QUIMBY",
+      "season": "Verão",
+      "ageGroup": "4-a-10",
+      "ageLabel": "Tam. 4 ao 8",
+      "sizes": [
+        "4",
+        "6",
+        "8"
+      ],
+      "registeredSizes": [
+        "4",
+        "6",
+        "8"
+      ],
+      "badge": "Novo",
+      "featured": true,
+      "images": [
+        "https://raw.githubusercontent.com/felipesfs7/happy-kids-moda-infantil/main/assets/uploads/hk-1794417346833-236.jpg"
+      ],
+      "description": "Peça especial da coleção Happy Kids Moda Infantil, unindo conforto, liberdade de movimento e muito estilo.",
+      "fabric": "Tecido selecionado de toque macio e alta durabilidade.",
+      "washing": [
+        "Lavar com cores similares e sabão neutro",
+        "Não utilizar alvejantes com cloro",
+        "Secar à sombra"
+      ],
+      "createdAt": "2026-11-11"
+    },
     {
       "id": "hk-custom-292789",
       "sku": "CÓD. 40",
