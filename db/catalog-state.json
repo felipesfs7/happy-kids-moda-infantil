@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updatedAt": "2026-11-11T17:06:16.850Z",
+  "updatedAt": "2026-11-11T17:07:05.706Z",
   "soldOutIds": [],
   "productOverrides": {},
   "customProducts": [
@@ -8,7 +8,7 @@
       "id": "hk-custom-776849",
       "sku": "CÓD. 39",
       "name": "PIJAMA EM MEIA MALHA",
-      "color": null,
+      "color": "ROSA",
       "price": 74.9,
       "oldPrice": null,
       "onSale": false,
