@@ -1,9 +1,43 @@
 {
   "version": 2,
-  "updatedAt": "2026-11-11T17:10:39.392Z",
+  "updatedAt": "2026-11-11T17:11:37.024Z",
   "soldOutIds": [],
   "productOverrides": {},
   "customProducts": [
+    {
+      "id": "hk-custom-097021",
+      "sku": "CÓD. 40",
+      "name": "PIJAMA EM MALHA RIBANA",
+      "color": "PRETO",
+      "price": 89.9,
+      "oldPrice": null,
+      "onSale": false,
+      "gender": "Feminino",
+      "category": "Pijamas",
+      "brand": "Alakazoo",
+      "season": "Verão",
+      "ageGroup": "4-a-10",
+      "ageLabel": "Tam. 10",
+      "sizes": [
+        "10"
+      ],
+      "registeredSizes": [
+        "10"
+      ],
+      "badge": "Novo",
+      "featured": true,
+      "images": [
+        "https://raw.githubusercontent.com/felipesfs7/happy-kids-moda-infantil/main/assets/uploads/hk-1794417048451-518.jpg"
+      ],
+      "description": "Peça especial da coleção Happy Kids Moda Infantil, unindo conforto, liberdade de movimento e muito estilo.",
+      "fabric": "Tecido selecionado de toque macio e alta durabilidade.",
+      "washing": [
+        "Lavar com cores similares e sabão neutro",
+        "Não utilizar alvejantes com cloro",
+        "Secar à sombra"
+      ],
+      "createdAt": "2026-11-11"
+    },
     {
       "id": "hk-custom-039388",
       "sku": "CÓD. 40",
