@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updatedAt": "2026-11-09T18:27:41.156Z",
+  "updatedAt": "2026-11-11T11:47:09.086Z",
   "soldOutIds": [],
   "productOverrides": {},
   "customProducts": [
@@ -942,7 +942,6 @@
       "ageGroup": "4-a-10",
       "ageLabel": "Tam. 4 ao 10",
       "sizes": [
-        "4",
         "6",
         "8",
         "10"
