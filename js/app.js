@@ -866,6 +866,89 @@ function toggleSingleSizeStock(productId, size) {
   syncCloudDatabase(`Atualizou tamanhos de ${product.sku}`);
 }
 
+function compareSkusAscending(skuA, skuB) {
+  const a = normalizeSku(skuA);
+  const b = normalizeSku(skuB);
+
+  if (!a && !b) return 0;
+  if (!a) return 1;
+  if (!b) return -1;
+
+  const aIsPureNum = /^\d+$/.test(a);
+  const bIsPureNum = /^\d+$/.test(b);
+
+  if (aIsPureNum && bIsPureNum) {
+    const numDiff = Number(a) - Number(b);
+    if (numDiff !== 0) return numDiff;
+    return a.localeCompare(b);
+  }
+
+  // Códigos puramente numéricos vêm antes de códigos com prefixo de letra (ex.: C1, M1)
+  if (aIsPureNum !== bIsPureNum) {
+    return aIsPureNum ? -1 : 1;
+  }
+
+  // Comparação alfanumérica natural (ex.: C1, C2, ..., C10, C18, M1, M2)
+  const tokensA = a.match(/[A-Z]+|\d+/g) || [a];
+  const tokensB = b.match(/[A-Z]+|\d+/g) || [b];
+  const maxLen = Math.max(tokensA.length, tokensB.length);
+  for (let i = 0; i < maxLen; i++) {
+    if (i >= tokensA.length) return -1;
+    if (i >= tokensB.length) return 1;
+    const ta = tokensA[i];
+    const tb = tokensB[i];
+    const taNum = /^\d+$/.test(ta);
+    const tbNum = /^\d+$/.test(tb);
+    if (taNum && tbNum) {
+      const diff = Number(ta) - Number(tb);
+      if (diff !== 0) return diff;
+    } else if (taNum !== tbNum) {
+      return taNum ? -1 : 1;
+    } else {
+      const cmp = ta.localeCompare(tb, "pt-BR", { sensitivity: "base" });
+      if (cmp !== 0) return cmp;
+    }
+  }
+  return a.localeCompare(b);
+}
+
+function getQuickCodeMatchTier(product, normQuery, cleanCodeQuery) {
+  if (!normQuery && !cleanCodeQuery) return 0;
+  const normSku = normalizeSku(product.sku);
+  const skuNoPrefix = (product.sku || "").toLowerCase().replace(/^c[oó]d\.?\s*/i, "").trim();
+
+  // 0: Correspondência exata com o código digitado (ex.: digitar "1" -> "CÓD. 1" sempre no topo)
+  if (normQuery && normSku === normQuery) return 0;
+  // 1: Correspondência parcial no código (ex.: "10", "11", "41", "C1", "M1")
+  if ((normQuery && normSku.includes(normQuery)) || (cleanCodeQuery && skuNoPrefix.includes(cleanCodeQuery))) {
+    return 1;
+  }
+  // 2: Correspondência apenas no nome do produto
+  return 2;
+}
+
+function sortProductsAscendingBySku(products, normQuery = "", cleanCodeQuery = "") {
+  return [...products].sort((a, b) => {
+    if (normQuery || cleanCodeQuery) {
+      const tierDiff =
+        getQuickCodeMatchTier(a, normQuery, cleanCodeQuery) -
+        getQuickCodeMatchTier(b, normQuery, cleanCodeQuery);
+      if (tierDiff !== 0) return tierDiff;
+    }
+
+    const skuDiff = compareSkusAscending(a.sku, b.sku);
+    if (skuDiff !== 0) return skuDiff;
+
+    // Mantém variações/cores do mesmo código agrupadas em ordem alfabética
+    const colorA = String(a.color || getProductColorOrVariant(a) || a.name || "");
+    const colorB = String(b.color || getProductColorOrVariant(b) || b.name || "");
+    const colorDiff = colorA.localeCompare(colorB, "pt-BR", { numeric: true, sensitivity: "base" });
+    if (colorDiff !== 0) return colorDiff;
+
+    return String(a.name || "").localeCompare(String(b.name || ""), "pt-BR", { numeric: true, sensitivity: "base" });
+  });
+}
+
 function renderQuickCodeManager() {
   const container = document.getElementById("admin-quick-code-results");
   const soldOutCounter = document.getElementById("admin-soldout-count-badge");
@@ -878,16 +961,23 @@ function renderQuickCodeManager() {
 
   const rawQuery = (AppState.admin.quickCodeQuery || "").trim().toLowerCase();
   const cleanCodeQuery = rawQuery.replace(/^c[oó]d\.?\s*/i, "").trim();
+  const normQuery = normalizeSku(rawQuery) || cleanCodeQuery.replace(/[^a-z0-9]/gi, "").toUpperCase();
 
   let matches = [];
   if (AppState.admin.showOnlySoldOutInQuick) {
-    matches = soldOutProducts;
+    matches = sortProductsAscendingBySku(soldOutProducts);
   } else if (cleanCodeQuery.length > 0) {
-    matches = AppState.allProducts.filter((p) => {
+    const filtered = AppState.allProducts.filter((p) => {
       const skuClean = (p.sku || "").toLowerCase();
+      const normSku = normalizeSku(p.sku);
       const nameClean = (p.name || "").toLowerCase();
-      return skuClean.includes(cleanCodeQuery) || nameClean.includes(cleanCodeQuery);
+      return (
+        skuClean.includes(cleanCodeQuery) ||
+        (normQuery && normSku.includes(normQuery)) ||
+        nameClean.includes(cleanCodeQuery)
+      );
     });
+    matches = sortProductsAscendingBySku(filtered, normQuery, cleanCodeQuery);
   }
 
   if (!AppState.admin.showOnlySoldOutInQuick && cleanCodeQuery.length === 0) {
