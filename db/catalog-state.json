@@ -1,9 +1,43 @@
 {
   "version": 2,
-  "updatedAt": "2026-11-13T17:23:34.704Z",
+  "updatedAt": "2026-11-13T17:24:05.264Z",
   "soldOutIds": [],
   "productOverrides": {},
   "customProducts": [
+    {
+      "id": "hk-custom-645264",
+      "sku": "CÓD. 92",
+      "name": "PIJAMA MALHA MONDELI",
+      "color": "VERDE",
+      "price": 79.9,
+      "oldPrice": null,
+      "onSale": false,
+      "gender": "Feminino",
+      "category": "Pijamas",
+      "brand": "Alakazoo",
+      "season": "Verão",
+      "ageGroup": "1-a-3",
+      "ageLabel": "Tam. 1",
+      "sizes": [
+        "1"
+      ],
+      "registeredSizes": [
+        "1"
+      ],
+      "badge": "Novo",
+      "featured": true,
+      "images": [
+        "https://raw.githubusercontent.com/felipesfs7/happy-kids-moda-infantil/main/assets/uploads/hk-1794590621626-669.jpg"
+      ],
+      "description": "Peça especial da coleção Happy Kids Moda Infantil, unindo conforto, liberdade de movimento e muito estilo.",
+      "fabric": "Tecido selecionado de toque macio e alta durabilidade.",
+      "washing": [
+        "Lavar com cores similares e sabão neutro",
+        "Não utilizar alvejantes com cloro",
+        "Secar à sombra"
+      ],
+      "createdAt": "2026-11-13"
+    },
     {
       "id": "hk-custom-614703",
       "sku": "CÓD. 92",
