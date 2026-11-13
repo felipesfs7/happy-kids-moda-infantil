@@ -1,9 +1,49 @@
 {
   "version": 2,
-  "updatedAt": "2026-11-13T16:41:44.419Z",
+  "updatedAt": "2026-11-13T16:42:37.570Z",
   "soldOutIds": [],
   "productOverrides": {},
   "customProducts": [
+    {
+      "id": "hk-custom-157570",
+      "sku": "CÓD. 45",
+      "name": "CONJUNTO CAMISETA MALHA TRABALHADA E BERMUDA MOLETINHO",
+      "color": "VERDE",
+      "price": 79.9,
+      "oldPrice": null,
+      "onSale": false,
+      "gender": "Masculino",
+      "category": "Conjuntos",
+      "brand": "BABY VEST",
+      "season": "Verão",
+      "ageGroup": "4-a-10",
+      "ageLabel": "Tam. 4 ao 10",
+      "sizes": [
+        "4",
+        "6",
+        "8",
+        "10"
+      ],
+      "registeredSizes": [
+        "4",
+        "6",
+        "8",
+        "10"
+      ],
+      "badge": "Novo",
+      "featured": true,
+      "images": [
+        "https://raw.githubusercontent.com/felipesfs7/happy-kids-moda-infantil/main/assets/uploads/hk-1794588109847-646.jpg"
+      ],
+      "description": "Peça especial da coleção Happy Kids Moda Infantil, unindo conforto, liberdade de movimento e muito estilo.",
+      "fabric": "Tecido selecionado de toque macio e alta durabilidade.",
+      "washing": [
+        "Lavar com cores similares e sabão neutro",
+        "Não utilizar alvejantes com cloro",
+        "Secar à sombra"
+      ],
+      "createdAt": "2026-11-13"
+    },
     {
       "id": "hk-custom-104417",
       "sku": "CÓD. 46",
