@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updatedAt": "2026-11-18T13:05:04.104Z",
+  "updatedAt": "2026-11-18T13:09:49.959Z",
   "soldOutIds": [],
   "productOverrides": {},
   "customProducts": [
@@ -3413,8 +3413,7 @@
       "sizes": [
         "4",
         "6",
-        "8",
-        "10"
+        "8"
       ],
       "registeredSizes": [
         "4",
