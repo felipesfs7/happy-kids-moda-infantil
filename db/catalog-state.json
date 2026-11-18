@@ -1,7 +1,9 @@
 {
   "version": 2,
-  "updatedAt": "2026-11-18T13:10:18.273Z",
-  "soldOutIds": [],
+  "updatedAt": "2026-11-18T13:11:09.158Z",
+  "soldOutIds": [
+    "hk-custom-249035"
+  ],
   "productOverrides": {},
   "customProducts": [
     {
@@ -1986,9 +1988,7 @@
       "season": "Verão",
       "ageGroup": "1-a-3",
       "ageLabel": "Tam. 1",
-      "sizes": [
-        "1"
-      ],
+      "sizes": [],
       "registeredSizes": [
         "1"
       ],
