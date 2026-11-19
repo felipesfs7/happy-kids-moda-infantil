@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updatedAt": "2026-11-19T13:26:30.329Z",
+  "updatedAt": "2026-11-19T13:26:41.701Z",
   "soldOutIds": [
     "hk-custom-249035"
   ],
@@ -3295,8 +3295,7 @@
       "ageLabel": "Tam. 12 ao 16",
       "sizes": [
         "12",
-        "14",
-        "16"
+        "14"
       ],
       "registeredSizes": [
         "12",
@@ -5836,6 +5835,7 @@
       "ageGroup": "bebe",
       "ageLabel": "Tam. 13 ao 18",
       "sizes": [
+        "13",
         "14",
         "15",
         "16",
