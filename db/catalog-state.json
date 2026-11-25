@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updatedAt": "2026-11-25T17:03:00.211Z",
+  "updatedAt": "2026-11-25T17:03:14.128Z",
   "soldOutIds": [],
   "productOverrides": {},
   "customProducts": [
@@ -43,7 +43,7 @@
       "sku": "CÓD. 68",
       "name": "BLUSA DE MALHA",
       "color": "PRETA",
-      "price": 39.9,
+      "price": 34.9,
       "oldPrice": null,
       "onSale": false,
       "gender": "Feminino",
