@@ -1,9 +1,7 @@
 {
   "version": 2,
-  "updatedAt": "2026-11-25T16:21:39.247Z",
-  "soldOutIds": [
-    "hk-custom-249035"
-  ],
+  "updatedAt": "2026-11-25T16:28:52.559Z",
+  "soldOutIds": [],
   "productOverrides": {},
   "customProducts": [
     {
@@ -2048,38 +2046,6 @@
         "Secar à sombra"
       ],
       "createdAt": "2026-11-11"
-    },
-    {
-      "id": "hk-custom-249035",
-      "sku": "CÓD. 37",
-      "name": "CONJUNTO BLUSA MALHA NIKO E SHORT MOLETINHO",
-      "color": null,
-      "price": 109.9,
-      "oldPrice": null,
-      "onSale": false,
-      "gender": "Feminino",
-      "category": "Conjuntos",
-      "brand": "Alakazoo",
-      "season": "Verão",
-      "ageGroup": "1-a-3",
-      "ageLabel": "Tam. 1",
-      "sizes": [],
-      "registeredSizes": [
-        "1"
-      ],
-      "badge": "Novo",
-      "featured": true,
-      "images": [
-        "https://raw.githubusercontent.com/felipesfs7/happy-kids-moda-infantil/main/assets/uploads/hk-1794244210909-455.jpg"
-      ],
-      "description": "Peça especial da coleção Happy Kids Moda Infantil, unindo conforto, liberdade de movimento e muito estilo.",
-      "fabric": "Tecido selecionado de toque macio e alta durabilidade.",
-      "washing": [
-        "Lavar com cores similares e sabão neutro",
-        "Não utilizar alvejantes com cloro",
-        "Secar à sombra"
-      ],
-      "createdAt": "2026-11-09"
     },
     {
       "id": "hk-custom-201635",
@@ -12928,6 +12894,7 @@
     "hk-custom-169819",
     "hk-custom-201402",
     "hk-custom-704409",
-    "hk-custom-543279"
+    "hk-custom-543279",
+    "hk-custom-249035"
   ]
 }
