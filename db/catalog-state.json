@@ -1,9 +1,43 @@
 {
   "version": 2,
-  "updatedAt": "2026-11-25T16:59:55.176Z",
+  "updatedAt": "2026-11-25T17:01:31.569Z",
   "soldOutIds": [],
   "productOverrides": {},
   "customProducts": [
+    {
+      "id": "hk-custom-091568",
+      "sku": "CÓD. 68",
+      "name": "BLUSA DE MALHA",
+      "color": "PRETA",
+      "price": 39.9,
+      "oldPrice": null,
+      "onSale": false,
+      "gender": "Feminino",
+      "category": "Blusas",
+      "brand": "BABY VEST",
+      "season": "Verão",
+      "ageGroup": "1-a-3",
+      "ageLabel": "Tam. 3",
+      "sizes": [
+        "3"
+      ],
+      "registeredSizes": [
+        "3"
+      ],
+      "badge": "Novo",
+      "featured": true,
+      "images": [
+        "https://raw.githubusercontent.com/felipesfs7/happy-kids-moda-infantil/main/assets/uploads/hk-1795626089782-567.jpg"
+      ],
+      "description": "Peça especial da coleção Happy Kids Moda Infantil, unindo conforto, liberdade de movimento e muito estilo.",
+      "fabric": "Tecido selecionado de toque macio e alta durabilidade.",
+      "washing": [
+        "Lavar com cores similares e sabão neutro",
+        "Não utilizar alvejantes com cloro",
+        "Secar à sombra"
+      ],
+      "createdAt": "2026-11-25"
+    },
     {
       "id": "hk-custom-995175",
       "sku": "CÓD. 67",
