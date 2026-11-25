@@ -1,9 +1,43 @@
 {
   "version": 2,
-  "updatedAt": "2026-11-25T16:47:42.399Z",
+  "updatedAt": "2026-11-25T16:49:49.875Z",
   "soldOutIds": [],
   "productOverrides": {},
   "customProducts": [
+    {
+      "id": "hk-custom-389874",
+      "sku": "CÓD. 79",
+      "name": "PIJAMA MALHA MODELLI",
+      "color": "DINO",
+      "price": 116.9,
+      "oldPrice": null,
+      "onSale": false,
+      "gender": "Masculino",
+      "category": "Pijamas",
+      "brand": "Alakazoo",
+      "season": "Verão",
+      "ageGroup": "4-a-10",
+      "ageLabel": "Tam. 8",
+      "sizes": [
+        "8"
+      ],
+      "registeredSizes": [
+        "8"
+      ],
+      "badge": "Novo",
+      "featured": true,
+      "images": [
+        "https://raw.githubusercontent.com/felipesfs7/happy-kids-moda-infantil/main/assets/uploads/hk-1795625316132-964.jpg"
+      ],
+      "description": "Peça especial da coleção Happy Kids Moda Infantil, unindo conforto, liberdade de movimento e muito estilo.",
+      "fabric": "Tecido selecionado de toque macio e alta durabilidade.",
+      "washing": [
+        "Lavar com cores similares e sabão neutro",
+        "Não utilizar alvejantes com cloro",
+        "Secar à sombra"
+      ],
+      "createdAt": "2026-11-25"
+    },
     {
       "id": "hk-custom-219774",
       "sku": "CÓD. 55",
