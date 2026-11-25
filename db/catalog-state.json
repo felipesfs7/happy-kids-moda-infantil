@@ -1,9 +1,47 @@
 {
   "version": 2,
-  "updatedAt": "2026-11-25T16:49:49.875Z",
+  "updatedAt": "2026-11-25T16:53:58.515Z",
   "soldOutIds": [],
   "productOverrides": {},
   "customProducts": [
+    {
+      "id": "hk-custom-638514",
+      "sku": "CÓD. 62",
+      "name": "CONJUNTO BLUSA MALHA SHORT MALHA TRABALHADA",
+      "color": null,
+      "price": 62.9,
+      "oldPrice": null,
+      "onSale": false,
+      "gender": "Feminino",
+      "category": "Conjuntos",
+      "brand": "BABY VEST",
+      "season": "Verão",
+      "ageGroup": "1-a-3",
+      "ageLabel": "Tam. 1 ao 3",
+      "sizes": [
+        "1",
+        "2",
+        "3"
+      ],
+      "registeredSizes": [
+        "1",
+        "2",
+        "3"
+      ],
+      "badge": "Novo",
+      "featured": true,
+      "images": [
+        "https://raw.githubusercontent.com/felipesfs7/happy-kids-moda-infantil/main/assets/uploads/hk-1795625595574-851.jpg"
+      ],
+      "description": "Peça especial da coleção Happy Kids Moda Infantil, unindo conforto, liberdade de movimento e muito estilo.",
+      "fabric": "Tecido selecionado de toque macio e alta durabilidade.",
+      "washing": [
+        "Lavar com cores similares e sabão neutro",
+        "Não utilizar alvejantes com cloro",
+        "Secar à sombra"
+      ],
+      "createdAt": "2026-11-25"
+    },
     {
       "id": "hk-custom-389874",
       "sku": "CÓD. 79",
