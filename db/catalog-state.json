@@ -1,11 +1,51 @@
 {
   "version": 2,
-  "updatedAt": "2026-11-27T17:16:50.917Z",
+  "updatedAt": "2026-11-27T17:18:27.674Z",
   "soldOutIds": [
     "hk-custom-881125"
   ],
   "productOverrides": {},
   "customProducts": [
+    {
+      "id": "hk-custom-907673",
+      "sku": "CÓD. 88",
+      "name": "CONJUNTO BLUSA E SHORT TECIDO COM ACABAMENTO EM RENDA",
+      "color": null,
+      "price": 209.9,
+      "oldPrice": null,
+      "onSale": false,
+      "gender": "Feminino",
+      "category": "Conjuntos",
+      "brand": "KIKI",
+      "season": "Verão",
+      "ageGroup": "4-a-10",
+      "ageLabel": "Tam. 6 ao 12",
+      "sizes": [
+        "6",
+        "8",
+        "10",
+        "12"
+      ],
+      "registeredSizes": [
+        "6",
+        "8",
+        "10",
+        "12"
+      ],
+      "badge": "Novo",
+      "featured": true,
+      "images": [
+        "https://raw.githubusercontent.com/felipesfs7/happy-kids-moda-infantil/main/assets/uploads/hk-1795799847570-113.jpg"
+      ],
+      "description": "Peça especial da coleção Happy Kids Moda Infantil, unindo conforto, liberdade de movimento e muito estilo.",
+      "fabric": "Tecido selecionado de toque macio e alta durabilidade.",
+      "washing": [
+        "Lavar com cores similares e sabão neutro",
+        "Não utilizar alvejantes com cloro",
+        "Secar à sombra"
+      ],
+      "createdAt": "2026-11-27"
+    },
     {
       "id": "hk-custom-810917",
       "sku": "CÓD. 91",
