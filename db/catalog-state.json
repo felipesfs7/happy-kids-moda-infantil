@@ -1,11 +1,47 @@
 {
   "version": 2,
-  "updatedAt": "2026-11-27T16:39:07.304Z",
+  "updatedAt": "2026-11-27T16:40:06.723Z",
   "soldOutIds": [
     "hk-custom-881125"
   ],
   "productOverrides": {},
   "customProducts": [
+    {
+      "id": "hk-custom-606722",
+      "sku": "CÓD. 74",
+      "name": "BLUSA EM MALHA",
+      "color": "VERDE",
+      "price": 39.9,
+      "oldPrice": null,
+      "onSale": false,
+      "gender": "Feminino",
+      "category": "Blusas",
+      "brand": "BABY VEST",
+      "season": "Verão",
+      "ageGroup": "4-a-10",
+      "ageLabel": "Tam. 8 ao 10",
+      "sizes": [
+        "8",
+        "10"
+      ],
+      "registeredSizes": [
+        "8",
+        "10"
+      ],
+      "badge": "Novo",
+      "featured": true,
+      "images": [
+        "https://raw.githubusercontent.com/felipesfs7/happy-kids-moda-infantil/main/assets/uploads/hk-1795797564647-304.jpg"
+      ],
+      "description": "Peça especial da coleção Happy Kids Moda Infantil, unindo conforto, liberdade de movimento e muito estilo.",
+      "fabric": "Tecido selecionado de toque macio e alta durabilidade.",
+      "washing": [
+        "Lavar com cores similares e sabão neutro",
+        "Não utilizar alvejantes com cloro",
+        "Secar à sombra"
+      ],
+      "createdAt": "2026-11-27"
+    },
     {
       "id": "hk-custom-547303",
       "sku": "CÓD. 74",
