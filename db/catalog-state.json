@@ -1,11 +1,51 @@
 {
   "version": 2,
-  "updatedAt": "2026-11-27T17:09:29.896Z",
+  "updatedAt": "2026-11-27T17:10:10.054Z",
   "soldOutIds": [
     "hk-custom-881125"
   ],
   "productOverrides": {},
   "customProducts": [
+    {
+      "id": "hk-custom-410052",
+      "sku": "CÓD. 80",
+      "name": "VESTIDO MALHA TRABALHADA",
+      "color": null,
+      "price": 149.9,
+      "oldPrice": null,
+      "onSale": false,
+      "gender": "Feminino",
+      "category": "Vestidos",
+      "brand": "KIKI",
+      "season": "Verão",
+      "ageGroup": "1-a-3",
+      "ageLabel": "Tam. 1 ao 4",
+      "sizes": [
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "registeredSizes": [
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "badge": "Novo",
+      "featured": true,
+      "images": [
+        "https://raw.githubusercontent.com/felipesfs7/happy-kids-moda-infantil/main/assets/uploads/hk-1795799352837-506.jpg"
+      ],
+      "description": "Peça especial da coleção Happy Kids Moda Infantil, unindo conforto, liberdade de movimento e muito estilo.",
+      "fabric": "Tecido selecionado de toque macio e alta durabilidade.",
+      "washing": [
+        "Lavar com cores similares e sabão neutro",
+        "Não utilizar alvejantes com cloro",
+        "Secar à sombra"
+      ],
+      "createdAt": "2026-11-27"
+    },
     {
       "id": "hk-custom-896430",
       "sku": "CÓD. 77",
