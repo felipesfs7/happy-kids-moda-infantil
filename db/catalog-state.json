@@ -1,11 +1,51 @@
 {
   "version": 2,
-  "updatedAt": "2026-11-27T16:32:26.246Z",
+  "updatedAt": "2026-11-27T16:33:14.321Z",
   "soldOutIds": [
     "hk-custom-881125"
   ],
   "productOverrides": {},
   "customProducts": [
+    {
+      "id": "hk-custom-194318",
+      "sku": "CÓD. 70",
+      "name": "CONJUNTO BLUSA MALHA SHORT MOLETINHO",
+      "color": null,
+      "price": 89.9,
+      "oldPrice": null,
+      "onSale": false,
+      "gender": "Feminino",
+      "category": "Conjuntos",
+      "brand": "BABY VEST",
+      "season": "Verão",
+      "ageGroup": "4-a-10",
+      "ageLabel": "Tam. 4 ao 10",
+      "sizes": [
+        "4",
+        "6",
+        "8",
+        "10"
+      ],
+      "registeredSizes": [
+        "4",
+        "6",
+        "8",
+        "10"
+      ],
+      "badge": "Novo",
+      "featured": true,
+      "images": [
+        "https://raw.githubusercontent.com/felipesfs7/happy-kids-moda-infantil/main/assets/uploads/hk-1795797192722-821.jpg"
+      ],
+      "description": "Peça especial da coleção Happy Kids Moda Infantil, unindo conforto, liberdade de movimento e muito estilo.",
+      "fabric": "Tecido selecionado de toque macio e alta durabilidade.",
+      "washing": [
+        "Lavar com cores similares e sabão neutro",
+        "Não utilizar alvejantes com cloro",
+        "Secar à sombra"
+      ],
+      "createdAt": "2026-11-27"
+    },
     {
       "id": "hk-custom-146240",
       "sku": "CÓD. 69",
