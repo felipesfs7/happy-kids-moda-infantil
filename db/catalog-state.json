@@ -1,11 +1,51 @@
 {
   "version": 2,
-  "updatedAt": "2026-11-27T17:51:44.938Z",
+  "updatedAt": "2026-11-27T17:53:03.675Z",
   "soldOutIds": [
     "hk-custom-881125"
   ],
   "productOverrides": {},
   "customProducts": [
+    {
+      "id": "hk-custom-983674",
+      "sku": "CÓD. 87",
+      "name": "CONJUNTO BLUSA ALCINHA EM MALHA SHORT SAIA TECIDO ESTAMPADO",
+      "color": null,
+      "price": 199.9,
+      "oldPrice": null,
+      "onSale": false,
+      "gender": "Feminino",
+      "category": "Conjuntos",
+      "brand": "KIKI",
+      "season": "Verão",
+      "ageGroup": "4-a-10",
+      "ageLabel": "Tam. 6 ao 12",
+      "sizes": [
+        "6",
+        "8",
+        "10",
+        "12"
+      ],
+      "registeredSizes": [
+        "6",
+        "8",
+        "10",
+        "12"
+      ],
+      "badge": "Novo",
+      "featured": true,
+      "images": [
+        "https://raw.githubusercontent.com/felipesfs7/happy-kids-moda-infantil/main/assets/uploads/hk-1795801932226-409.jpg"
+      ],
+      "description": "Peça especial da coleção Happy Kids Moda Infantil, unindo conforto, liberdade de movimento e muito estilo.",
+      "fabric": "Tecido selecionado de toque macio e alta durabilidade.",
+      "washing": [
+        "Lavar com cores similares e sabão neutro",
+        "Não utilizar alvejantes com cloro",
+        "Secar à sombra"
+      ],
+      "createdAt": "2026-11-27"
+    },
     {
       "id": "hk-custom-904898",
       "sku": "CÓD. 81",
